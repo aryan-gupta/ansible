@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  name: bootstrap ArchLinux system
+  become: yes
+  connection: local
+  
+  pre_tasks:
+    - include_vars: "host_vars/{{ hostname }}.yml"
+    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
+  
+  roles:
+    - role: 'pre'
+
+
+- hosts: chroot
+  name: install Archlinux
+  connection: chroot
+  vars:
+    hostname: hostvars['localhost']['hostname']
+
+  pre_tasks:
+    - include_vars: "host_vars/{{ hostname }}.yml"
+    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
+
+  roles:
+    - role: 'install'
+    - role: 'post'
+    - role: 'user'

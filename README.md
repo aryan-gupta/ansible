@@ -1,2 +1,100 @@
 # ansible-linux
 An Ansible Playbook to setup my Linux machines
+
+
+## Hosts
+    - axion : Remote VPN Server
+    - boson : Thinkpad Laptop
+    - graviton : Asus Z97 desktop
+    - higgs : Intel Stick server
+    - photon : ODroid N2 server
+    - tachyon : Firewall server
+
+## Next Devices (alpha-unique)
+    - chargino
+    - dyon
+    - electron
+    - fermions
+    - inflaton
+    - j
+    - kaon
+    - lepton
+    - muon
+    - neutrino
+    - o
+    - quark
+    - r
+    - saxion
+    - u
+    - v
+    - wino
+    - x
+    - y
+    - zino
+
+## Future Devices
+    - anyon
+    - axino
+        - axion
+    - baryon
+        - boson
+    - bradyon
+    - branon
+    - chargino
+    - dilatino
+    - dilaton
+    - dyon
+    - electron
+    - exciton
+    - fermions
+    - geon
+    - glueball
+    - gluino
+    - goldstino
+    - goldstone
+    - graviphoton
+    - graviscalar
+        - graviton
+    - hadron
+        - higgs
+    - higgsino
+    - hyperon
+    - inflaton
+    - instanton
+    - isotope
+    - kaon
+    - lepton
+    - luxon
+    - magnon
+    - majoron
+    - majorona
+    - meson
+    - muon
+    - neutralino
+    - neutrino
+    - neutron
+    - pentaquark
+    - phonon
+    - photino
+        - photon
+    - pion
+    - plasmon
+    - plekton
+    - polariton
+    - polaron
+    - positron
+    - preon
+    - proton
+    - quark
+    - saxino
+    - skyrmion
+    - slepton
+    - sneutron
+    - spurion
+    - squark
+        - tachyon
+    - tardyon
+    - tauon
+    - tetraquark
+    - wino
+    - zino

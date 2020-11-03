@@ -1,0 +1,88 @@
+---
+- name: Upgrade system to latest state
+  pacman:
+    update_cache: yes
+    upgrade: yes
+
+- name: configure locales
+  community.general.locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ locales }}"
+
+- name: set active locale to English US
+  lineinfile:
+    path: /etc/locale.conf
+    line: "LANG={{ locales[0] }}"
+    create: yes
+
+- name: set timezone
+  file:
+    src: "/usr/share/zoneinfo/{{ timezone }}"
+    dest: /etc/localtime
+    state: link
+
+- name: set hardware clock from system and configure for UTC timescale
+  command: hwclock --systohc --utc
+  args:
+    creates: /etc/adjtime
+
+- name: Configure hostname
+  lineinfile:
+    path: /etc/hostname
+    line: "{{ hostname }}"
+    create: yes
+
+- name: Configure hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    mode: 644
+
+- name: install base packages
+  pacman:
+    name: "{{ base_packages }}"
+    extra_args: --needed
+
+- name: configure console font
+  lineinfile:
+    path: /etc/vconsole.conf
+    line: "KEYMAP=ter-122n"
+    create: yes
+
+- name: configure initramfs build hooks
+  lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^HOOKS=\('
+    line: "HOOKS=({{ initramfs_hooks | join(' ') }})"
+
+- name: configure initramfs build hooks
+  lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES=\('
+    line: "MODULES=({{ initramfs_modules | join(' ') }})"
+
+- name: rebuild initramfs
+  command: mkinitcpio -p {{ kernel }}
+  args:
+    creates: "initramfs-{{ kernel }}-fallback.img"
+
+- name: restrict access permissions to initramfs
+  file:
+    path: "/boot/{{ item }}"
+    mode: 0600
+  with_items:
+    - "initramfs-{{ kernel }}.img"
+    - "initramfs-{{ kernel }}-fallback.img"
+
+- name: install intel microcode
+  pacman:
+    name: intel-ucode
+  when: "'GenuineIntel' in ansible_processor"
+
+- name: setup boot items
+  shell: >-
+    "efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
+    {{ label }} --loader /vmlinuz-{{ kernel }} --unicode 
+    'rd.luks.name={{ root_uuid }}={{ crypt_name }}
+    root={{ root_part.device }} rw initrd=\\initramfs-{{ kernel }}.img' --verbose"

@@ -1,0 +1,122 @@
+- name: Create on disk partitions
+  community.general.parted:
+    state: present
+    device: "{{ item.device }}"
+    label: gpt
+    flags: "{{ item.flags }}"
+    name: "{{ item.name }}"
+    number: "{{ item.number }}"
+    part_start: "{{ item.start }}"
+    part_end: "{{ item.end }}"
+  with_items: "{{ partitions }}"
+
+# https://stackoverflow.com/questions/24679591
+- name: Create keyfile for luks
+  shell: "openssl rand -base64 {{ item.keyfile_len }} | tr -d '\n' | tee {{ item.keyfile }}"
+  args: 
+    creates: "{{ item.keyfile }}"
+  with_items: "{{ crypt }}"
+
+- name: Setup luks partitions
+  community.crypto.luks_device:
+    device: "{{ item.device }}"
+    state: "present"
+    name: "{{ item.name }}"
+    label: "{{ item.name }}"
+    type: "{{ item.type }}"
+    cipher: "{{ item.cipher }}"
+    keysize: "{{ item.keysize }}"
+    hash: "{{ item.hash }}"
+    keyfile: "{{ item.keyfile }}"
+    #passphrase: "{{ item.passphrase }}"
+  with_items: "{{ crypt }}"
+
+# The reason we remove then add the passphrase
+# is so that there is idempotency for this passphrase
+# - name: Attempt to remove the passphrase
+#   community.crypto.luks_device:
+#     device: "{{ item.device }}"
+#     keyfile: "{{ item.keyfile }}"
+#     new_passphrase: "{{ item.passphrase }}"
+#   with_items: "{{ crypt }}"
+
+- name: Add luks passprase
+  community.crypto.luks_device:
+    device: "{{ item.device }}"
+    keyfile: "{{ item.keyfile }}"
+    new_passphrase: "{{ item.passphrase }}"
+  with_items: "{{ crypt }}"
+
+# - name: Create pvs
+#   shell: "pvcreate {{ item.device }}"
+#   with_items: "{{ lvm.pv }}"
+  
+- name: Create LVM vgs
+  community.general.lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.pvs }}"
+    pvresize: "{{ item.pvresize }}"
+  with_items: "{{ lvm.vg }}"
+
+- name: Create LVM lvs
+  community.general.lvol:
+    vg: "{{ item.vg }}"
+    lv: "{{ item.name }}"
+    size: "{{ item.size }}"
+  # args: 
+  #   creates: "/dev/mapper/{{ item.vg }}-{{ item.name }}"
+  with_items: "{{ lvm.lv }}"
+
+- name: Format partitions
+  community.general.filesystem:
+    device: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+  with_items: "{{ fs }}"
+
+- name: Mount root partition
+  ansible.posix.mount:
+    path: "{{ arch_root }}"
+    src: "{{ root_part.device }}"
+    fstype: "{{ root_part.fstype }}"
+    state: mounted
+
+- name: Create mount points
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "{{ arch_root }}/home"
+    - "{{ arch_root }}/boot"
+
+- name: Mount rest of partitions
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  with_items: "{{ mounts }}"
+
+- name: Set swapon partitions
+  command: "swapon {{ swap_part }}"
+  when: swap_part is defined
+
+# This allows me to run this ansible script
+# again and will not touch my home partition
+# aka allows reinstalls without deleting home
+# I am also creating a file in boot because I
+# dont have this feature implemented yet and 
+# not sure if I should check the boot partition
+# or the actual home partition. Checking the
+# home partition means mounting the luks parts
+# checking for the file, unmounting, then 
+# reformatting. I will decide later and change
+# this accordingly
+- name: Create no touch files
+  lineinfile: 
+    path: "{{ item }}/ANSIBLE_{{ hostname }}"
+    line: "{{ ansible_date_time.epoch }}"
+    create: yes
+  with_items:
+    - "{{ arch_root }}/home"
+    - "{{ arch_root }}/boot"

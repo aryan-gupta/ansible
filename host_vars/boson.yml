@@ -1,0 +1,70 @@
+include: "{{ hostname }}_secure.yml"
+
+crypt_name: "{{ hostname }}_crypt"
+
+partitions:
+  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+    flags: [ 'boot' ]
+    name: boot
+    number: 1
+    start: 0%
+    end: 512MiB
+
+  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+    flags: [  ]
+    name: linux
+    number: 2
+    start: 512MiB
+    end: 100%
+
+
+crypt:
+  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part2
+    name: "{{ cryptname }}"
+    type: luks2
+    cipher: aes-xts-plain64
+    keysize: 512
+    hash: sha512
+    passphrase: "{{ luks_password }}"
+    keyfile: "/tmp/crypt_name_{{ luks_keyfile }}_{{ ansible_date_time.date }}"
+
+lvm:
+  # pv:
+  #   - device: "/dev/mapper/{{ cryptname }}"
+  vg:
+    - name: "{{ hostname }}_lvg01"
+      pvresize: yes
+      pvs: 
+        - "/dev/mapper/{{ cryptname }}"
+  lv:
+    - name: root
+      vg: "{{ hostname }}_lvg01"
+      size: 32GB
+    - name: home
+      vg: "{{ hostname }}_lvg01"
+      size: 100%FREE
+      
+fs:
+  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+    fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}_lvg01-root"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}_lvg01-home"
+    fstype: ext4
+
+root_part:
+  device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  fstype: ext4
+
+# I dont have a swap on my laptop since I dont want
+# too many writes on my nvme flash. I have a script
+# that warns me whenever I have filled up my RAM
+# swap_part
+
+mounts:
+  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+    path: "/boot"
+    fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}_lvg01-home"
+    path: "/home"
+    fstype: ext4
