@@ -100,7 +100,7 @@
 
 - name: Mount rest of partitions
   ansible.posix.mount:
-    path: "{{ item.path }}"
+    path: "{{ arch_root }}{{ item.path }}"
     src: "{{ item.device }}"
     fstype: "{{ item.fstype }}"
     state: mounted
