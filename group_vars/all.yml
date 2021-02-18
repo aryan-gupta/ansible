@@ -13,6 +13,7 @@ pacstrap_packages:
   - base
   - linux-lts
   - linux-firmware
+  - ansible
 
 base_packages:
   # extensions
