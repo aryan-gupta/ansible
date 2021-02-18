@@ -47,6 +47,15 @@
     new_passphrase: "{{ item.passphrase }}"
   with_items: "{{ crypt }}"
 
+- name: Open luks partitions
+  community.crypto.luks_device:
+    device: "{{ item.device }}"
+    state: "opened"
+    name: "{{ item.name }}"
+    keyfile: "{{ item.keyfile }}"
+    #passphrase: "{{ item.passphrase }}"
+  with_items: "{{ crypt }}"
+
 # - name: Create pvs
 #   shell: "pvcreate {{ item.device }}"
 #   with_items: "{{ lvm.pv }}"
