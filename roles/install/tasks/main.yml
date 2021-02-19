@@ -80,9 +80,24 @@
     name: intel-ucode
   when: "'GenuineIntel' in ansible_processor"
 
+- name: get root UUID
+  command: blkid -s UUID -o value {{ root_part.device }}
+  register: root_uuid
+  changed_when: False
+  check_mode: no
+
 - name: setup boot items
   shell: >-
-    "efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
-    {{ label }} --loader /vmlinuz-{{ kernel }} --unicode 
-    'rd.luks.name={{ root_uuid }}={{ crypt_name }}
-    root={{ root_part.device }} rw initrd=\\initramfs-{{ kernel }}.img' --verbose"
+    efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
+    {{ boot.label }} --loader /vmlinuz-{{ kernel }} --unicode 
+    'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }}
+    root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img' --verbose
+
+- name: copy boot script to boot part
+  copy: 
+    content: >- 
+      efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
+      {{ boot.label }} --loader /vmlinuz-{{ kernel }} --unicode 
+      'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }}
+      root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img' --verbose
+    dest: "{{ boot.mount }}/boot.sh"

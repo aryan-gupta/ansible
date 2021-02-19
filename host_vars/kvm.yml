@@ -93,5 +93,6 @@ packages:
 
 boot:
   device: /dev/vda
+  mount: /boot
   part: 1
-  label: Arch Linux
+  label: ArchLinux
