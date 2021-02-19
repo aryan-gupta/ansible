@@ -1,4 +1,8 @@
-umount /mnt -r
+sync
+
+umount /mnt/home -rf
+umount /mnt/boot -rf
+umount /mnt -rf
 
 # lvchange -an /dev/mapper/kvm_lvg01-home
 # lvchange -an /dev/mapper/kvm_lvg01-root
