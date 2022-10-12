@@ -17,15 +17,27 @@
     dest: "{{ home_dir }}/.gitconfig-local"
     state: link
 
+- name: Check bashrc
+  stat: 
+    path: "{{ home_dir }}/.bashrc"
+  register: bashrc_file_type
+
 - name: remove bashrc
   ansible.builtin.file:
     path: "{{ home_dir }}/.bashrc"
     state: absent
+  when: bashrc_file_type.stat.islnk is defined and not bashrc_file_type.stat.islnk
+
+- name: Check zshrc
+  stat: 
+    path: "{{ home_dir }}/.zshrc"
+  register: zshrc_file_type
 
 - name: remove zshrc
   ansible.builtin.file:
     path: "{{ home_dir }}/.zshrc"
     state: absent
+  when: zshrc_file_type.stat.islnk is defined and not zshrc_file_type.stat.islnk
 
 - name: add bashrc
   ansible.builtin.file:
@@ -39,16 +51,23 @@
     dest: "{{ home_dir }}/.zshrc"
     state: link
 
+- name: Check .config folder
+  stat: 
+    path: "{{ home_dir }}/.config"
+  register: config_folder_type
+
 - name: remove old .config folder
   ansible.builtin.file:
     path: "{{ home_dir }}/.config"
     state: absent
+  when: config_folder_type.stat.islnk is defined and not config_folder_type.stat.islnk
 
 - name: link .config folder
   ansible.builtin.file:
     src: "{{ project_dir }}/{{ dotfile_repo }}/.config"
     dest: "{{ home_dir }}/.config"
     state: link
+  when: config_folder_type.stat.islnk is defined and not config_folder_type.stat.islnk
 
 - name: finish setting up alacritty
   ansible.builtin.file:
