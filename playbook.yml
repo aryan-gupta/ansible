@@ -46,6 +46,7 @@
   name: finish setup
   become: yes
   connection: local
+  become_user: aryan
   tags: ['user']
   
   pre_tasks:
