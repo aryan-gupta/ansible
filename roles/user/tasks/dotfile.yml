@@ -3,7 +3,7 @@
   ansible.builtin.git:
     clone: yes
     repo: "{{ dotfile_repo_github }}"
-    dest: "{{ project_dir }}"
+    dest: "{{ project_dir }}/{{ dotfile_repo }}"
 
 - name: setup .gitconfig
   ansible.builtin.file:
