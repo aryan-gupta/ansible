@@ -1,6 +1,14 @@
 # ansible-linux
 An Ansible Playbook to setup my Linux machines
 
+Steps:
+ - [backup] Backup current system
+ - [bootable] Create bootable device
+ - [pre] pre install
+ - [install] install
+ - [post] post install
+ - [user] config/dotfiles install
+ - [backup] Backup current system
 
 ## Hosts
     - axion : Remote VPN Server
