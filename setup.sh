@@ -12,3 +12,8 @@ mount -o remount,size=1G /run/archiso/cowspace
 pacman -Sy ansible git efibootmgr --needed --noconfirm
 
 ansible-playbook playbook.yml --extra-vars "hostname=$1"
+
+
+# install dotfiles:
+# ansible-playbook playbook.yml --tags "user" --extra-vars="hostname=$1"
+# ansible-playbook playbook.yml --tags "user" --extra-vars="hostname=$1" --check
