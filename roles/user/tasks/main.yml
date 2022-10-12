@@ -1,0 +1,3 @@
+---
+- name: setup dotfiles
+  ansible.builtin.include_tasks: dotfile.yml

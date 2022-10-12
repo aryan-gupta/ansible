@@ -1,0 +1,57 @@
+---
+- name: clone linux.files
+  ansible.builtin.git:
+    clone: yes
+    repo: "{{ dotfile_repo_github }}"
+    dest: "{{ project_dir }}"
+
+- name: setup .gitconfig
+  ansible.builtin.file:
+    src: "{{ project_dir }}/{{ dotfile_repo }}/.gitconfig"
+    dest: "{{ home_dir }}/.gitconfig"
+    state: link
+
+- name: setup .gitconfig-local
+  ansible.builtin.file:
+    src: "{{ project_dir }}/{{ dotfile_repo }}/.gitconfig-{{ hostname }}"
+    dest: "{{ home_dir }}/.gitconfig-local"
+    state: link
+
+- name: remove bashrc
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.bashrc"
+    state: absent
+
+- name: remove zshrc
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.zshrc"
+    state: absent
+
+- name: add bashrc
+  ansible.builtin.file:
+    src: "{{ project_dir }}/{{ dotfile_repo }}/.bashrc"
+    dest: "{{ home_dir }}/.bashrc"
+    state: link
+
+- name: add zshrc
+  ansible.builtin.file:
+    src: "{{ project_dir }}/{{ dotfile_repo }}/.zshrc"
+    dest: "{{ home_dir }}/.zshrc"
+    state: link
+
+- name: remove old .config folder
+  ansible.builtin.file:
+    path: "{{ home_dir }}/.config"
+    state: absent
+
+- name: link .config folder
+  ansible.builtin.file:
+    src: "{{ project_dir }}/{{ dotfile_repo }}/.config"
+    dest: "{{ home_dir }}/.config"
+    state: link
+
+- name: finish setting up alacritty
+  ansible.builtin.file:
+    src: "{{ home_dir }}/.config/alacritty/alacritty-{{ hostname }}.yml"
+    dest: "{{ home_dir }}/.config/alacritty/alacritty-local.yml"
+    state: link

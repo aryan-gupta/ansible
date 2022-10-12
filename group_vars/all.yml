@@ -60,3 +60,12 @@ base_packages:
 
 aur_base_packages:
   - polybar
+
+username: aryan
+home_dir: "/home/{{ username }}"
+github_username: aryan-gupta
+
+project_dir: "{{ home_dir }}/Projects"
+
+dotfile_repo: "linux.files"
+dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
