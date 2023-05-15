@@ -46,7 +46,7 @@
   name: finish setup
   become: yes
   connection: local
-  become_user: "{{ username }}"
+  become_user: "{{ user.name }}"
   tags: ['user']
   
   pre_tasks:
