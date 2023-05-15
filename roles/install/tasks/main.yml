@@ -81,7 +81,7 @@
   when: "'GenuineIntel' in ansible_processor"
 
 - name: get root UUID
-  command: blkid -s UUID -o value {{ root_part.device }}
+  command: blkid -s UUID -o value {{ crypt[0].device }}
   register: root_uuid
   changed_when: False
   check_mode: no
