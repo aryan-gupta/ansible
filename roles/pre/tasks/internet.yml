@@ -21,3 +21,12 @@
   wait_for:
     host: archlinux.org
     port: 80
+
+# - name: Ping Google's server for internet access
+#   ansible.netcommon.net_ping:
+#     dest: 8.8.8.8
+#     count: 1
+#   register: ping
+
+# - include_tasks: internet.yml
+#   when: ping.packets_rx < 1

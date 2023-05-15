@@ -1,0 +1,5 @@
+---
+- name: install base packages
+  pacman:
+    name: "{{ base_packages }}"
+    extra_args: --needed

@@ -1,35 +1,6 @@
 ---
-- name: Abort if the host is not booted from the Arch install media
-  fail:
-    msg: "This host is not booted from the Arch install media!"
-  when: ansible_nodename != 'archiso'
-
-- name: Check if in UEFI mode
-  stat:
-    path: /sys/firmware/efi/efivars
-  register: uefi
-
-- name: Fail if not in UEFI mode
-  fail:
-    msg: "This device is not in UEFI mode"
-  when: not uefi.stat.exists
-
-# - name: Ping Google's server for internet access
-#   ansible.netcommon.net_ping:
-#     dest: 8.8.8.8
-#     count: 1
-#   register: ping
-
-# - include_tasks: internet.yml
-#   when: ping.packets_rx < 1
-
-- name: Enable ntp
-  command: /usr/bin/timedatectl set-ntp true
-
-- name: Enable ntp
-  command: /usr/bin/timedatectl status
-  register: ntp
-
+- import_tasks: uefi.yml
+# - import_tasks: internet.yml
+- import_tasks: ntp.yml
 - import_tasks: disks.yml
-
-- import_tasks: preinstall.yml
+- import_tasks: pacstrap.yml

@@ -1,0 +1,15 @@
+---
+- name: Abort if the host is not booted from the Arch install media
+  fail:
+    msg: "This host is not booted from the Arch install media!"
+  when: ansible_nodename != 'archiso'
+
+- name: Check if in UEFI mode
+  stat:
+    path: /sys/firmware/efi/efivars
+  register: uefi
+
+- name: Fail if not in UEFI mode
+  fail:
+    msg: "This device is not in UEFI mode"
+  when: not uefi.stat.exists

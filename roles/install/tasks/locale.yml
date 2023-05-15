@@ -1,0 +1,34 @@
+---
+- name: Upgrade system to latest state
+  pacman:
+    update_cache: yes
+    upgrade: yes
+
+- name: configure locales
+  community.general.locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ locales }}"
+
+- name: set active locale to English US
+  lineinfile:
+    path: /etc/locale.conf
+    line: "LANG={{ locales[0] }}"
+    create: yes
+
+- name: set timezone
+  file:
+    src: "/usr/share/zoneinfo/{{ timezone }}"
+    dest: /etc/localtime
+    state: link
+
+- name: set hardware clock from system and configure for UTC timescale
+  command: hwclock --systohc --utc
+  args:
+    creates: /etc/adjtime
+
+- name: configure console font
+  lineinfile:
+    path: /etc/vconsole.conf
+    line: "KEYMAP=ter-122n"
+    create: yes

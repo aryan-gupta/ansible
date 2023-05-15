@@ -1,0 +1,7 @@
+---
+- name: Enable ntp
+  command: /usr/bin/timedatectl set-ntp true
+
+- name: Enable ntp
+  command: /usr/bin/timedatectl status
+  register: ntp
