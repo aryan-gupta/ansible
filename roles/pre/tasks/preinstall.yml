@@ -6,12 +6,6 @@
   shell: "/usr/bin/genfstab -U -p {{ arch_root }} >> {{ arch_root }}/etc/fstab"
   args:
     creates: "{{ arch_root }}/etc/fstab"
-
-- name: copy encryption key into boot partition
-  copy:
-    src: "{{ item.keyfile }}"
-    dest: "{{ arch_root }}{{ boot.mount }}/{{ item.keyfile_name }}"
-  with_items: "{{ crypt }}"
     
 # - name: "Clone ansible repo into chroot enviroment"
 #   shell: /bin/git clone "" /mnt/root/ansible-linux

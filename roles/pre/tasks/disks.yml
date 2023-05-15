@@ -110,6 +110,12 @@
   command: "swapon {{ swap_part }}"
   when: swap_part is defined
 
+- name: copy encryption key into boot partition
+  copy:
+    src: "{{ item.keyfile }}"
+    dest: "{{ arch_root }}{{ boot.mount }}/{{ item.keyfile_name }}"
+  with_items: "{{ crypt }}"
+
 # This allows me to run this ansible script
 # again and will not touch my home partition
 # aka allows reinstalls without deleting home
