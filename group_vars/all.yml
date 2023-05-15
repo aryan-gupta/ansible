@@ -1,4 +1,8 @@
 ---
+
+network_name: Nokia
+network_pass: XXXXXXXXXX
+
 arch_root: /mnt
 domain_suffix: gempi.re
 
@@ -91,12 +95,12 @@ aur_base_packages:
 username: aryan
 
 user:
-  name: {{ username }}
+  name: "{{ username }}"
   uid: 42069
-  group: {{ username }}
+  group: "{{ username }}"
   home_dir: "/home/{{ username }}"
   groups:
-    - wheel 
+    - wheel
   shell: /usr/bin/zsh
   email:  me@theguptaempire.net
 
