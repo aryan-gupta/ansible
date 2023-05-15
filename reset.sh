@@ -1,3 +1,5 @@
+HOST="boson"
+
 sync
 
 umount /mnt/home -rf
@@ -8,26 +10,26 @@ umount /mnt -rf
 # lvchange -an /dev/mapper/kvm_lvg01-root
 # vgchange -an kvm_lvg01
 
-lvremove -ff kvm_lvg01-home
-lvremove -ff kvm_lvg01-root
-vgremove -ff kvm_lvg01
-pvremove -y -ff /dev/mapper/kvm_crypt
+lvremove -ff boson_lvg01-home
+lvremove -ff boson_lvg01-root
+vgremove -ff boson_lvg01
+pvremove -y -ff /dev/mapper/boson_crypt
 
-dd if=/dev/zero of=/dev/mapper/kvm_crypt bs=1M count=16
+dd if=/dev/zero of=/dev/mapper/boson_crypt bs=1M count=16
 
-cryptsetup close kvm_crypt
-cryptsetup -q luksErase /dev/vda2
-dmsetup remove kvm_crypt
-dmsetup remove kvm_lvg01-home
-dmsetup remove kvm_lvg01-root
+cryptsetup close boson_crypt
+cryptsetup -q luksErase /dev/nvme0n1p2
+dmsetup remove boson_crypt
+dmsetup remove boson_lvg01-home
+dmsetup remove boson_lvg01-root
 
-dd if=/dev/zero of=/dev/vda2 bs=1M count=32
-dd if=/dev/zero of=/dev/vda1 bs=1M count=16
-dd if=/dev/zero of=/dev/vda  bs=1M count=16
+dd if=/dev/zero of=/dev/nvme0n1p2 bs=1M count=32
+dd if=/dev/zero of=/dev/nvme0n1p1 bs=1M count=16
+dd if=/dev/zero of=/dev/nvme0n1  bs=1M count=16
 
-rm -f /dev/mapper/kvm_crypt
-rm -f /dev/vda1
-rm -f /dev/vda2
+rm -f /dev/mapper/boson_crypt
+rm -f /dev/nvme0n1p1
+rm -f /dev/nvme0n1p2
 
 lvmdiskscan
 partprobe
