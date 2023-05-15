@@ -84,3 +84,9 @@ initramfs_hooks:
   - sd-lvm2
   - filesystems
   - fsck
+
+boot:
+  device: /dev/nvme0n1p1
+  mount: /boot
+  part: 1
+  label: ArchLinux
