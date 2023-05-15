@@ -98,16 +98,12 @@
 
 - name: setup boot items
   shell: >-
-    efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
-    {{ boot.label }} --loader /vmlinuz-{{ kernel }} --unicode 
-    'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }}
-    root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img loglevel=3' --verbose
-
-- name: copy boot script to boot part
-  copy: 
-    content: >- 
-      efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
-      {{ boot.label }} --loader /vmlinuz-{{ kernel }} --unicode 
-      'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }}
-      root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img loglevel=3' --verbose
-    dest: "{{ boot.mount }}/boot.sh"
+    efibootmgr 
+    --create 
+    --disk {{ boot.device }} 
+    --part {{ boot.part }} 
+    --label {{ boot.label }} 
+    --loader /vmlinuz-{{ kernel }} 
+    --unicode 
+    --verbose
+    'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0' 
