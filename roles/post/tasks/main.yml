@@ -38,3 +38,8 @@
     append: yes
   tags:
     - user
+
+- name: install packages
+  pacman:
+    name: "{{ packages }}"
+    extra_args: --needed
