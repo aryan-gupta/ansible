@@ -68,3 +68,19 @@ mounts:
   - device: "/dev/mapper/{{ hostname }}_lvg01-home"
     path: "/home"
     fstype: ext4
+
+initramfs_modules:
+  - i915
+
+initramfs_hooks: 
+  - base
+  - systemd
+  - autodetect
+  - keyboard
+  - sd-vconsole
+  - modconf
+  - block
+  - sd-encrypt
+  - sd-lvm2
+  - filesystems
+  - fsck
