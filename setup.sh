@@ -9,6 +9,8 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+pacman-key --init
+
 if [ $1 = "boson" ]; then
 	iwctl station wlan0 scan
 	sleep 2
@@ -24,7 +26,7 @@ fi
 
 mount -o remount,size=1G /run/archiso/cowspace
 
-pacman -Sy ansible-core ansible git efibootmgr --needed --noconfirm
+pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
 ansible-playbook playbook.yml --extra-vars "hostname=$1"
 
