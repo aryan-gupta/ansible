@@ -87,7 +87,7 @@
 
 - name: delete old boot entries
   shell: >-
-    variable=$(efibootmgr | grep "{{ boot.label }}" | sed 's/* {{ boot.label }}//' | sed 's/Boot//')
+    variable=$(efibootmgr | grep "{{ boot.label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//'))
     printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
 
 - name: get root UUID
