@@ -1,8 +1,21 @@
 ---
+
+- name: generate root hash pass
+  command:  python -c "from passlib.hash import sha512_crypt; import getpass; print(sha512_crypt.encrypt('{{ root_password }}'))"
+  register: hash
+  tags:
+    - user
+
 - name: update root user password
   user:
     name: "root"
-    password: "{{ root_password }}"
+    password: '{{ hash.stdout }}'
+  tags:
+    - user
+
+- name: generate user hash pass
+  command:  python -c "from passlib.hash import sha512_crypt; import getpass; print(sha512_crypt.encrypt('{{ user_password }}'))"
+  register: hash
   tags:
     - user
 
@@ -17,7 +30,7 @@
   user:
     name: "{{ user.name }}"
     group: "{{ user.group }}"
-    password: "{{ user_password }}"
+    password: '{{ hash.stdout }}'
     shell: "{{ user.shell }}"
     update_password: on_create
     uid: "{{ user.uid }}"
