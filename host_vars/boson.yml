@@ -86,7 +86,10 @@ initramfs_hooks:
   - fsck
 
 packages:
-  - cura
+  # - cura
+  - sof-firmware
+  - intel-media-driver
+  - intel-gpu-tools
 
 boot:
   device: /dev/nvme0n1p1
