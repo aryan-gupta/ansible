@@ -80,6 +80,11 @@
     name: intel-ucode
   when: "'GenuineIntel' in ansible_processor"
 
+- name: delete old boot entries
+  shell: >-
+    variable=$(efibootmgr | grep "{{ boot.label }}" | sed 's/* {{ boot.label }}//' | sed 's/Boot//')
+    printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
+
 - name: get root UUID
   command: blkid -s UUID -o value {{ crypt[0].device }}
   register: root_uuid
