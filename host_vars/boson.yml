@@ -93,3 +93,5 @@ boot:
   mount: /boot
   part: 1
   label: ArchLinux
+
+cpu_manufacturer: intel
