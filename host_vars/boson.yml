@@ -1,5 +1,3 @@
-include: "{{ hostname }}_secure.yml"
-
 crypt_name: "{{ hostname }}_crypt"
 
 partitions:
@@ -41,7 +39,7 @@ lvm:
   lv:
     - name: root
       vg: "{{ hostname }}_lvg01"
-      size: 32GB
+      size: 32G
     - name: home
       vg: "{{ hostname }}_lvg01"
       size: 100%FREE
@@ -55,7 +53,7 @@ fs:
     fstype: ext4
 
 root_part:
-  device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  device: /dev/mapper/{{ hostname }}_lvg01-root
   fstype: ext4
 
 # I dont have a swap on my laptop since I dont want
