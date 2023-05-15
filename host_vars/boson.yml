@@ -17,25 +17,27 @@ partitions:
     start: 512MiB
     end: 100%
 
-
+# The first crypt device MUST be what contains root device
 crypt:
   - device: /dev/nvme0n1p2
-    name: "{{ cryptname }}"
+    name: "{{ crypt_name }}"
     type: luks2
     cipher: aes-xts-plain64
     keysize: 512
     hash: sha512
     passphrase: "{{ luks_password }}"
-    keyfile: "/tmp/crypt_name_{{ luks_keyfile }}_{{ ansible_date_time.date }}"
+    keyfile_name: "{{ crypt_name }}_{{ ansible_date_time.date }}"
+    keyfile: "/tmp/{{ crypt_name }}_{{ ansible_date_time.date }}"
+    keyfile_len: 512
 
 lvm:
-  # pv:
-  #   - device: "/dev/mapper/{{ cryptname }}"
+  pv:
+    - device: "/dev/mapper/{{ crypt_name }}"
   vg:
     - name: "{{ hostname }}_lvg01"
       pvresize: yes
       pvs: 
-        - "/dev/mapper/{{ cryptname }}"
+        - "/dev/mapper/{{ crypt_name }}"
   lv:
     - name: root
       vg: "{{ hostname }}_lvg01"
