@@ -1,17 +1,17 @@
 ---
-- hosts: localhost
-  name: prepare system for reinstall
-  become: yes
-  connection: local
-  tags: ['backup', 'bootable']
-
-  pre_tasks:
-    - include_vars: "host_vars/{{ hostname }}.yml"
-    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
-  
-  roles:
-    - role: 'backup'
-    - role: 'bootable'
+#- hosts: localhost
+#  name: prepare system for reinstall
+#  become: yes
+#  connection: local
+#  tags: ['backup', 'bootable']
+#
+#  pre_tasks:
+#    - include_vars: "host_vars/{{ hostname }}.yml"
+#    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
+#  
+#  roles:
+#    - role: 'backup'
+#    - role: 'bootable'
 
 - hosts: localhost
   name: bootstrap ArchLinux system
