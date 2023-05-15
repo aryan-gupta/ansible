@@ -16,13 +16,24 @@ pacstrap_packages:
   - ansible
 
 base_packages:
+  # ansible / automation packages
+  - ansible-core
+  - ansible
+  - git
+  - efibootmgr
+  - python
+  - python-passlib
+  - python-jinja
+  - python-yaml
+  - python-markupsafe
+
   # extensions
   - exfat-utils
   - ntfs-3g
   - lvm2
 
   # maintinance
-  - pacman-contrib 
+  - pacman-contrib
   - fwupd
 
   # devel
@@ -40,6 +51,20 @@ base_packages:
   - efibootmgr
   - wget
   - vim
+  - iwd
+  - wpa_supplicant
+  # - networkmanager
+  - python-passlib
+  - alsa-utils
+  - pipewire
+  - wireplumber
+  - pipewire-audio
+  - pipewire-pulse
+  - pipewire-alsa
+  - pipewire-jack
+  - rtkit
+  - libva-utils
+  - git
 
   # applications
   - xorg
@@ -51,12 +76,14 @@ base_packages:
   - alacritty
   - nitrogen
   - redshift
-  - inkscape
-  - gimp
-  - kicad
+  # - inkscape
+  # - gimp
+  # - kicad
   - mpc
   - ncmpcpp
   - dunst
+  - firefox
+  - vlc
 
 aur_base_packages:
   - polybar
