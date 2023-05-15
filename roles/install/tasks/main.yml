@@ -80,8 +80,13 @@
     name: intel-ucode
   when: "'GenuineIntel' in ansible_processor"
 
+- name: delete old boot entries
+  shell: >-
+    variable=$(efibootmgr | grep "{{ boot.label }}" | sed 's/* {{ boot.label }}//' | sed 's/Boot//')
+    printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
+
 - name: get root UUID
-  command: blkid -s UUID -o value {{ root_part.device }}
+  command: blkid -s UUID -o value {{ crypt[0].device }}
   register: root_uuid
   changed_when: False
   check_mode: no
@@ -91,7 +96,7 @@
     efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
     {{ boot.label }} --loader /vmlinuz-{{ kernel }} --unicode 
     'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }}
-    root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img' --verbose
+    root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img loglevel=3' --verbose
 
 - name: copy boot script to boot part
   copy: 
@@ -99,5 +104,5 @@
       efibootmgr --disk {{ boot.device }} --part {{ boot.part }} --create --label
       {{ boot.label }} --loader /vmlinuz-{{ kernel }} --unicode 
       'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }}
-      root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img' --verbose
+      root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img loglevel=3' --verbose
     dest: "{{ boot.mount }}/boot.sh"

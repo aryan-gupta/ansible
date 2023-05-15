@@ -1,0 +1,27 @@
+---
+- name: update root user password
+  user:
+    name: "root"
+    password: "{{ root_password }}"
+  tags:
+    - user
+
+- name: create user group
+  group:
+    name: "{{ user.group }}"
+    state: present
+  tags:
+    - user
+
+- name: create user and assign to group
+  user:
+    name: "{{ user.name }}"
+    group: "{{ user.group }}"
+    password: "{{ user_password }}"
+    shell: "{{ user.shell }}"
+    update_password: on_create
+    uid: "{{ user.uid }}"
+    groups: "{{ user.groups }}"
+    append: yes
+  tags:
+    - user

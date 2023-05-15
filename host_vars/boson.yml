@@ -1,51 +1,51 @@
-include: "{{ hostname }}_secure.yml"
-
 crypt_name: "{{ hostname }}_crypt"
 
 partitions:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1
     flags: [ 'boot' ]
     name: boot
     number: 1
     start: 0%
     end: 512MiB
 
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1
     flags: [  ]
     name: linux
     number: 2
     start: 512MiB
     end: 100%
 
-
+# The first crypt device MUST be what contains root device
 crypt:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part2
-    name: "{{ cryptname }}"
+  - device: /dev/nvme0n1p2
+    name: "{{ crypt_name }}"
     type: luks2
     cipher: aes-xts-plain64
     keysize: 512
     hash: sha512
     passphrase: "{{ luks_password }}"
-    keyfile: "/tmp/crypt_name_{{ luks_keyfile }}_{{ ansible_date_time.date }}"
+    keyfile_name: "{{ crypt_name }}_{{ ansible_date_time.date }}"
+    keyfile: "/tmp/{{ crypt_name }}_{{ ansible_date_time.date }}"
+    keyfile_len: 512
 
 lvm:
-  # pv:
-  #   - device: "/dev/mapper/{{ cryptname }}"
+  pv:
+    - device: "/dev/mapper/{{ crypt_name }}"
   vg:
     - name: "{{ hostname }}_lvg01"
       pvresize: yes
       pvs: 
-        - "/dev/mapper/{{ cryptname }}"
+        - "/dev/mapper/{{ crypt_name }}"
   lv:
     - name: root
       vg: "{{ hostname }}_lvg01"
-      size: 32GB
+      size: 32G
     - name: home
       vg: "{{ hostname }}_lvg01"
       size: 100%FREE
       
 fs:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1p1
     fstype: vfat
   - device: "/dev/mapper/{{ hostname }}_lvg01-root"
     fstype: ext4
@@ -53,7 +53,7 @@ fs:
     fstype: ext4
 
 root_part:
-  device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  device: /dev/mapper/{{ hostname }}_lvg01-root
   fstype: ext4
 
 # I dont have a swap on my laptop since I dont want
@@ -62,9 +62,34 @@ root_part:
 # swap_part
 
 mounts:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1p1
     path: "/boot"
     fstype: vfat
   - device: "/dev/mapper/{{ hostname }}_lvg01-home"
     path: "/home"
     fstype: ext4
+
+initramfs_modules:
+  - i915
+
+initramfs_hooks: 
+  - base
+  - systemd
+  - autodetect
+  - keyboard
+  - sd-vconsole
+  - modconf
+  - block
+  - sd-encrypt
+  - sd-lvm2
+  - filesystems
+  - fsck
+
+packages:
+  - cura
+
+boot:
+  device: /dev/nvme0n1p1
+  mount: /boot
+  part: 1
+  label: ArchLinux

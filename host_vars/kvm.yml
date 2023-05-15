@@ -24,6 +24,7 @@ crypt:
     keysize: 512
     hash: sha512
     passphrase: "{{ luks_password }}"
+    keyfile_name: "{{ crypt_name }}_{{ ansible_date_time.date }}"
     keyfile: "/tmp/{{ crypt_name }}_{{ ansible_date_time.date }}"
     keyfile_len: 512
 
