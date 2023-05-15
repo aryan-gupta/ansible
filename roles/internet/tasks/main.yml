@@ -1,11 +1,11 @@
 ---
-- name: Copy network config file
-  copy:
-    src: nokia-netctl.conf
-    dest: /etc/netctl/nokia
+#- name: Copy network config file
+#  copy:
+#    src: nokia-netctl.conf
+#    dest: /etc/netctl/nokia
 
-- name: Start netctl
-  command: netctl start nokia
+#- name: Start netctl
+#  command: netctl start nokia
 
 - name: Test network access
   net_ping: 

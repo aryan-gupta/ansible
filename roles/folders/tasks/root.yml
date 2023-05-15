@@ -1,0 +1,12 @@
+---
+- name: Create root folders
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+  with_items:
+    - "/home/{{ user.name }}"
+    - "/life"
+  

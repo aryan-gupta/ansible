@@ -39,7 +39,10 @@
   tags:
     - user
 
-- name: install packages
-  pacman:
-    name: "{{ packages }}"
-    extra_args: --needed
+- name: configure sudoers
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^# %wheel ALL=\(ALL:ALL\) ALL'
+    line: '%wheel ALL=(ALL:ALL) ALL'
+    validate: visudo -cf %s

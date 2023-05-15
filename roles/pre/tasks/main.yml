@@ -1,6 +1,0 @@
----
-- import_tasks: uefi.yml
-# - import_tasks: internet.yml
-- import_tasks: ntp.yml
-- import_tasks: disks.yml
-- import_tasks: pacstrap.yml

@@ -3,3 +3,8 @@
   pacman:
     name: "{{ base_packages }}"
     extra_args: --needed
+
+- name: install packages
+  pacman:
+    name: "{{ packages }}"
+    extra_args: --needed
