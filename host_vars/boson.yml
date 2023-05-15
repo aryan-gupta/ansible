@@ -3,14 +3,14 @@ include: "{{ hostname }}_secure.yml"
 crypt_name: "{{ hostname }}_crypt"
 
 partitions:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1
     flags: [ 'boot' ]
     name: boot
     number: 1
     start: 0%
     end: 512MiB
 
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1
     flags: [  ]
     name: linux
     number: 2
@@ -19,7 +19,7 @@ partitions:
 
 
 crypt:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part2
+  - device: /dev/nvme0n1p2
     name: "{{ cryptname }}"
     type: luks2
     cipher: aes-xts-plain64
@@ -45,7 +45,7 @@ lvm:
       size: 100%FREE
       
 fs:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1p1
     fstype: vfat
   - device: "/dev/mapper/{{ hostname }}_lvg01-root"
     fstype: ext4
@@ -62,7 +62,7 @@ root_part:
 # swap_part
 
 mounts:
-  - device: /dev/disk/by-id/nvme-INTEL_SSDPE-part1
+  - device: /dev/nvme0n1p1
     path: "/boot"
     fstype: vfat
   - device: "/dev/mapper/{{ hostname }}_lvg01-home"
