@@ -62,10 +62,20 @@ aur_base_packages:
   - polybar
 
 username: aryan
-home_dir: "/home/{{ username }}"
+
+user:
+  name: {{ username }}
+  uid: 42069
+  group: {{ username }}
+  home_dir: "/home/{{ username }}"
+  groups:
+    - wheel 
+  shell: /usr/bin/zsh
+  email:  me@theguptaempire.net
+
 github_username: aryan-gupta
 
-project_dir: "{{ home_dir }}/Projects"
+project_dir: "{{ user.home_dir }}/Projects"
 
 dotfile_repo: "linux.files"
 dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
