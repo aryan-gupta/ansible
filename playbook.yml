@@ -8,7 +8,7 @@
 #  pre_tasks:
 #    - include_vars: "host_vars/{{ hostname }}.yml"
 #    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
-#  
+#
 #  roles:
 #    - role: 'backup'
 #    - role: 'bootable'
@@ -18,18 +18,22 @@
   become: yes
   connection: local
   tags: ['pre']
-  
+
   pre_tasks:
     - include_vars: "host_vars/{{ hostname }}.yml"
     - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
-  
+
   roles:
-    - role: 'pre'
+    - role: 'uefi'
+    # - role: 'internet'
+    - role: 'ntp'
+    - role: 'disks'
+    - role: 'pacstrap'
 
 - hosts: chroot
   name: install Archlinux
   connection: chroot
-  tags: ['install', 'post']
+  tags: ['install']
 
   vars:
     hostname: hostvars['localhost']['hostname']
@@ -39,8 +43,14 @@
     - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
 
   roles:
-    - role: 'install'
-    - role: 'post'
+    - role: 'locale'
+    - role: 'hosts'
+    - role: 'packages'
+    - role: 'aur'
+    - role: 'boot'
+    - role: 'accounts'
+    - role: 'folders' # /home/aryan and /life
+    - role: 'login'
 
 - hosts: localhost
   name: finish setup
@@ -48,10 +58,14 @@
   connection: local
   become_user: "{{ user.name }}"
   tags: ['user']
-  
+
   pre_tasks:
     - include_vars: "host_vars/{{ hostname }}.yml"
     - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
-  
+
   roles:
     - role: 'user'
+    - role: 'dotfile'
+    - role: 'folders'
+    # user config below
+    #- role: 'firefox'
