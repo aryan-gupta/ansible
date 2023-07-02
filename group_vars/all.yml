@@ -118,12 +118,12 @@ base_packages:
   - transmission-gtk
   - polybar
   - pavucontrol
-  - lxappearance-gtk3 
-  
+  - lxappearance-gtk3
+
   # extra
   - noto-fonts-cjk
   - noto-fonts-emoji
-  - noto-fonts-extra 
+  - noto-fonts-extra
   - ttf-font-awesome
   - powerline-fonts
 
@@ -145,6 +145,7 @@ user:
   group: "{{ username }}"
   home_dir: "/home/{{ username }}"
   groups:
+    - aryan
     - wheel
   shell: /usr/bin/zsh
   email:  me@theguptaempire.net
@@ -157,3 +158,9 @@ godfile_dir: "/godfile"
 dotfile_repo: "dotfiles"
 dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
 
+life_folders:
+  - /life/0
+  - /life/1
+  - /life/2
+  - /life/3
+  - /life/4
