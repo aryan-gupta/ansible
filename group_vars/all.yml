@@ -23,7 +23,6 @@ base_packages:
   # ansible / automation packages
   - ansible-core
   - ansible
-  - git
   - efibootmgr
   - python
   - python-passlib
@@ -49,6 +48,14 @@ base_packages:
   - docker
   - tar
   - zip
+  - unrar
+  - unzip
+  - cmake
+  - code
+  - gdb
+  - xterm
+  - tmux
+  - python-pre-commit
 
   # utilities
   - sudo
@@ -57,7 +64,7 @@ base_packages:
   - vim
   - iwd
   - wpa_supplicant
-  # - networkmanager
+  - networkmanager
   - python-passlib
   - alsa-utils
   - pipewire
@@ -69,28 +76,66 @@ base_packages:
   - rtkit
   - libva-utils
   - git
+  - go
+  - doas
+  - cifs-utils
+  - youtube-dl
+  - xf86-input-wacom
+  - xdotool
+  - wmname
+  - usbutils
+  - strace
+  - inetutils
 
   # applications
   - xorg
+  - xorg-xinit
+  - arandr
   - bspwm
   - sxhkd
   - rofi
   - flameshot
   - code
+  - picom
   - alacritty
   - nitrogen
   - redshift
+  - thunar
+  - ranger
   # - inkscape
   # - gimp
+  # - darktable
   # - kicad
   - mpc
   - ncmpcpp
   - dunst
   - firefox
   - vlc
+  - bitwarden-cli
+  - zathura
+  - xournalpp
+  - transmission-cli
+  - transmission-gtk
+  - polybar
+  - pavucontrol
+  - lxappearance-gtk3 
+  
+  # extra
+  - noto-fonts-cjk
+  - noto-fonts-emoji
+  - noto-fonts-extra 
+  - ttf-font-awesome
+  - powerline-fonts
 
 aur_base_packages:
-  - polybar
+  - yay
+  - xp-pen-tablet
+  # - picom-ibhagwan-git
+  - brave-bin
+  - cava
+  # - cura
+  # - ddccontrol
+  # - spotify
 
 username: aryan
 
