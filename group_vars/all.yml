@@ -151,7 +151,9 @@ user:
 
 github_username: aryan-gupta
 
-project_dir: "{{ user.home_dir }}/Projects"
+# project_dir: "{{ user.home_dir }}/Projects"
+godfile_dir: "/godfile"
 
-dotfile_repo: "linux.files"
+dotfile_repo: "dotfiles"
 dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
+

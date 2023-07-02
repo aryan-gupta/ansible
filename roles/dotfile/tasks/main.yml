@@ -3,79 +3,79 @@
   ansible.builtin.git:
     clone: yes
     repo: "{{ dotfile_repo_github }}"
-    dest: "{{ project_dir }}/{{ dotfile_repo }}"
+    dest: "{{ godfile_dir }}/{{ dotfile_repo }}"
 
 - name: setup .gitconfig
   ansible.builtin.file:
-    src: "{{ project_dir }}/{{ dotfile_repo }}/.gitconfig"
-    dest: "{{ home_dir }}/.gitconfig"
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gitconfig"
+    dest: "{{ user.home_dir }}/.gitconfig"
     state: link
 
 - name: setup .gitconfig-local
   ansible.builtin.file:
-    src: "{{ project_dir }}/{{ dotfile_repo }}/.gitconfig-{{ hostname }}"
-    dest: "{{ home_dir }}/.gitconfig-local"
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gitconfig-{{ hostname }}"
+    dest: "{{ user.home_dir }}/.gitconfig-local"
     state: link
 
 - name: Check bashrc
   stat: 
-    path: "{{ home_dir }}/.bashrc"
+    path: "{{ user.home_dir }}/.bashrc"
   register: bashrc_file_type
 
 - name: remove bashrc
   ansible.builtin.file:
-    path: "{{ home_dir }}/.bashrc"
+    path: "{{ user.home_dir }}/.bashrc"
     state: absent
   when: bashrc_file_type.stat.islnk is defined and not bashrc_file_type.stat.islnk
 
 - name: Check zshrc
   stat: 
-    path: "{{ home_dir }}/.zshrc"
+    path: "{{ user.home_dir }}/.zshrc"
   register: zshrc_file_type
 
 - name: remove zshrc
   ansible.builtin.file:
-    path: "{{ home_dir }}/.zshrc"
+    path: "{{ user.home_dir }}/.zshrc"
     state: absent
   when: zshrc_file_type.stat.islnk is defined and not zshrc_file_type.stat.islnk
 
 - name: add bashrc
   ansible.builtin.file:
-    src: "{{ project_dir }}/{{ dotfile_repo }}/.bashrc"
-    dest: "{{ home_dir }}/.bashrc"
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.bashrc"
+    dest: "{{ user.home_dir }}/.bashrc"
     state: link
 
 - name: add zshrc
   ansible.builtin.file:
-    src: "{{ project_dir }}/{{ dotfile_repo }}/.zshrc"
-    dest: "{{ home_dir }}/.zshrc"
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.zshrc"
+    dest: "{{ user.home_dir }}/.zshrc"
     state: link
 
 - name: Check .config folder
   stat: 
-    path: "{{ home_dir }}/.config"
+    path: "{{ user.home_dir }}/.config"
   register: config_folder_type
 
 - name: remove old .config folder
   ansible.builtin.file:
-    path: "{{ home_dir }}/.config"
+    path: "{{ user.home_dir }}/.config"
     state: absent
   when: config_folder_type.stat.islnk is defined and not config_folder_type.stat.islnk
 
 - name: Check .config folder
   stat: 
-    path: "{{ home_dir }}/.config"
+    path: "{{ user.home_dir }}/.config"
   register: config_folder_type
 
 - name: link .config folder
   ansible.builtin.file:
-    src: "{{ project_dir }}/{{ dotfile_repo }}/.config"
-    dest: "{{ home_dir }}/.config"
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.config"
+    dest: "{{ user.home_dir }}/.config"
     state: link
   when: not config_folder_type.stat.exists
 
 - name: finish setting up alacritty
   ansible.builtin.file:
-    src: "{{ home_dir }}/.config/alacritty/alacritty-{{ hostname }}.yml"
-    dest: "{{ home_dir }}/.config/alacritty/alacritty-local.yml"
+    src: "{{ user.home_dir }}/.config/alacritty/alacritty-{{ hostname }}.yml"
+    dest: "{{ user.home_dir }}/.config/alacritty/alacritty-local.yml"
     state: link

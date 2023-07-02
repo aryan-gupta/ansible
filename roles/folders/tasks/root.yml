@@ -1,6 +1,6 @@
 ---
 - name: Create root folders
-  file: 
+  file:
     path: "{{ item }}"
     state: directory
     mode: '0755'
@@ -9,4 +9,4 @@
   with_items:
     - "/home/{{ user.name }}"
     - "/life"
-  
+    - "/godfile"
