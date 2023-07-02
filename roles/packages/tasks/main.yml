@@ -8,3 +8,8 @@
   pacman:
     name: "{{ packages }}"
     extra_args: --needed
+
+- name: enable NetworkManager
+  ansible.builtin.systemd:
+    enabled: true
+    name: NetworkManager.service
