@@ -52,10 +52,11 @@
     - role: 'folders' # /home/aryan and /life
     - role: 'login'
 
-- hosts: localhost
-  name: finish setup
-  become: yes
-  connection: local
+- hosts: chroot
+  name: user setup
+  become: true
+  become_method: sudo
+  connection: chroot
   become_user: "{{ user.name }}"
   tags: ['user']
 
