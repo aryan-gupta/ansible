@@ -1,1 +1,33 @@
 ---
+# https://ohmyz.sh/#install
+- name: download omz script
+  ansible.builtin.command: "wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O /var/tmp/install.sh"
+
+- name: set executable omz script
+  file:
+    path: "/var/tmp/install.sh"
+    mode: "0777"
+
+- name: install omz
+  ansible.builtin.command: "/bin/bash -c /var/tmp/install.sh"
+
+# https://spaceship-prompt.sh/getting-started/#Requirements
+# please note that the default location is "$ZSH_CUSTOM/themes/spaceship-prompt"
+# and because $ZSH_CUSTOM may not be defined, I have expanded it out
+- name: install spaceship prompt
+  ansible.builtin.git:
+    clone: yes
+    repo: https://github.com/spaceship-prompt/spaceship-prompt.git
+    dest: "/home/{{ user.name }}/.oh-my-zsh/custom/themes/spaceship-prompt"
+    depth: 1
+
+- name: link spaceship prompt
+  file:
+    src: "/home/{{ user.name }}/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme"
+    dest: "/home/{{ user.name }}/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
+    state: link
+
+- name: remove default zshrc file
+  ansible.builtin.file:
+    state: absent
+    path: "/home/{{ user.name }}/.zshrc"
