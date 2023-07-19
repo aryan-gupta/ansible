@@ -82,7 +82,7 @@ initramfs_hooks:
   - modconf
   - block
   - sd-encrypt
-  - sd-lvm2
+  - lvm2
   - filesystems
   - fsck
 

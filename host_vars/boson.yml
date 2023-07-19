@@ -34,7 +34,7 @@ lvm:
   vg:
     - name: "{{ hostname }}_lvg01"
       pvresize: yes
-      pvs: 
+      pvs:
         - "/dev/mapper/{{ crypt_name }}"
   lv:
     - name: root
@@ -43,7 +43,7 @@ lvm:
     - name: home
       vg: "{{ hostname }}_lvg01"
       size: 100%FREE
-      
+
 fs:
   - device: /dev/nvme0n1p1
     fstype: vfat
@@ -72,7 +72,7 @@ mounts:
 initramfs_modules:
   - i915
 
-initramfs_hooks: 
+initramfs_hooks:
   - base
   - systemd
   - autodetect
@@ -81,7 +81,7 @@ initramfs_hooks:
   - modconf
   - block
   - sd-encrypt
-  - sd-lvm2
+  - lvm2
   - filesystems
   - fsck
 
