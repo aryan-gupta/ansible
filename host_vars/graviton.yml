@@ -89,10 +89,11 @@ initramfs_hooks:
 packages:
   # - cura
   - sof-firmware
-  - intel-media-driver
-  - intel-gpu-tools
+  # - intel-media-driver
+  # - intel-gpu-tools
   - xf86-video-amdgpu
   - libva-mesa-driver
+  - xf86-input-evdev
   # - lib32-libva-mesa-driver
   # - networkmanager
   # - gnome
