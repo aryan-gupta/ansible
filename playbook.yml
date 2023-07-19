@@ -67,6 +67,6 @@
   roles:
     - role: 'user'
     - role: 'dotfile'
-    - role: 'folders'
+    - role: 'life'
     # user config below
     #- role: 'firefox'

@@ -1,6 +1,6 @@
 ---
 - name: Create root folders
-  file: 
+  file:
     path: "{{ item }}"
     state: directory
     mode: '0755'
@@ -8,4 +8,3 @@
     group: "{{ user.group }}"
   with_items:
     - life_folders
-  
