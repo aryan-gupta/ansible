@@ -1,4 +1,6 @@
 ---
+# @TODO modularize this
+
 - name: clone linux.files
   ansible.builtin.git:
     clone: yes
@@ -18,7 +20,7 @@
     state: link
 
 - name: Check bashrc
-  stat: 
+  stat:
     path: "{{ user.home_dir }}/.bashrc"
   register: bashrc_file_type
 
@@ -29,7 +31,7 @@
   when: bashrc_file_type.stat.islnk is defined and not bashrc_file_type.stat.islnk
 
 - name: Check zshrc
-  stat: 
+  stat:
     path: "{{ user.home_dir }}/.zshrc"
   register: zshrc_file_type
 
@@ -38,6 +40,12 @@
     path: "{{ user.home_dir }}/.zshrc"
     state: absent
   when: zshrc_file_type.stat.islnk is defined and not zshrc_file_type.stat.islnk
+
+- name: setup .cmd-shortcuts
+  ansible.builtin.file:
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.cmd-shortcuts"
+    dest: "{{ user.home_dir }}/.cmd-shortcuts"
+    state: link
 
 - name: add bashrc
   ansible.builtin.file:
@@ -51,8 +59,14 @@
     dest: "{{ user.home_dir }}/.zshrc"
     state: link
 
+- name: setup .xinitrc
+  ansible.builtin.file:
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.xinitrc"
+    dest: "{{ user.home_dir }}/.xinitrc"
+    state: link
+
 - name: Check .config folder
-  stat: 
+  stat:
     path: "{{ user.home_dir }}/.config"
   register: config_folder_type
 
@@ -63,7 +77,7 @@
   when: config_folder_type.stat.islnk is defined and not config_folder_type.stat.islnk
 
 - name: Check .config folder
-  stat: 
+  stat:
     path: "{{ user.home_dir }}/.config"
   register: config_folder_type
 
