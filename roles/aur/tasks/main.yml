@@ -45,3 +45,8 @@
     #  ansible.builtin.command:
     #    cmd: "yay --noconfirm -S {{ item }}"
     #  loop: "{{ aur_base_packages }}"
+
+- name: remove nobody sudoers file
+  file:
+    dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
+    state: absent
