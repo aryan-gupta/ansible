@@ -29,9 +29,10 @@ base_packages:
   - python-jinja
   - python-yaml
   - python-markupsafe
+  - arch-install-scripts
 
   # extensions
-  - exfat-utils
+  - exfatprogs
   - ntfs-3g
   - lvm2
 
@@ -56,12 +57,14 @@ base_packages:
   - xterm
   - tmux
   - python-pre-commit
+  - python-pip
+  - ntp
 
   # utilities
   - sudo
   - efibootmgr
   - wget
-  - vim
+  - gvim
   - iwd
   - wpa_supplicant
   - networkmanager
@@ -75,17 +78,21 @@ base_packages:
   - pipewire-jack
   - rtkit
   - libva-utils
+  - tk
   - git
-  - go
-  - doas
+  - git-lfs
   - cifs-utils
   - youtube-dl
-  - xf86-input-wacom
   - xdotool
   - wmname
   - usbutils
   - strace
   - inetutils
+  - gtk3
+  - eog
+  - net-tools
+  - unclutter
+  - gvfs
 
   # applications
   - xorg
@@ -111,6 +118,7 @@ base_packages:
   - dunst
   - firefox
   - vlc
+  - bitwarden
   - bitwarden-cli
   - zathura
   - xournalpp
@@ -119,6 +127,8 @@ base_packages:
   - polybar
   - pavucontrol
   - lxappearance-gtk3
+  - baobab
+  - calibre
 
   # extra
   - noto-fonts-cjk
@@ -126,6 +136,15 @@ base_packages:
   - noto-fonts-extra
   - ttf-font-awesome
   - powerline-fonts
+  - gnome-themes-extra
+
+  # aur dep
+  - go
+  - rust
+  - doas
+  - perl-xml-parser
+  - intltool
+  - libcurl-gnutls
 
 aur_base_packages:
   - yay
