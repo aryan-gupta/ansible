@@ -46,6 +46,7 @@
     - role: 'locale'
     - role: 'hosts'
     - role: 'packages'
+    - role: 'etc'
     - role: 'aur'
     - role: 'boot'
     - role: 'accounts'

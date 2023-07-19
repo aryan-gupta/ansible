@@ -13,6 +13,11 @@ locales:
 country: United States
 timezone: America/New_York
 
+modprobe_modules:
+  - tun
+  - i2c-dev
+  - uinput
+
 pacstrap_packages:
   - base
   - linux-lts

@@ -1,0 +1,18 @@
+---
+- name: load modules boot
+  copy:
+    dest: "/etc/modules-load.d/load-{{ item }}.conf"
+    content: "{{ item }}"
+  loop: "{{ modprobe_modules }}"
+
+- name: allow restart script nopasswd
+  copy:
+    dest: "/etc/sudoers.d/restart-windows-nopasswd"
+    content: "{{ user.name }} ALL = (root) NOPASSWD: /usr/bin/restart_into_windows.sh"
+
+# @TODO BETTER WAY TO HANDLE SCRIPTS
+- name: link game mode script
+  ansible.builtin.file:
+    src: "{{ godfile_dir }}/{{ scripts_repo }}/nix/game_mode/restart_into_windows.sh"
+    dest: "/usr/bin/restart_into_windows.sh"
+    state: link
