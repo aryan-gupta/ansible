@@ -1,4 +1,5 @@
 ---
+# update to use https://aur.archlinux.org/packages/oh-my-zsh-git ??
 # https://ohmyz.sh/#install
 - name: download omz script
   ansible.builtin.command: "wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O /var/tmp/install.sh"
@@ -11,6 +12,7 @@
 - name: install omz
   ansible.builtin.command: "/bin/bash -c /var/tmp/install.sh"
 
+# replace with https://aur.archlinux.org/packages/spaceship-prompt ??
 # https://spaceship-prompt.sh/getting-started/#Requirements
 # please note that the default location is "$ZSH_CUSTOM/themes/spaceship-prompt"
 # and because $ZSH_CUSTOM may not be defined, I have expanded it out
