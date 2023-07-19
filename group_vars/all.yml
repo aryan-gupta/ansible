@@ -20,55 +20,20 @@ pacstrap_packages:
   - ansible
 
 base_packages:
-  # ansible / automation packages
+  # system automation / maintinance
   - ansible-core
   - ansible
   - efibootmgr
-  - python
-  - python-passlib
-  - python-jinja
-  - python-yaml
-  - python-markupsafe
+  - pacman-contrib
+  - fwupd
   - arch-install-scripts
 
-  # extensions
+  # bare system
+  - base-devel
   - exfatprogs
   - ntfs-3g
   - lvm2
-
-  # maintinance
-  - pacman-contrib
-  - fwupd
-
-  # devel
-  - base-devel
-  - zsh
-  - ansible
-  - jdk-openjdk
-  - python3
-  - docker
-  - tar
-  - zip
-  - unrar
-  - unzip
-  - cmake
-  - code
-  - gdb
-  - xterm
-  - tmux
-  - python-pre-commit
-  - python-pip
-  - ntp
-
-  # utilities
-  - sudo
-  - efibootmgr
-  - wget
-  - gvim
-  - iwd
-  - wpa_supplicant
-  - networkmanager
-  - python-passlib
+  - cryptsetup
   - alsa-utils
   - pipewire
   - wireplumber
@@ -76,18 +41,54 @@ base_packages:
   - pipewire-pulse
   - pipewire-alsa
   - pipewire-jack
-  - rtkit
-  - libva-utils
+  - wpa_supplicant
+  - networkmanager
+  - xorg
+  - xorg-xinit
+
+  # system utilities
+  - sudo
+  - tar
+  - zip
+  - unrar
+  - unzip
+  - inetutils
+
+  # devel
   - tk
   - git
   - git-lfs
+  - jdk-openjdk
+  - docker
+  - cmake
+  - code
+  - gvim
+  - gdb
+  - xterm
+  - tmux
+  - ntp
+
+  # python packages
+  - python
+  - python3
+  - python-pip
+  - python-yaml
+  - python-jinja
+  - python-passlib
+  - python-pre-commit
+  - python-markupsafe
+
+  # user utilities
+  - wget
+  - iwd
+  - rtkit
+  - libva-utils
   - cifs-utils
   - youtube-dl
   - xdotool
   - wmname
   - usbutils
   - strace
-  - inetutils
   - gtk3
   - eog
   - net-tools
@@ -95,14 +96,12 @@ base_packages:
   - gvfs
 
   # applications
-  - xorg
-  - xorg-xinit
+  - zsh
   - arandr
   - bspwm
   - sxhkd
   - rofi
   - flameshot
-  - code
   - picom
   - alacritty
   - nitrogen
@@ -130,7 +129,7 @@ base_packages:
   - baobab
   - calibre
 
-  # extra
+  # extras
   - noto-fonts-cjk
   - noto-fonts-emoji
   - noto-fonts-extra
@@ -138,7 +137,7 @@ base_packages:
   - powerline-fonts
   - gnome-themes-extra
 
-  # aur dep
+  # aur dependancies
   - go
   - rust
   - doas
