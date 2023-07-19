@@ -13,3 +13,8 @@
   ansible.builtin.systemd:
     enabled: true
     name: NetworkManager.service
+
+- name: enable ntpd
+  ansible.builtin.systemd:
+    enabled: true
+    name: ntpd.service
