@@ -1,29 +1,4 @@
 ---
-- name: configure initramfs build hooks
-  lineinfile:
-    path: /etc/mkinitcpio.conf
-    regexp: '^HOOKS=\('
-    line: "HOOKS=({{ initramfs_hooks | join(' ') }})"
-
-- name: configure initramfs build hooks
-  lineinfile:
-    path: /etc/mkinitcpio.conf
-    regexp: '^MODULES=\('
-    line: "MODULES=({{ initramfs_modules | join(' ') }})"
-
-- name: rebuild initramfs
-  command: mkinitcpio -p {{ kernel }}
-  args:
-    creates: "initramfs-{{ kernel }}-fallback.img"
-
-- name: restrict access permissions to initramfs
-  file:
-    path: "/boot/{{ item }}"
-    mode: 0600
-  with_items:
-    - "initramfs-{{ kernel }}.img"
-    - "initramfs-{{ kernel }}-fallback.img"
-
 - name: install intel microcode
   pacman:
     name: intel-ucode
@@ -33,6 +8,42 @@
   pacman:
     name: amd-ucode
   when: cpu_manufacturer == "amd"
+
+- name: configure initramfs build hooks
+  lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^HOOKS=\('
+    line: "HOOKS=({{ initramfs_hooks | join(' ') }})"
+
+- name: configure initramfs build modules
+  lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES=\('
+    line: "MODULES=({{ initramfs_modules | join(' ') }})"
+
+- name: uncomment preset file uki
+  lineinfile:
+    path: /etc/mkinitcpio.d/{{ kernel }}.preset
+    regexp: '^#{{ item }}_uki'
+    line: '{{ item }}_uki="/boot/arch-{{ kernel }}-{{ item }}.efi"'
+  with_items:
+    - "default"
+    - "fallback"
+
+- name: comment preset file image
+  lineinfile:
+    path: /etc/mkinitcpio.d/{{ kernel }}.preset
+    regexp: '^{{ item }}_image'
+    line: '#{{ item }}_image="/boot/initramfs-{{ kernel }}-{{ item }}.img"'
+  with_items:
+    - "default"
+    - "fallback"
+
+- name: add preset file splash
+  lineinfile:
+    path: /etc/mkinitcpio.d/{{ kernel }}.preset
+    regexp: '^#default_options'
+    line: 'default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"'
 
 - name: delete old boot entries
   shell: >-
@@ -44,14 +55,35 @@
   changed_when: False
   check_mode: no
 
+- name: save cmdline boot
+  copy:
+    dest: /etc/kernel/cmdline
+    content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw loglevel=0'
+
+- name: rebuild initramfs
+  command: mkinitcpio -p {{ kernel }}
+  args:
+    creates:
+      - "/boot/arch-{{ kernel }}-default.efi"
+      - "/boot/arch-{{ kernel }}-fallback.efi"
+
+- name: restrict access permissions to initramfs
+  file:
+    path: "/boot/arch-{{ kernel }}-{{ item }}.efi"
+    mode: 0600
+  with_items:
+    - "default"
+    - "fallback"
+
 - name: setup boot items
   shell: >-
-    efibootmgr 
-    --create 
-    --disk {{ boot.device }} 
-    --part {{ boot.part }} 
-    --label {{ boot.label }} 
-    --loader /vmlinuz-{{ kernel }} 
-    --unicode 
+    efibootmgr
+    --create
+    --disk {{ boot.device }}
+    --part {{ boot.part }}
+    --label {{ boot.label }}
+    --loader /arch-{{ kernel }}-default.efi
+    --unicode
     --verbose
-    'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0' 
+
+#    'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0'
