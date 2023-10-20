@@ -1,0 +1,75 @@
+---
+
+- name: create life folders
+  ansible.builtin.file:
+    state: directory
+    path: "{{ life_folders_root }}/{{ item }}"
+  loop: "{{ life_folders }}"
+
+- name: assert life 0 is the first index
+  ansible.builtin.assert:
+    that: life_folders[0] == "0"
+    msg: "{{ life_folders_root }}/0 is not the first index"
+    quiet: true
+
+- name: create life 0 folders
+  ansible.builtin.file:
+    state: directory
+    path: "{{ life_folders_root }}/{{ life_folders[0] }}/{{ item }}"
+  loop: "{{ aol0_folders }}"
+
+
+
+- name: assert life 1 is the second index
+  ansible.builtin.assert:
+    that: life_folders[1] == "1"
+    msg: "{{ life_folders_root }}/1 is not the second index"
+    quiet: true
+
+- name: create life 1 folders
+  ansible.builtin.file:
+    state: directory
+    path: "{{ life_folders_root }}/{{ life_folders[1] }}/{{ item }}"
+  loop: "{{ aol1_folders }}"
+
+
+
+- name: assert life 2 is the third index
+  ansible.builtin.assert:
+    that: life_folders[2] == "2"
+    msg: "{{ life_folders_root }}/2 is not the third index"
+    quiet: true
+
+- name: create life 2 folders
+  ansible.builtin.file:
+    state: directory
+    path: "{{ life_folders_root }}/{{ life_folders[2] }}/{{ item }}"
+  loop: "{{ aol2_folders }}"
+
+
+
+- name: assert life 3 is the fourth index
+  ansible.builtin.assert:
+    that: life_folders[3] == "3"
+    msg: "{{ life_folders_root }}/3 is not the fourth index"
+    quiet: true
+
+- name: create life 3 folders
+  ansible.builtin.file:
+    state: directory
+    path: "{{ life_folders_root }}/{{ life_folders[3] }}/{{ item }}"
+  loop: "{{ aol3_folders }}"
+
+
+
+- name: assert life 4 is the fifth index
+  ansible.builtin.assert:
+    that: life_folders[4] == "4"
+    msg: "{{ life_folders_root }}/4 is not the fifth index"
+    quiet: true
+
+- name: create life 4 folders
+  ansible.builtin.file:
+    state: directory
+    path: "{{ life_folders_root }}/{{ life_folders[4] }}/{{ item }}"
+  loop: "{{ aol4_folders }}"

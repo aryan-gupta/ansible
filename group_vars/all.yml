@@ -195,9 +195,52 @@ dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }
 scripts_repo: "scripts"
 scripts_repo_github: "https://github.com/{{ github_username }}/{{ scripts_repo }}"
 
+life_folders_root: /home/life
+
 life_folders:
-  - /life/0
-  - /life/1
-  - /life/2
-  - /life/3
-  - /life/4
+  - "0"
+  - "1"
+  - "2"
+  - "3"
+  - "4"
+
+aol0_folders:
+  - unsorted
+
+aol1_folders:
+  - albums
+  - entertainment
+  - government
+  - other-life
+  - residency
+  - tech
+  - auto
+  - financial
+  - grad
+  - outdoors
+  - secrets
+  - company
+  - fitness
+  - medical
+  - professional
+  - social
+
+aol2_folders:
+  - pass
+
+aol3_folders:
+  - pass
+
+aol4_folders:
+  - pass
+
+
+delete_default_home_folders:
+  - Desktop
+  - Document
+  - Download
+  - Music
+  - Pictures
+  - Public
+  - Templates
+  - Videos

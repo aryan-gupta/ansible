@@ -64,10 +64,12 @@
   pre_tasks:
     - include_vars: "host_vars/{{ hostname }}.yml"
     - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
+    - include_vars: "group_vars/all_secret.yml"           # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
 
   roles:
     - role: 'user'
     - role: 'dotfile'
-    - role: 'life'
+    # - role: 'life'
+    - role: 'apps'
     # user config below
     #- role: 'firefox'

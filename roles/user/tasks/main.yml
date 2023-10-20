@@ -33,3 +33,11 @@
   ansible.builtin.file:
     state: absent
     path: "/home/{{ user.name }}/.zshrc"
+
+- name: remove default home folders
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  loop: "{{ delete_default_home_folders }}"
+
+- include_tasks: life.yml
