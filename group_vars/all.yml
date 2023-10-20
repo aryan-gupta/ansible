@@ -192,6 +192,9 @@ godfile_dir: "/godfile"
 dotfile_repo: "dotfiles"
 dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
 
+scripts_repo: "scripts"
+scripts_repo_github: "https://github.com/{{ github_username }}/{{ scripts_repo }}"
+
 life_folders:
   - /life/0
   - /life/1

@@ -41,11 +41,23 @@
     state: absent
   when: zshrc_file_type.stat.islnk is defined and not zshrc_file_type.stat.islnk
 
+- name: Check gtkrc2
+  stat:
+    path: "{{ user.home_dir }}/.gtkrc-2.0"
+  register: gtkrc2_file_type
+
+- name: remove gtkrc2
+  ansible.builtin.file:
+    path: "{{ user.home_dir }}/.gtkrc-2.0"
+    state: absent
+  when: gtkrc2_file_type.stat.islnk is defined and not gtkrc2_file_type.stat.islnk
+
 - name: setup .cmd-shortcuts
   ansible.builtin.file:
     src: "{{ godfile_dir }}/{{ dotfile_repo }}/.cmd-shortcuts"
     dest: "{{ user.home_dir }}/.cmd-shortcuts"
     state: link
+    force: true
 
 - name: add bashrc
   ansible.builtin.file:
@@ -58,6 +70,13 @@
     src: "{{ godfile_dir }}/{{ dotfile_repo }}/.zshrc"
     dest: "{{ user.home_dir }}/.zshrc"
     state: link
+
+- name: add gtkrc2
+  ansible.builtin.file:
+    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gtkrc-2.0"
+    dest: "{{ user.home_dir }}/.gtkrc-2.0"
+    state: link
+    force: true
 
 - name: setup .xinitrc
   ansible.builtin.file:

@@ -16,3 +16,6 @@
     src: "{{ godfile_dir }}/{{ scripts_repo }}/nix/game_mode/restart_into_windows.sh"
     dest: "/usr/bin/restart_into_windows.sh"
     state: link
+    force: true
+
+
