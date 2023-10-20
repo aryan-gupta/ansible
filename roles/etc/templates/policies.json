@@ -1,0 +1,54 @@
+{
+  "policies":{
+    "Extensions": {
+      "Install": [
+        "https://addons.mozilla.org/firefox/downloads/file/3551054/ublock_origin-latest.xpi",
+        "https://addons.mozilla.org/firefox/downloads/file/4128403/bitwarden_password_manager-latest.xpi",
+	      "https://addons.mozilla.org/firefox/downloads/file/3756025/videospeed-latest.xpi",
+	      "https://addons.mozilla.org/firefox/downloads/file/3914147/matte_black_violet-latest.xpi"
+      ]
+    },
+    "HardwareAcceleration": true,
+    "ExtensionUpdate": true,
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "EnableTrackingProtection": {
+      "Value": true,
+      "Locked": false,
+      "Cryptomining": true,
+      "Fingerprinting": true,
+      "EmailTracking": true,
+      "Exceptions": []
+    },
+    "FirefoxHome": {
+      "Highlights": false,
+      "Pocket": false,
+      "Search": true,
+      "Snippets": false,
+      "TopSites": true
+    },
+    "OfferToSaveLogins": false,
+    "PasswordManagerEnabled": false,
+    "DisablePasswordReveal": true,
+    "Preferences": {
+      "browser.search.update": true,
+      "media.gmp-gmpopenh264.enabled": true,
+      "media.gmp-widevinecdm.enabled": true,
+      "browser.urlbar.suggest.bookmark": true,
+      "browser.urlbar.suggest.history": true,
+      "browser.urlbar.suggest.openpage": true,
+      "places.history.enabled": true
+    },
+    "DefaultDownloadDirectory": "${home}",
+    "DownloadDirectory": "${home}",
+    "SearchSuggestEnabled": true,
+    "OverrideFirstRunPage": "",
+    "DisableMasterPasswordCreation": true,
+    "DisablePocket": true,
+    "DisableProfileImport": true,
+    "DisableSetDesktopBackground": true,
+    "SearchEngines": {
+      "Default": "DuckDuckGo"
+    }
+  }
+}
