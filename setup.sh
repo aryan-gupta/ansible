@@ -26,9 +26,14 @@ fi
 # https://stackoverflow.com/questions/369758
 user_password=$(awk -F ' ' '{print $2}' group_vars/all_secret.yml | xargs echo -n)
 
-pacman-key --init
-
 mount -o remount,size=1G /run/archiso/cowspace
+
+timedatectl set-timezone "America/New_York"
+
+./reset.sh $1
+
+pacman-key --init
+pacman-key --populate archlinux
 
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
