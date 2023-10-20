@@ -1,0 +1,11 @@
+---
+
+- name: Create pia username and password file
+  template:
+    src: pia_passwd.j2
+    dest: /var/tmp/pia_passwd
+    mode: 777
+
+#- name: pia login
+#  ansible.builtin.command:
+#    cmd: "piactl login /var/tmp/pia_passwd"
