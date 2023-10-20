@@ -30,5 +30,5 @@
 - name: configure console font
   lineinfile:
     path: /etc/vconsole.conf
-    line: "KEYMAP=ter-122n"
+    line: "KEYMAP=us"
     create: yes
