@@ -10,8 +10,17 @@ fi
 if ping -c 1 "8.8.8.8"; then
     echo "Connected"
 else
-    echo "Please connect to the internet before running build script"
-    exit 1
+    # attempt to connect to the internet if possible
+    ./network.sh
+    sleep 5
+
+    # check if success, exit if not
+    if ping -c 1 "8.8.8.8"; then
+        echo "Connected"
+    else
+        echo "Please connect to the internet before running build script"
+        exit 1
+    fi
 fi
 
 # https://stackoverflow.com/questions/369758
