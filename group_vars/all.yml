@@ -50,6 +50,8 @@ base_packages:
   - networkmanager
   - xorg
   - xorg-xinit
+  - lm_sensors
+  - dosfstools
 
   # system utilities
   - sudo
@@ -58,6 +60,7 @@ base_packages:
   - unrar
   - unzip
   - inetutils
+  - rsync
 
   # devel
   - tk
@@ -72,9 +75,11 @@ base_packages:
   - xterm
   - tmux
   - ntp
+  - bc
 
   # python packages
   - python
+  - pyenv
   - python3
   - python-pip
   - python-yaml
@@ -89,7 +94,7 @@ base_packages:
   - rtkit
   - libva-utils
   - cifs-utils
-  - youtube-dl
+  - yt-dlp
   - xdotool
   - wmname
   - usbutils
@@ -154,11 +159,17 @@ aur_base_packages:
   - yay
   - xp-pen-tablet
   # - picom-ibhagwan-git
+  - piavpn-bin
   - brave-bin
   - cava
+  - amdgpu_top
   # - cura
+  # - ddccontrol-db-git
   # - ddccontrol
   # - spotify
+  # - zenpower3-dkms
+  # - zenmonitor
+  # - python-detect-secrets
 
 username: aryan
 
