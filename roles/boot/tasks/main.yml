@@ -21,6 +21,12 @@
     regexp: '^MODULES=\('
     line: "MODULES=({{ initramfs_modules | join(' ') }})"
 
+- name: remove fallback preset
+  lineinfile:
+    path: /etc/mkinitcpio.d/{{ kernel }}.preset
+    regexp: '^PRESETS'
+    line: "PRESETS=('default')"
+
 - name: uncomment preset file uki
   lineinfile:
     path: /etc/mkinitcpio.d/{{ kernel }}.preset
@@ -28,7 +34,7 @@
     line: '{{ item }}_uki="/boot/arch-{{ kernel }}-{{ item }}.efi"'
   with_items:
     - "default"
-    - "fallback"
+    # - "fallback"
 
 - name: comment preset file image
   lineinfile:
@@ -37,7 +43,7 @@
     line: '#{{ item }}_image="/boot/initramfs-{{ kernel }}-{{ item }}.img"'
   with_items:
     - "default"
-    - "fallback"
+    # - "fallback"
 
 - name: add preset file splash
   lineinfile:
@@ -65,7 +71,7 @@
   args:
     creates:
       - "/boot/arch-{{ kernel }}-default.efi"
-      - "/boot/arch-{{ kernel }}-fallback.efi"
+      # - "/boot/arch-{{ kernel }}-fallback.efi"
 
 - name: restrict access permissions to initramfs
   file:
@@ -73,7 +79,7 @@
     mode: 0600
   with_items:
     - "default"
-    - "fallback"
+    # - "fallback"
 
 - name: setup boot items
   shell: >-
@@ -82,7 +88,7 @@
     --disk {{ boot.device }}
     --part {{ boot.part }}
     --label {{ boot.label }}
-    --loader /arch-{{ kernel }}-default.efi
+    --loader "/arch-{{ kernel }}-default.efi"
     --unicode
     --verbose
 
