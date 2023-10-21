@@ -1,0 +1,13 @@
+---
+
+- hosts: localhost
+  name: Install dotfiles
+  # become: yes
+  connection: local
+
+  pre_tasks:
+    - include_vars: "host_vars/{{ hostname }}.yml"
+    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
+
+  roles:
+    - role: 'dotfile'
