@@ -55,6 +55,14 @@
   shell: >-
     variable=$(efibootmgr | grep "{{ boot.label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
 
+- name: delete default mkinitcpio img files
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - "/boot/initramfs-{{ kernel }}.img"
+    - "/boot/initramfs-{{ kernel }}-fallback.img"
+
 - name: clone plymouth git repo
   ansible.builtin.git:
     repo: 'https://github.com/adi1090x/plymouth-themes'
