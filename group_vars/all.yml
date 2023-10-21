@@ -52,6 +52,7 @@ base_packages:
   - xorg-xinit
   - lm_sensors
   - dosfstools
+  - plymouth
 
   # system utilities
   - sudo

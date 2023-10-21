@@ -45,15 +45,61 @@
     - "default"
     # - "fallback"
 
-- name: add preset file splash
-  lineinfile:
-    path: /etc/mkinitcpio.d/{{ kernel }}.preset
-    regexp: '^#default_options'
-    line: 'default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"'
+# - name: add preset file splash
+#   lineinfile:
+#     path: /etc/mkinitcpio.d/{{ kernel }}.preset
+#     regexp: '^#default_options'
+#     line: 'default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"'
 
 - name: delete old boot entries
   shell: >-
     variable=$(efibootmgr | grep "{{ boot.label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
+
+- name: clone plymouth git repo
+  ansible.builtin.git:
+    repo: 'https://github.com/adi1090x/plymouth-themes'
+    dest: /var/tmp/plymouth-themes
+    version: master
+
+- name: copy theme over
+  copy:
+    src: /var/tmp/plymouth-themes/pack_3/owl
+    dest: /usr/share/plymouth/themes
+    directory_mode: yes
+    remote_src: true
+
+- name: change plymouth default theme
+  ansible.builtin.command: plymouth-set-default-theme owl
+
+# - name: create directory for plymouth service
+#   ansible.builtin.file:
+#     path: /etc/systemd/system/display-manager.service.d
+#     state: directory
+
+# - name: create seamless plymouth transition
+#   template:
+#     src: plymouth.conf.j2
+#     dest: /etc/systemd/system/display-manager.service.d/plymouth.conf
+#     mode: 644
+
+- name: create directory for plymouth quit service override
+  ansible.builtin.file:
+    path: /etc/systemd/system/plymouth-quit.service.d
+    state: directory
+
+- name: create seamless plymouth transition
+  template:
+    src: plymouth-quit-override.conf.j2
+    dest: /etc/systemd/system/plymouth-quit.service.d/override.conf
+    mode: 644
+
+# - name: set plymouth settings
+#   copy:
+#     dest: /etc/kernel/cmdline
+#     content: |
+#       [Daemon]
+#       Theme=owl
+#       ShowDelay=2
 
 - name: get root UUID
   command: blkid -s UUID -o value {{ crypt[0].device }}
@@ -64,7 +110,7 @@
 - name: save cmdline boot
   copy:
     dest: /etc/kernel/cmdline
-    content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw loglevel=0'
+    content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw quiet splash loglevel=3 fbcon=nodefer'
 
 - name: rebuild initramfs
   command: mkinitcpio -p {{ kernel }}

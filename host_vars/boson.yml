@@ -78,6 +78,7 @@ initramfs_hooks:
   - autodetect
   - keyboard
   - sd-vconsole
+  - plymouth
   - modconf
   - block
   - sd-encrypt
