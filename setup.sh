@@ -12,7 +12,7 @@ if ping -c 1 "8.8.8.8"; then
 else
     # attempt to connect to the internet if possible
     ./network.sh
-    sleep 5
+    sleep 10
 
     # check if success, exit if not
     if ping -c 1 "8.8.8.8"; then
