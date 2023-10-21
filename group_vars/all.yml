@@ -164,6 +164,7 @@ aur_base_packages:
   - brave-bin
   - cava
   - amdgpu_top
+  # - plymouth-theme-owl-git
   # - cura
   # - ddccontrol-db-git
   # - ddccontrol
