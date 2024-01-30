@@ -37,7 +37,15 @@
 - name: remove default home folders
   ansible.builtin.file:
     state: absent
-    path: "{{ item }}"
+    path: "/home/{{ user.name }}/{{ item }}"
   loop: "{{ delete_default_home_folders }}"
+
+- name: link required default home folders
+  file:
+    src: "/home/{{ user.name }}/"
+    dest: "/home/{{ user.name }}/{{ item }}"
+    state: link
+    force: yes
+  loop: "{{ link_default_home_folders }}"
 
 - include_tasks: life.yml

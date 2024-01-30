@@ -272,9 +272,15 @@ aol4_folders:
 delete_default_home_folders:
   - Desktop
   - Document
-  - Download
+  - Downloads
   - Music
   - Pictures
   - Public
   - Templates
   - Videos
+
+# some apps require some home folders
+# link them to the root of home
+link_default_home_folders:
+  - Desktop
+  - Downloads
