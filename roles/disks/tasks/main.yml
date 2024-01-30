@@ -96,7 +96,9 @@
     mode: '0755'
   with_items:
     - "{{ arch_root }}/home"
-    - "{{ arch_root }}/boot"
+    - "{{ arch_root }}/efi"
+    - "{{ arch_root }}/var"
+    - "{{ arch_root }}/data"
 
 - name: Mount rest of partitions
   ansible.posix.mount:

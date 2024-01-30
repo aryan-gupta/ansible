@@ -4,7 +4,10 @@ HOST="$1"
 sync
 
 umount /mnt/home -rf
+umount /mnt/data -rf
 umount /mnt/boot -rf
+umount /mnt/efi -rf
+umount /mnt/var -rf
 umount /mnt -rf
 
 # lvchange -an /dev/mapper/kvm_lvg01-home
@@ -12,7 +15,9 @@ umount /mnt -rf
 # vgchange -an kvm_lvg01
 
 lvremove -ff "$HOST""_lvg01-home"
+lvremove -ff "$HOST""_lvg01-data"
 lvremove -ff "$HOST""_lvg01-root"
+lvremove -ff "$HOST""_lvg01-var"
 vgremove -ff "$HOST""_lvg01"
 pvremove -y -ff "/dev/mapper/""$HOST""_crypt"
 
@@ -24,11 +29,13 @@ cryptsetup close "$HOST""_crypt"
 #cryptsetup -q luksErase /dev/sda2
 dmsetup remove "$HOST""_crypt"
 dmsetup remove "$HOST""_lvg01-home"
+dmsetup remove "$HOST""_lvg01-data"
 dmsetup remove "$HOST""_lvg01-root"
+dmsetup remove "$HOST""_lvg01-var"
 
 dd if=/dev/zero of=/dev/nvme0n1p2 bs=1M count=32
-dd if=/dev/zero of=/dev/nvme0n1p1 bs=1M count=16
-dd if=/dev/zero of=/dev/nvme0n1  bs=1M count=16
+dd if=/dev/zero of=/dev/nvme0n1p1 bs=1M count=32
+dd if=/dev/zero of=/dev/nvme0n1  bs=1M count=32
 #dd if=/dev/zero of=/dev/sda  bs=1M count=1024
 
 rm -f "/dev/mapper/""$HOST""_crypt"

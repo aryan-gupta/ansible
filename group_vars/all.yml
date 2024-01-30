@@ -229,7 +229,7 @@ dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }
 scripts_repo: "scripts"
 scripts_repo_github: "https://github.com/{{ github_username }}/{{ scripts_repo }}"
 
-life_folders_root: /home/life
+life_folders_root: /data/life
 
 life_folders:
   - "0"

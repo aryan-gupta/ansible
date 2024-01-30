@@ -3,7 +3,7 @@ crypt_name: "{{ hostname }}_crypt"
 partitions:
   - device: /dev/nvme0n1
     flags: [ 'boot' ]
-    name: boot
+    name: efi
     number: 1
     start: 0%
     end: 512MiB
@@ -39,10 +39,20 @@ lvm:
   lv:
     - name: root
       vg: "{{ hostname }}_lvg01"
-      size: 32G
+      size: 64G
+    - name: var
+      vg: "{{ hostname }}_lvg01"
+      size: 8G
     - name: home
       vg: "{{ hostname }}_lvg01"
-      size: 100%FREE
+      size: 128M
+    - name: data
+      vg: "{{ hostname }}_lvg01"
+      size: 398G
+      #size: 100%FREE
+    # - name: swap
+    #   vg: "{{ hostname }}_lvg01"
+    #   size: 100%FREE
 
 fs:
   - device: /dev/nvme0n1p1
@@ -50,6 +60,10 @@ fs:
   - device: "/dev/mapper/{{ hostname }}_lvg01-root"
     fstype: ext4
   - device: "/dev/mapper/{{ hostname }}_lvg01-home"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}_lvg01-var"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}_lvg01-data"
     fstype: ext4
 
 root_part:
@@ -63,10 +77,16 @@ root_part:
 
 mounts:
   - device: /dev/nvme0n1p1
-    path: "/boot"
+    path: "/efi"
     fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}_lvg01-var"
+    path: "/var"
+    fstype: ext4
   - device: "/dev/mapper/{{ hostname }}_lvg01-home"
     path: "/home"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}_lvg01-data"
+    path: "/data"
     fstype: ext4
 
 initramfs_modules:
@@ -80,7 +100,7 @@ packages:
 
 boot:
   device: /dev/nvme0n1p1
-  mount: /boot
+  mount: /efi
   part: 1
   label: ArchLinux
 

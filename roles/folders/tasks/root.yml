@@ -7,6 +7,24 @@
     owner: "{{ user.name }}"
     group: "{{ user.group }}"
   with_items:
-    - "/home/{{ user.name }}"
-    - "/life"
+    # - "/home/{{ user.name }}" # -symlink-> /data/{{ user.name }}
+    # - "/life"
+    # - "/win"
+    # - "/scratch"
+    # - "/nas"
     - "/godfile"
+    - "/data"
+    - "/data/life"
+    - "/data/{{ user.name }}"
+
+- name: remove old user dir
+  file:
+    state: absent
+    path: "/home/{{ user.name }}"
+
+- name: link home dir
+  ansible.builtin.file:
+    src: "/data/{{ user.name }}"
+    dest: "/home/{{ user.name }}"
+    state: link
+
