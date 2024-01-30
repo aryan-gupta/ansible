@@ -112,10 +112,15 @@
   command: "swapon {{ swap_part }}"
   when: swap_part is defined
 
+- name: create secure folder on data drive
+  file:
+    path: "{{ arch_root }}/data/secure"
+    state: directory
+
 - name: copy encryption key into root partition
   copy:
     src: "{{ item.keyfile }}"
-    dest: "{{ arch_root }}/{{ item.keyfile_name }}"
+    dest: "{{ arch_root }}/data/secure/{{ item.keyfile_name }}"
   with_items: "{{ crypt }}"
 
 # This allows me to run this ansible script
