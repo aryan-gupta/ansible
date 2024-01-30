@@ -31,7 +31,7 @@
   lineinfile:
     path: /etc/mkinitcpio.d/{{ kernel }}.preset
     regexp: '^#{{ item }}_uki'
-    line: '{{ item }}_uki="/boot/arch-{{ kernel }}-{{ item }}.efi"'
+    line: '{{ item }}_uki="{{ boot.mount }}/{{ hostname }}-arch-{{ kernel }}-{{ item }}.efi"'
   with_items:
     - "default"
     # - "fallback"
@@ -76,16 +76,19 @@
     dest: /etc/kernel/cmdline
     content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} rd.luks.options=timeout=0 root={{ root_part.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
 
-- name: rebuild initramfs
+- name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}
+# WARNING: THIS IS BAD and will be replaced when sbctl is working
+#  register: mkinit_res
+#  failed_when: ( mkinit_res.rc not in [ 0, 1 ] )
   args:
     creates:
-      - "/boot/arch-{{ kernel }}-default.efi"
+      - "{{ boot.mount }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
       # - "/boot/arch-{{ kernel }}-fallback.efi"
 
-- name: restrict access permissions to initramfs
+- name: restrict access permissions to UKI efi file
   file:
-    path: "/boot/arch-{{ kernel }}-{{ item }}.efi"
+    path: "{{ boot.mount }}/{{ hostname }}-arch-{{ kernel }}-{{ item }}.efi"
     mode: 0600
   with_items:
     - "default"
@@ -98,7 +101,7 @@
     --disk {{ boot.device }}
     --part {{ boot.part }}
     --label {{ boot.label }}
-    --loader "/arch-{{ kernel }}-default.efi"
+    --loader "/{{ hostname }}-arch-{{ kernel }}-default.efi"
     --unicode
     --verbose
 
