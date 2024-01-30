@@ -18,6 +18,20 @@ modprobe_modules:
   - i2c-dev
   - uinput
 
+initramfs_hooks:
+  - base
+  - systemd
+  - autodetect
+  - keyboard
+  - sd-vconsole
+  - plymouth
+  - modconf
+  - block
+  - sd-encrypt
+  - lvm2
+  - filesystems
+  - fsck
+
 pacstrap_packages:
   - base
   - linux-lts

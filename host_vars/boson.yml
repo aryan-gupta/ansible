@@ -72,20 +72,6 @@ mounts:
 initramfs_modules:
   - i915
 
-initramfs_hooks:
-  - base
-  - systemd
-  - autodetect
-  - keyboard
-  - sd-vconsole
-  - plymouth
-  - modconf
-  - block
-  - sd-encrypt
-  - lvm2
-  - filesystems
-  - fsck
-
 packages:
   # - cura
   - sof-firmware

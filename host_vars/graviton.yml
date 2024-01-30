@@ -73,19 +73,6 @@ initramfs_modules:
   - amdgpu
   - radeon
 
-initramfs_hooks:
-  - base
-  - systemd
-  - autodetect
-  - keyboard
-  - sd-vconsole
-  - modconf
-  - block
-  - sd-encrypt
-  - lvm2
-  - filesystems
-  - fsck
-
 packages:
   # - cura
   - sof-firmware
