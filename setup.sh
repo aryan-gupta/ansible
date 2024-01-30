@@ -37,6 +37,7 @@ pacman-key --populate archlinux
 
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
+export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 ansible-playbook playbook.yml --extra-vars "hostname=$1" --extra-vars "ansible_become_pass=$user_password"
 
 
