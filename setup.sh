@@ -24,7 +24,7 @@ else
 fi
 
 # https://stackoverflow.com/questions/369758
-user_password=$(awk -F ' ' '{print $2}' group_vars/all_secret.yml | xargs echo -n)
+user_password=$(awk -F ' ' '{print $2}' group_vars/all_secret.yml | head -1 | xargs echo -n)
 
 mount -o remount,size=1G /run/archiso/cowspace
 
