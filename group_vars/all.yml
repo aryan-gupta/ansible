@@ -40,8 +40,8 @@ pacstrap_packages:
 
 base_packages:
   # system automation / maintinance
-  - ansible-core
-  - ansible
+  #- ansible-core
+  #- ansible
   - efibootmgr
   - pacman-contrib
   - fwupd
@@ -51,8 +51,11 @@ base_packages:
   - base-devel
   - exfatprogs
   - ntfs-3g
+  - dosfstools
   - lvm2
   - cryptsetup
+
+  # audio
   - alsa-utils
   - pipewire
   - wireplumber
@@ -60,13 +63,21 @@ base_packages:
   - pipewire-pulse
   - pipewire-alsa
   - pipewire-jack
+
+  # netwoek
   - wpa_supplicant
   - networkmanager
+
+  # WM
   - xorg
   - xorg-xinit
+
+  # hardware
+  - acpilight # BOSON ONLY laptop backlight
   - lm_sensors
-  - dosfstools
-  - plymouth
+
+  - plymouth # boot splash screen
+  - sbctl # secure boot
 
   # system utilities
   - sudo
@@ -119,6 +130,8 @@ base_packages:
   - net-tools
   - unclutter
   - gvfs
+  - feh
+  - neofetch
 
   # applications
   - zsh
@@ -154,6 +167,10 @@ base_packages:
   - baobab
   - calibre
 
+  # security
+  - clamav
+  - rkhunter
+
   # extras
   - noto-fonts-cjk
   - noto-fonts-emoji
@@ -178,6 +195,7 @@ aur_base_packages:
   - brave-bin
   - cava
   - amdgpu_top
+  # - sbctl-initcpio-post-hook
   # - plymouth-theme-owl-git
   # - cura
   # - ddccontrol-db-git
