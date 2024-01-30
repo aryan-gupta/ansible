@@ -1,0 +1,48 @@
+---
+
+
+- name: clone plymouth git repo
+  ansible.builtin.git:
+    repo: 'https://github.com/adi1090x/plymouth-themes'
+    dest: /var/tmp/plymouth-themes
+    version: master
+
+- name: copy theme over
+  copy:
+    src: /var/tmp/plymouth-themes/pack_3/owl
+    dest: /usr/share/plymouth/themes
+    directory_mode: yes
+    remote_src: true
+
+- name: change plymouth default theme
+  ansible.builtin.command: plymouth-set-default-theme owl
+
+# - name: create directory for plymouth service
+#   ansible.builtin.file:
+#     path: /etc/systemd/system/display-manager.service.d
+#     state: directory
+
+# - name: create seamless plymouth transition
+#   template:
+#     src: plymouth.conf.j2
+#     dest: /etc/systemd/system/display-manager.service.d/plymouth.conf
+#     mode: 644
+
+- name: create directory for plymouth quit service override
+  ansible.builtin.file:
+    path: /etc/systemd/system/plymouth-quit.service.d
+    state: directory
+
+- name: create seamless plymouth transition
+  template:
+    src: plymouth-quit-override.conf.j2
+    dest: /etc/systemd/system/plymouth-quit.service.d/override.conf
+    mode: 644
+
+# - name: set plymouth settings
+#   copy:
+#     dest: /etc/kernel/cmdline
+#     content: |
+#       [Daemon]
+#       Theme=owl
+#       ShowDelay=2
