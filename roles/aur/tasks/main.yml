@@ -50,3 +50,8 @@
   file:
     dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
     state: absent
+
+- name: enable piavpn service
+  ansible.builtin.systemd:
+    enabled: true
+    name: piavpn.service
