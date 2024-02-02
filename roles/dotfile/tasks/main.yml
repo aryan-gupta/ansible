@@ -7,6 +7,12 @@
     repo: "{{ dotfile_repo_github }}"
     dest: "{{ godfile_dir }}/{{ dotfile_repo }}"
 
+- name: clone scripts
+  ansible.builtin.git:
+    clone: yes
+    repo: "{{ scripts_repo_github }}"
+    dest: "{{ godfile_dir }}/{{ scripts_repo }}"
+
 - name: setup .gitconfig
   ansible.builtin.file:
     src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gitconfig"
