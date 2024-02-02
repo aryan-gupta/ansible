@@ -43,11 +43,17 @@ pacman-key --populate archlinux
 # install packages we need
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
-HOSTNAME_PARAM=" --extra-vars 'hostname=$1' "
-BECOME_PARAM=" --extra-vars 'ansible_become_pass=$user_password' " # @TODO needs to be removed
-EXVAR_PARAM=" --extra-vars '@host_vars/$1.yml' --extra-vars '@group_vars/all_secret.yml' "
-[ -z "$2" ] && RESUME_PARAM=" --start-at-task='$2' "
+[ ! -z "$2" ] && RESUME_PARAM="--start-at-task='$2'"
 
 # run ansible playbook
 export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
-ansible-playbook playbook.yml $HOSTNAME_PARAM $BECOME_PARAM $EXVAR_PARAM $RESUME_PARAM
+# echo "ansible-playbook playbook.yml $HOSTNAME_PARAM $BECOME_PARAM $EXVAR_PARAM $RESUME_PARAM"
+#  ansible-playbook playbook.yml $RESUME_PARAM $BECOME_PARAM $EXVAR_PARAM $HOSTNAME_PARAM 
+ansible-playbook playbook.yml \
+	--extra-vars "ansible_become_pass=$user_password" \
+	--extra-vars "@group_vars/all_secret.yml" \
+	--extra-vars "@group_vars/all.yml" \
+	--extra-vars "@host_vars/$1.yml" $RESUME_PARAM
+
+# 	--extra-vars "hostname=$1"\
+
