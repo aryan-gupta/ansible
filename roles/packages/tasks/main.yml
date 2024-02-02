@@ -18,3 +18,16 @@
   ansible.builtin.systemd:
     enabled: true
     name: ntpd.service
+
+- name: mask accessibility service
+  ansible.builtin.systemd:
+    enabled: false
+    masked: true
+    name: at-spi-dbus-bus.service
+    scope: "global" # "user" # "system"
+      #  ignore_errors: true
+
+- name: enable fresh clamav
+  ansible.builtin.systemd:
+    enabled: true
+    name: clamav-freshclam.service
