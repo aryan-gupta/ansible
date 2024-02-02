@@ -31,7 +31,7 @@
   lineinfile:
     path: /etc/mkinitcpio.d/{{ kernel }}.preset
     regexp: '^#{{ item }}_uki'
-    line: '{{ item }}_uki="{{ boot.mount }}/{{ hostname }}-arch-{{ kernel }}-{{ item }}.efi"'
+    line: '{{ item }}_uki="{{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-{{ item }}.efi"'
   with_items:
     - "default"
     # - "fallback"
@@ -53,7 +53,7 @@
 
 - name: delete old boot entries
   shell: >-
-    variable=$(efibootmgr | grep "{{ boot.label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
+    variable=$(efibootmgr | grep "{{ partitions[0].label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
 
 - name: delete default mkinitcpio img files
   file:
@@ -74,7 +74,7 @@
 - name: save cmdline boot
   copy:
     dest: /etc/kernel/cmdline
-    content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} rd.luks.options=timeout=0 root={{ root_part.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
+    content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} rd.luks.options=timeout=0 root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
 
 - name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}
@@ -83,12 +83,14 @@
 #  failed_when: ( mkinit_res.rc not in [ 0, 1 ] )
   args:
     creates:
-      - "{{ boot.mount }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
+      - "{{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
       # - "/boot/arch-{{ kernel }}-fallback.efi"
+
+- include_tasks: secureboot.yml
 
 - name: restrict access permissions to UKI efi file
   file:
-    path: "{{ boot.mount }}/{{ hostname }}-arch-{{ kernel }}-{{ item }}.efi"
+    path: "{{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-{{ item }}.efi"
     mode: 0600
   with_items:
     - "default"
@@ -98,11 +100,11 @@
   shell: >-
     efibootmgr
     --create
-    --disk {{ boot.device }}
-    --part {{ boot.part }}
-    --label {{ boot.label }}
+    --disk {{ partitions[0].device }}
+    --part {{ partitions[0].number }}
+    --label {{ partitions[0].label }}
     --loader "/{{ hostname }}-arch-{{ kernel }}-default.efi"
     --unicode
     --verbose
 
-#    'rd.luks.name={{ root_uuid.stdout }}={{ crypt_name }} root={{ root_part.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0'
+#    'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} root={{ root.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0'

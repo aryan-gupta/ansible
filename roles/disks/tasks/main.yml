@@ -76,29 +76,30 @@
   #   creates: "/dev/mapper/{{ item.vg }}-{{ item.name }}"
   with_items: "{{ lvm.lv }}"
 
-- name: Format partitions
+- name: format root part
   community.general.filesystem:
-    device: "{{ item.device }}"
-    fstype: "{{ item.fstype }}"
-  with_items: "{{ fs }}"
+    device: "{{ root.device }}"
+    fstype: "{{ root.fstype }}"
 
 - name: Mount root partition
   ansible.posix.mount:
     path: "{{ arch_root }}"
-    src: "{{ root_part.device }}"
-    fstype: "{{ root_part.fstype }}"
+    src: "{{ root.device }}"
+    fstype: "{{ root.fstype }}"
     state: mounted
+
+- name: Format partitions
+  community.general.filesystem:
+    device: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+  with_items: "{{ mounts }}"
 
 - name: Create mount points
   file: 
-    path: "{{ item }}"
+    path: "{{ arch_root }}{{ item.path }}"
     state: directory
     mode: '0755'
-  with_items:
-    - "{{ arch_root }}/home"
-    - "{{ arch_root }}/efi"
-    - "{{ arch_root }}/var"
-    - "{{ arch_root }}/data"
+  with_items: "{{ mounts }}"
 
 - name: Mount rest of partitions
   ansible.posix.mount:
