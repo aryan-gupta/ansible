@@ -1,7 +1,7 @@
 ---
 # @TODO modularize this
 
-- name: clone linux.files
+- name: clone dotfiles
   ansible.builtin.git:
     clone: yes
     repo: "{{ dotfile_repo_github }}"
