@@ -5,10 +5,6 @@
 #  connection: local
 #  tags: ['backup', 'bootable']
 #
-#  pre_tasks:
-#    - include_vars: "host_vars/{{ hostname }}.yml"
-#    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
-#
 #  roles:
 #    - role: 'backup'
 #    - role: 'bootable'
@@ -18,10 +14,6 @@
   become: yes
   connection: local
   tags: ['pre']
-
-  pre_tasks:
-    - include_vars: "host_vars/{{ hostname }}.yml"
-    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
 
   roles:
     - role: 'uefi'
@@ -37,10 +29,6 @@
 
   vars:
     hostname: hostvars['localhost']['hostname']
-
-  pre_tasks:
-    - include_vars: "host_vars/{{ hostname }}.yml"
-    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
 
   roles:
     - role: 'locale'
@@ -60,11 +48,6 @@
   connection: chroot
   become_user: "{{ user.name }}"
   tags: ['user']
-
-  pre_tasks:
-    - include_vars: "host_vars/{{ hostname }}.yml"
-    - include_vars: "host_vars/{{ hostname }}_secret.yml" # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
-    - include_vars: "group_vars/all_secret.yml"           # WARNING: THIS NEEDS TO BE REMOVED AFTER TESTING!!
 
   roles:
     - role: 'user'
