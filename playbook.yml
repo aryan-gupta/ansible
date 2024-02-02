@@ -21,6 +21,7 @@
     - role: 'ntp'
     - role: 'disks'
     - role: 'pacstrap'
+    - role: 'blobs'
 
 - hosts: chroot
   name: install Archlinux

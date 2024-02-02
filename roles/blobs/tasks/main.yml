@@ -1,0 +1,12 @@
+---
+- name: create secureboot directory
+  file:
+    path: "{{ secureboot_keytarpacket.unzippath }}"
+    state: 'directory'
+
+- name: copy secureboot file into chroot
+  copy:
+    src: "{{ secureboot_keytarpacket.src }}"
+    dest: "{{ arch_root }}/{{ secureboot_keytarpacket.dest }}"
+    owner: root
+    group: root
