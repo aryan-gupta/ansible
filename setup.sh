@@ -1,5 +1,3 @@
-# remount cowspace so we can install ansible and git
-# https://github.com/zxiiro/ansible-arch-install
 
 if [ $# -eq 0 ]; then
     echo "No arguments provided"
@@ -26,21 +24,23 @@ fi
 # https://stackoverflow.com/questions/369758
 user_password=$(awk -F ' ' '{print $2}' group_vars/all_secret.yml | head -1 | xargs echo -n)
 
+# setup archiso boot
+# remount cowspace so we can install ansible and git
+# https://github.com/zxiiro/ansible-arch-install
 mount -o remount,size=1G /run/archiso/cowspace
-
 timedatectl set-timezone "America/New_York"
 
+# WARNING: running this command will WIPE THE DISK
+# move to ansible
 ./reset.sh $1
 
+# init pacman and pacman keys
 pacman-key --init
 pacman-key --populate archlinux
 
+# install packages we need
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
+# run ansible playbook
 export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 ansible-playbook playbook.yml --extra-vars "hostname=$1" --extra-vars "ansible_become_pass=$user_password"
-
-
-# install dotfiles:
-# ansible-playbook playbook.yml --tags "user" --extra-vars="hostname=$1"
-# ansible-playbook playbook.yml --tags "user" --extra-vars="hostname=$1" --check
