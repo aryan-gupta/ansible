@@ -34,7 +34,7 @@ initramfs_hooks:
 
 pacstrap_packages:
   - base
-  - linux-lts
+  - "{{ kernel }}"
   - linux-firmware
   - ansible
 
@@ -81,6 +81,7 @@ base_packages:
 
   # system utilities
   - sudo
+  - htop
   - tar
   - zip
   - unrar
