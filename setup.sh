@@ -9,7 +9,9 @@ if ping -c 1 "8.8.8.8"; then
     echo "Connected"
 else
     # attempt to connect to the internet if possible
-    ./network.sh
+    iwctl station wlan0 scan
+    sleep 5
+    iwctl station wlan0 connect $(cat .network-ssid-secret)
     sleep 10
 
     # check if success, exit if not

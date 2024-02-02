@@ -1,8 +1,5 @@
 ---
 
-network_name: Nokia
-network_pass: XXXXXXXXXX
-
 arch_root: /mnt
 domain_suffix: gempi.re
 
