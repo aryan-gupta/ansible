@@ -1,73 +1,89 @@
-crypt_name: "{{ hostname }}_crypt"
+---
+# system_name: ArchLinux
 
 partitions:
+  # index 0 must be esp/efi/boot partition
   - device: /dev/sda
     flags: [ 'boot' ]
-    name: boot
+    name: efi
     number: 1
     start: 0%
     end: 512MiB
-
+    label: ArchLinux
   - device: /dev/sda
     flags: [  ]
     name: linux
     number: 2
     start: 512MiB
     end: 100%
+    label: "{{ hostname }}_crypt"
 
 # The first crypt device MUST be what contains root device
 crypt:
   - device: /dev/sda2
-    name: "{{ crypt_name }}"
+    name: "{{ partitions[1].label }}"
     type: luks2
     cipher: aes-xts-plain64
     keysize: 512
     hash: sha512
     passphrase: "{{ luks_password }}"
-    keyfile_name: "{{ crypt_name }}_{{ ansible_date_time.date }}"
-    keyfile: "/tmp/{{ crypt_name }}_{{ ansible_date_time.date }}"
+    keyfile_name: "{{ partitions[1].label }}_{{ ansible_date_time.date }}"
+    keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
     keyfile_len: 512
 
+lvm_postfix: "_lv"
 lvm:
   pv:
-    - device: "/dev/mapper/{{ crypt_name }}"
+    - device: "/dev/mapper/{{ crypt[0].name }}"
   vg:
-    - name: "{{ hostname }}_lvg01"
+    - name: "{{ hostname }}{{ lvm_postfix }}"
       pvresize: yes
       pvs:
-        - "/dev/mapper/{{ crypt_name }}"
+        - "/dev/mapper/{{ crypt[0].name }}"
   lv:
+    # disk size: 465GB
     - name: root
-      vg: "{{ hostname }}_lvg01"
-      size: 32G
-    - name: home
-      vg: "{{ hostname }}_lvg01"
-      size: 100%FREE
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: 64G
+    - name: var
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: 8G
+    # - name: home
+    #   vg: "{{ hostname }}{{ lvm_postfix }}"
+    #   size: 128M
+    - name: data
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: 398G
+      #size: 100%FREE
+    # - name: swap
+    #   vg: "{{ hostname }}{{ lvm_postfix }}"
+    #   size: 100%FREE
 
-fs:
-  - device: /dev/sda1
-    fstype: vfat
-  - device: "/dev/mapper/{{ hostname }}_lvg01-root"
-    fstype: ext4
-  - device: "/dev/mapper/{{ hostname }}_lvg01-home"
-    fstype: ext4
-
-root_part:
-  device: /dev/mapper/{{ hostname }}_lvg01-root
+root:
+  device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  path: "/"
+  chroot_path: "/mnt"
   fstype: ext4
+
+mounts:
+  # index 0 must be esp/efi/boot partition
+  - device: /dev/sda1
+    path: "/efi"
+    fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-var"
+    path: "/var"
+    fstype: ext4
+  # - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-home"
+  #   path: "/home"
+  #   fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-data"
+    path: "/data"
+    fstype: ext4
 
 # I dont have a swap on my laptop since I dont want
 # too many writes on my nvme flash. I have a script
 # that warns me whenever I have filled up my RAM
-# swap_part
-
-mounts:
-  - device: /dev/sda1
-    path: "/boot"
-    fstype: vfat
-  - device: "/dev/mapper/{{ hostname }}_lvg01-home"
-    path: "/home"
-    fstype: ext4
+# swap_part:
 
 initramfs_modules:
   - amdgpu
@@ -85,10 +101,8 @@ packages:
   # - networkmanager
   # - gnome
 
-boot:
-  device: /dev/sda1
-  mount: /boot
-  part: 1
-  label: ArchLinux
-
 cpu_manufacturer: amd
+
+
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/assert_module.html
+
