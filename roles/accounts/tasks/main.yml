@@ -47,10 +47,10 @@
     line: '%wheel ALL=(ALL:ALL) ALL'
     validate: visudo -cf %s
 
-- name: create life folder
-  ansible.builtin.file:
-    path: /home/life
-    state: directory
-    owner: "{{ user.name }}"
-    group: "{{ user.group }}"
-    mode: '0755'
+# - name: create life folder
+#   ansible.builtin.file:
+#     path: /home/life
+#     state: directory
+#     owner: "{{ user.name }}"
+#     group: "{{ user.group }}"
+#     mode: '0755'
