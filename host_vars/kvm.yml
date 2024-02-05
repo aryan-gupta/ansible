@@ -5,7 +5,7 @@ install_disk: "/dev/vda"
 root_vol_size: 13G
 var_vol_size: 5G
 data_vol_size: 1G
-part_postfix: "p"
+part_postfix: ""
 
 initramfs_modules:
   - vfio_pci
