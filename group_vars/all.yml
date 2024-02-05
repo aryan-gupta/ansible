@@ -55,10 +55,10 @@ lvm:
   lv:
     - name: root
       vg: "{{ hostname }}{{ lvm_postfix }}"
-      size: 64G
+      size: "{{ root_vol_size }}"
     - name: var
       vg: "{{ hostname }}{{ lvm_postfix }}"
-      size: 8G
+      size: "{{ var_vol_size }}"
     - name: data
       vg: "{{ hostname }}{{ lvm_postfix }}"
       size: "{{ data_vol_size }}"

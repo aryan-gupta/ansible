@@ -2,6 +2,8 @@
 
 hostname: 'graviton'
 install_disk: "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_500GB_S3Z1NB0KA20685D"
+root_vol_size: 64G
+var_vol_size: 8G
 data_vol_size: 384G
 
 initramfs_modules:

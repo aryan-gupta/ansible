@@ -1,6 +1,8 @@
 ---
 hostname: 'boson'
 install_disk: "/dev/disk/by-id/nvme-WDC_PC_SN730_SDBQNTY-512G-1001_21081F804906"
+root_vol_size: 64G
+var_vol_size: 8G
 data_vol_size: 398G
 
 initramfs_modules:
