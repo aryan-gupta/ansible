@@ -32,7 +32,7 @@ partitions:
 
 # The first crypt device MUST be what contains root device
 crypt:
-  - device: "{{ install_disk }}-part2"
+  - device: "{{ install_disk }}{{ part_postfix }}2"
     name: "{{ partitions[1].label }}"
     type: luks2
     cipher: aes-xts-plain64
@@ -75,7 +75,7 @@ root:
 
 mounts:
   # index 0 must be esp/efi/boot partition
-  - device: "{{ install_disk }}-part1"
+  - device: "{{ install_disk }}{{ part_postfix }}1"
     path: "/efi"
     fstype: vfat
   - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-var"

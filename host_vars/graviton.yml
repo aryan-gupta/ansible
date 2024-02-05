@@ -5,6 +5,7 @@ install_disk: "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_500GB_S3Z1NB0KA20685D"
 root_vol_size: 64G
 var_vol_size: 8G
 data_vol_size: 384G
+part_postfix: "-part"
 
 initramfs_modules:
   - amdgpu
@@ -26,4 +27,3 @@ cpu_manufacturer: amd
 
 
 # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/assert_module.html
-
