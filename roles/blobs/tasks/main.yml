@@ -1,8 +1,13 @@
 ---
+- stat: path="{{ secureboot_keytarpacket.src }}"
+  register: optional_file
+
 - name: create secureboot directory
   file:
     path: "{{ secureboot_keytarpacket.unzippath }}"
     state: 'directory'
+  when: optional_file.stat.exists
+  ignore_errors: True
 
 - name: copy secureboot file into chroot
   copy:
@@ -10,3 +15,5 @@
     dest: "{{ arch_root }}/{{ secureboot_keytarpacket.dest }}"
     owner: root
     group: root
+  when: optional_file.stat.exists
+  ignore_errors: True

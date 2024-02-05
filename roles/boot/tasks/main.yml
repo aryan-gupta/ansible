@@ -86,7 +86,12 @@
       - "{{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
       # - "/boot/arch-{{ kernel }}-fallback.efi"
 
+- stat: path="{{ secureboot_keytarpacket.src }}"
+  register: optional_file
+
 - include_tasks: secureboot.yml
+  when: optional_file.stat.exists
+  ignore_errors: True
 
 - name: restrict access permissions to UKI efi file
   file:
