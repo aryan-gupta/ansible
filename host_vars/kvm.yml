@@ -28,7 +28,7 @@ initramfs_hooks:
   - fsck
 
 packages:
-  - cura
+  - base
 
 boot:
   device: /dev/vda
