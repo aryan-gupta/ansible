@@ -40,12 +40,12 @@ rm -f "/dev/mapper/""$HOST""_crypt"
 install_disk=$(grep "install_disk" host_vars/$HOST.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
 part_postfix=$(grep "part_postfix" host_vars/$HOST.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
 
-dd if=/dev/zero of="/dev/$install_disk$part_postfix""1"  bs=1M count=32
-dd if=/dev/zero of="/dev/$install_disk$part_postfix""2"  bs=1M count=32
-dd if=/dev/zero of="/dev/$install_disk$part_postfix"  bs=1M count=32
+dd if=/dev/zero of="$install_disk$part_postfix""1"  bs=1M count=32
+dd if=/dev/zero of="$install_disk$part_postfix""2"  bs=1M count=32
+dd if=/dev/zero of="$install_disk$part_postfix"  bs=1M count=32
 
-rm -f "/dev/$install_disk$part_postfix""1"
-rm -f "/dev/$install_disk$part_postfix""2"
+rm -f "$install_disk$part_postfix""1"
+rm -f "$install_disk$part_postfix""2"
 
 lvmdiskscan
 partprobe

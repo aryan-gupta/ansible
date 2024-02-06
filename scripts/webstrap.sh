@@ -1,9 +1,8 @@
 #!/bin/sh
 
 if [ $# -eq 0 ]; then
-    echo "No arguments provided"
-    echo "./setup.sh HOSTNAME"
-    exit 1
+    echo -n "Host Name: "
+    read host
 fi
 
 if ping -c 1 "8.8.8.8"; then
@@ -12,7 +11,7 @@ else
     # attempt to connect to the internet if possible
     iwctl station wlan0 scan
     sleep 5
-    echo "Network Name: "
+    echo -n "Network Name: "
     read network
     iwctl station wlan0 connect $network
     sleep 10
@@ -47,4 +46,4 @@ cd /tmp/ansible
 pwd
 git checkout develop
 sleep 5
-./setup $1 $2
+./setup.sh $host
