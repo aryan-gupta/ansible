@@ -4,34 +4,12 @@ hostname: 'kvm'
 install_disk: "/dev/vda"
 root_vol_size: 13G
 var_vol_size: 5G
-data_vol_size: 1G
+data_vol_size: 8G
 part_postfix: ""
 
-initramfs_modules:
-  - vfio_pci
-  - vfio
-  - vfio_iommu_type1
-  - vfio_virqfd
-  - i915
+initramfs_modules: []
+packages: []
 
-initramfs_hooks:
-  - base
-  - systemd
-  - autodetect
-  - keyboard
-  - sd-vconsole
-  - modconf
-  - block
-  - sd-encrypt
-  - sd-lvm2
-  - filesystems
-  - fsck
-
-packages:
-  - base
-
-boot:
-  device: /dev/vda
-  mount: /boot
-  part: 1
-  label: ArchLinux
+# only intel and amd are valid. All others are ignored
+# and no ucode will be installed
+cpu_manufacturer: vm-amd
