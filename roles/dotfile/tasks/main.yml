@@ -24,6 +24,7 @@
     src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gitconfig-{{ hostname }}"
     dest: "{{ user.home_dir }}/.gitconfig-local"
     state: link
+  ignore_errors: true # this is to handle that there is no .github-default file
 
 - name: Check bashrc
   stat:
@@ -118,3 +119,4 @@
     src: "{{ user.home_dir }}/.config/alacritty/alacritty-{{ hostname }}.yml"
     dest: "{{ user.home_dir }}/.config/alacritty/alacritty-local.yml"
     state: link
+  ignore_errors: true # this is to handle that there is no alacritty-default file
