@@ -74,4 +74,4 @@ if [ "$SESSION_TYPE" = "remote/ssh" ]; then
     passwd -d `whoami`
 fi
 
-./setup.sh $host
+sh ./setup.sh $host
