@@ -70,7 +70,9 @@ If you are attempting to run this in a vm, first download the arch iso:
 
 Create a VM with a `20 GB` disk and boot into the arch iso. please ensure network connectivity and `/dev/vda` is the disk you want to install to
 
-Run above command and select `default` for the hostname. If `ssh` is allowed, a quicker way is documented after these steps:
+Run above command and select `default` for the hostname:
+
+> If `ssh` is allowed, a quicker way is documented after these steps.
 
 ```
 root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
@@ -78,7 +80,9 @@ Host Name: default
 
 ```
 
-Select `y` two times to confirm data destruction. See script `scripts/reset.sh` for more info. Select `n` to not wipe. If the disk is new, it is recommemded to select `n`. It is also the default choice.
+Select `y` two times to confirm data destruction. See script `scripts/reset.sh` for more info. Select `n` to not wipe.
+
+> If the disk is new, it is recommemded to select `n`. It is also the default choice.
 
 ```
 [...]
@@ -87,13 +91,20 @@ One more time: DELETE ALL DATA? [y/N]: y
 
 ```
 
-Since default was the chosen hostname, the file `host_vars/default.yml` gets loaded. You can copy this file to change the settings for another specific host. More examples are in the `host_vars` directory. Theoritcally, the `./setup.sh` script can be manually run with this parameters. However this has not been tested.
+Since `default` was the chosen hostname, the file `host_vars/default.yml` gets loaded. You can copy this file to change the settings for another specific host. More examples are in the `host_vars` directory.
 
-```shell
-./setup.sh default "" --extra-vars="hostname=foobar install_disk=/dev/sda"
-```
+>
+> Theoritcally, the `./setup.sh` script can be manually run with this parameters. However this has not been tested.
+>
+> ```shell
+> ./setup.sh default "" --extra-vars="hostname=foobar install_disk=/dev/sda"
+>
+> ```
+>
 
-If `ssh` is available, after booting into the arch iso, run this command and type in any password. This needs to be as secure as you need it:
+If `ssh` is available, after booting into the arch iso, run this command and type in any password:
+
+> This needs to be as secure as you need it. Since the connection is local on a VM it can be simple.
 
 ```
 root@archiso ~ # passwd
@@ -102,9 +113,12 @@ Retype new password: <text hidden>
 passwd: password updated successfully
 ```
 
-From another box connected to the same network (My host box since this is a VM example), you can run this command. Substitute the ip of the guest as needed.
+From another box connected to the same network (My host box since this is a VM example), you can run this command:
+
+> example uses 192.168.122.128 as the ip. Substitute the ip of the guest as needed.
+
 ```
-➜ ssh root@192.168.122.128.guest.ip
+➜ ssh root@192.168.122.128
 The authenticity of host '192.168.122.128 (192.168.122.128)' can't be established.
 ED25519 key fingerprint is SHA256:jVLpn2MEqLm7MkCSHyxzIQSi1kubdjS27+XhCUFqLHM.
 This key is not known by any other names.
@@ -114,7 +128,7 @@ root@192.168.122.128's password:
 
 ```
 
-You can now copy and paste the command into your host shell.
+You can now copy and paste the command into your host shell:
 
 ```
 root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
