@@ -119,19 +119,24 @@ base_packages:
   # system automation / maintinance
   - ansible-core
   - ansible
-  - efibootmgr
   - pacman-contrib
   - fwupd
   - arch-install-scripts
   - linux-firmware
 
-  # bare system
+  # hardware
+  - lm_sensors
+
+  # system
   - base-devel
   - exfatprogs
   - ntfs-3g
   - dosfstools
   - lvm2
   - cryptsetup
+  - efibootmgr
+  - plymouth # boot splash screen
+  - sbctl # secure boot
 
   # audio
   - alsa-utils
@@ -140,22 +145,15 @@ base_packages:
   - pipewire-audio
   - pipewire-pulse
   - pipewire-alsa
-  - pipewire-jack
+  # - pipewire-jack # one day I will have a real time kernel and a sound room
 
-  # netwoek
+  # network
   - wpa_supplicant
   - networkmanager
 
   # WM
   - xorg
   - xorg-xinit
-
-  # hardware
-  - acpilight # BOSON ONLY laptop backlight
-  - lm_sensors
-
-  - plymouth # boot splash screen
-  - sbctl # secure boot
 
   # system utilities
   - sudo
@@ -183,9 +181,9 @@ base_packages:
   - bc
 
   # python packages
-  - python
+  - python # who uses python 2 anymore?
   - pyenv
-  - python3
+  - python3 # duplicate
   - python-pip
   - python-yaml
   - python-jinja

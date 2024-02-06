@@ -11,6 +11,7 @@ initramfs_modules:
 
 packages:
   # - cura
+  - acpilight # BOSON ONLY laptop backlight
   - sof-firmware
   - intel-media-driver
   - intel-gpu-tools
