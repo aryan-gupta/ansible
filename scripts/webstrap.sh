@@ -46,6 +46,7 @@ pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinj
 
 git clone $this_repo $repo_path
 cd $repo_path
+git checkout develop
 
 while [ ! -f "$secrets_file" ]
 do
