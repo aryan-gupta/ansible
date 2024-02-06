@@ -1,4 +1,6 @@
 
+# https://github.com/aryan-gupta/ansible/releases/download/v0.0.1/setup.sh
+
 if [ $# -eq 0 ]; then
     echo "No arguments provided"
     echo "./setup.sh HOSTNAME"
@@ -74,7 +76,7 @@ export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 
 if [ ! -z "$2" ]; then
     ansible-playbook playbook.yml \
-        --start-at-task="$2"
+        --start-at-task="$2" \
         --extra-vars "ansible_become_pass=$user_password" \
         --extra-vars "@group_vars/all_secret.yml" \
         --extra-vars "@host_vars/$1.yml"
