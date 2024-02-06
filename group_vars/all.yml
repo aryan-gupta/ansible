@@ -274,7 +274,7 @@ aur_base_packages:
   - piavpn-bin
   - brave-bin
   - cava
-  - amdgpu_top
+  # - amdgpu_top
   # - sbctl-initcpio-post-hook
   # - plymouth-theme-owl-git
   # - cura
