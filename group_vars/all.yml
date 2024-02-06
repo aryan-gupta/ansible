@@ -1,4 +1,7 @@
 ---
+username: aryan
+github_username: aryan
+email: "me@theguptaempire.net"
 
 arch_root: /mnt
 domain_suffix: gempi.re
@@ -282,27 +285,20 @@ aur_base_packages:
   # - zenmonitor
   # - python-detect-secrets
 
-username: aryan
-
 user:
   name: "{{ username }}"
   uid: 42069
   group: "{{ username }}"
   home_dir: "/home/{{ username }}"
   groups:
-    - aryan
+    - "{{ username }}"
     - wheel
   shell: /usr/bin/zsh
-  email:  me@theguptaempire.net
+  email:  "{{ email }}"
 
-github_username: aryan-gupta
-
-# project_dir: "{{ user.home_dir }}/Projects"
 godfile_dir: "/godfile"
-
 dotfile_repo: "dotfiles"
 dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
-
 scripts_repo: "scripts"
 scripts_repo_github: "https://github.com/{{ github_username }}/{{ scripts_repo }}"
 
@@ -336,15 +332,11 @@ aol1_folders:
   - professional
   - social
 
-aol2_folders:
-  - pass
+aol2_folders: []
 
-aol3_folders:
-  - pass
+aol3_folders: []
 
-aol4_folders:
-  - pass
-
+aol4_folders: []
 
 delete_default_home_folders:
   - Desktop
