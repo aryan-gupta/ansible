@@ -1,4 +1,5 @@
-#HOST="graviton"
+#!/bin/sh
+
 HOST="$1"
 
 sync
@@ -34,20 +35,17 @@ dmsetup remove "$HOST""$LVM""-data"
 dmsetup remove "$HOST""$LVM""-root"
 dmsetup remove "$HOST""$LVM""-var"
 dmsetup remove "$HOST""_crypt"
+rm -f "/dev/mapper/""$HOST""_crypt"
 
-# dd if=/dev/zero of=/dev/nvme0n1p2 bs=1M count=32
-# dd if=/dev/zero of=/dev/nvme0n1p1 bs=1M count=32
-# dd if=/dev/zero of=/dev/nvme0n1  bs=1M count=32
-#dd if=/dev/zero of=/dev/sda  bs=1M count=1024
+install_disk=$(grep "install_disk" host_vars/$HOST.yml | awk -F ' ' '{print $2}' | head -HOST | xargs echo -n)
+part_postfix=$(grep "part_postfix" host_vars/$HOST.yml | awk -F ' ' '{print $2}' | head -1 |HOSTxargs echo -n)
+
 dd if=/dev/zero of=/dev/vda2  bs=1M count=32
 dd if=/dev/zero of=/dev/vda1  bs=1M count=32
 dd if=/dev/zero of=/dev/vda  bs=1M count=32
 
-rm -f "/dev/mapper/""$HOST""_crypt"
-# rm -f /dev/nvme0n1p1
-# rm -f /dev/nvme0n1p2
-rm -f /dev/vda1
-rm -f /dev/vda2
+rm -f "/dev/$install_disk$part_postfix""1"
+rm -f "/dev/$install_disk$part_postfix""2"
 
 lvmdiskscan
 partprobe
