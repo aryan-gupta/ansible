@@ -39,6 +39,11 @@ pacman-key --populate archlinux
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
 
+git clone https://github.com/aryan-gupta/ansible /tmp/ansible
+cd /tmp/ansible
+pwd
+git checkout develop
+sleep 5
 #
 # =============== ANSIBLE ==================
 #
