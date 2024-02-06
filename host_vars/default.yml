@@ -8,7 +8,12 @@ data_vol_size: 1G
 part_postfix: ""
 
 initramfs_modules: []
-packages: []
+
+# this var cannot be []. The script will fail with nothing but
+#         TASK [packages : install packages] *********************************************************************************************************************************************************************************
+#         fatal: [/mnt]: FAILED! => {"changed": false, "msg": "This is a bug"}
+packages:
+  - base
 
 # only intel and amd are valid. All others are ignored
 # and no ucode will be installed
