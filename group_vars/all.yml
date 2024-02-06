@@ -117,15 +117,15 @@ pacstrap_packages:
   - base
   - "{{ kernel }}"
   - python3 # so that ansible can run its code in the chroot
+  - linux-firmware
+  - ansible
 
 base_packages:
   # system automation / maintinance
-  - ansible-core
-  - ansible
+  - efibootmgr
   - pacman-contrib
   - fwupd
   - arch-install-scripts
-  - linux-firmware
 
   # hardware
   - lm_sensors
