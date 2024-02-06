@@ -17,10 +17,11 @@ user_password=$(grep "user_password" group_vars/all_secret.yml | awk -F ' ' '{pr
 # https://stackoverflow.com/questions/29436275
 function yes_or_no {
     while true; do
-        read -p "$* [y/n]: " yn
+        read -p "$* [y/N]: " yn
         case $yn in
-            [Yy]*) return 0  ;;
+            [Yy]*) echo "Yes... Wiping... Bye..."            ;  return 0  ;;
             [Nn]*) echo "Did not do anything. Continuing..." ; return  1 ;;
+            *)     echo "Defaulting... Wiping... Bye..."     ;  return 0  ;;
         esac
     done
 }
@@ -37,8 +38,26 @@ yes_or_no "One more time: DELETE ALL DATA?"   && ./scripts/reset.sh $1
 # run ansible playbook
 mkdir -p logs/
 export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
+
+#
+# method to the madness
+# $1 should be the hostname
+# $2 is the --start-at-task parameter so you can recover from failure quickly
+# ${@:3} is the "there are the rest of the parameters I dont know what to do with"
+# hopefully you can run this script in these ways:
+#
+# ./setup.sh default
+# ./setup.sh default "START_AT_TASK"
+# ./setup.sh default "START_AT_TASK" --extra-vars @extra_vars_file.yml
+# ./setup.sh default "START_AT_TASK" --extra-vars @extra_vars_file1.yml --extra-vars @extra_vars_file2.yml
+#
+# this however is not tested
+# ./setup.sh default "" --start-at-task="START_AT_TASK" --extra-vars @extra_vars_file.yml
+#
+# https://stackoverflow.com/questions/3811345/
+#
+
 if [ ! -z "$2" ]; then
-    # https://stackoverflow.com/questions/3811345/
     ansible-playbook playbook.yml \
         --start-at-task="$2" \
         --extra-vars "ansible_become_pass=$user_password" \

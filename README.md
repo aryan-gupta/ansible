@@ -8,6 +8,15 @@ Run this command to start the install. It will ask you if you want to destroy th
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
 ```
 
+#### KVM
+If you are attempting to run this in a vm, first download the arch iso:
+
+> [https://archlinux.org/download/](https://archlinux.org/download/)
+
+Create a VM with a `20 GB` disk and boot into the arch iso. please ensure network connectivity and `/dev/vda` is the disk you want to install to
+
+Run above command
+
 ## Features
 #### Base
   - Arch linux
