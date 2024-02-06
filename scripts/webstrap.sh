@@ -1,5 +1,9 @@
 #!/bin/sh
 
+this_repo="https://github.com/aryan-gupta/ansible"
+repo_path="/tmp/ansible"
+secrets_file="/tmp/ansible/group_vars/all_secret.yml"
+
 if [ $# -eq 0 ]; then
     echo -n "Host Name: "
     read host
@@ -40,11 +44,9 @@ pacman-key --populate archlinux
 # install packages we need
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm
 
+git clone $this_repo $repo_path
+cd $repo_path
 
-git clone https://github.com/aryan-gupta/ansible /tmp/ansible
-cd /tmp/ansible
-
-secrets_file="/tmp/ansible/group_vars/all_secret.yml"
 while [ ! -f "$secrets_file" ]
 do
     echo "[ERROR]: $secrets_file doesnt exist."
@@ -56,5 +58,19 @@ do
     sleep 5
 
 done
+
+# if we are in a ssh shell, then delete the password (as a test)
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  SESSION_TYPE=remote/ssh
+# many other tests omitted
+else
+  case $(ps -o comm= -p "$PPID") in
+    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+  esac
+fi
+
+if [ "$SESSION_TYPE" = "remote/ssh" ]; then
+    passwd -d `whoami`
+fi
 
 ./setup.sh $host

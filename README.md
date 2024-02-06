@@ -1,10 +1,12 @@
-# ansible-linux
+# ansible
 An Ansible Playbook to setup my Linux machines. From the platform of Arch linux (not sure if you knew, [I use Arch Linux, btws](https://i.kym-cdn.com/photos/images/original/002/243/383/c00.png)) and wanting to automate my install was born this project.
 
 
 ## Installing
-`sh -c "$(curl -fsSL https://github.com/aryan-gupta/ansible/releases/download/v0.0.1/webstrap.sh)"`
-
+Run this command to start the install. It will ask you if you want to destroy the disk.
+```shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
+```
 
 ## Features
 #### Base
