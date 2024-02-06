@@ -15,7 +15,28 @@ If you are attempting to run this in a vm, first download the arch iso:
 
 Create a VM with a `20 GB` disk and boot into the arch iso. please ensure network connectivity and `/dev/vda` is the disk you want to install to
 
-Run above command
+Run above command and select `default` for the hostname:
+
+```
+root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
+Host Name: default
+
+```
+
+Select `y` two times to confirm data destruction. See script `scripts/reset.sh` for more info. Select `n` to not wipe. If the disk is new, it is recommemded to select `n`. It is also the default choice.
+
+```
+[...]
+Do you want to WIPE THIS COMPUTER [y/N]: y
+One more time: DELETE ALL DATA? [y/N]: y
+
+```
+
+Since default was the chosen hostname, the file `host_vars/default.yml` gets loaded. You can copy this file to change the settings for another specific host. More examples are in the `host_vars` directory. Theoritcally, the `./setup.sh` script can be manually run with this parameters. However this has not been tested.
+
+```shell
+./setup.sh default "" --extra-vars="hostname=foobar install_disk=/dev/sda"
+```
 
 ## Features
 #### Base
