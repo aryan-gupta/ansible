@@ -1,6 +1,6 @@
 ---
 
-hostname: 'kvm'
+hostname: 'default'
 install_disk: "/dev/vda"
 root_vol_size: 13G
 var_vol_size: 5G
@@ -12,4 +12,4 @@ packages: []
 
 # only intel and amd are valid. All others are ignored
 # and no ucode will be installed
-cpu_manufacturer: vm-amd
+cpu_manufacturer: default

@@ -81,4 +81,5 @@ This section will never be updated and will be removed once issues have been res
 - graviton : Main Desktop
   - Gigabyte B550
   - retired ~~Asus Z97 Custom Build~~
-- kvm : linux kvm test VM
+- default
+  - reserved for VM test installs

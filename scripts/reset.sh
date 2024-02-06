@@ -11,12 +11,7 @@ umount /mnt/efi -rf
 umount /mnt/var -rf
 umount /mnt -rf
 
-# lvchange -an /dev/mapper/kvm_lvg01-home
-# lvchange -an /dev/mapper/kvm_lvg01-root
-# vgchange -an kvm_lvg01
-
 LVM="_lv"
-
 lvremove -ff "$HOST""$LVM""-home"
 lvremove -ff "$HOST""$LVM""-data"
 lvremove -ff "$HOST""$LVM""-root"
@@ -27,9 +22,6 @@ pvremove -y -ff "/dev/mapper/""$HOST""_crypt"
 dd if=/dev/zero of="/dev/mapper/""$HOST""_crypt" bs=1M count=32
 
 cryptsetup close "$HOST""_crypt"
-#cryptsetup -q luksErase /dev/nvme0n1p2
-#cryptsetup -q luksErase /dev/nvme0n1p2
-#cryptsetup -q luksErase /dev/sda2
 dmsetup remove "$HOST""$LVM""-home"
 dmsetup remove "$HOST""$LVM""-data"
 dmsetup remove "$HOST""$LVM""-root"
@@ -42,7 +34,7 @@ part_postfix=$(grep "part_postfix" host_vars/$HOST.yml | awk -F ' ' '{print $2}'
 
 dd if=/dev/zero of="$install_disk$part_postfix""1"  bs=1M count=32
 dd if=/dev/zero of="$install_disk$part_postfix""2"  bs=1M count=32
-dd if=/dev/zero of="$install_disk$part_postfix"  bs=1M count=32
+dd if=/dev/zero of="$install_disk$part_postfix"     bs=1M count=32
 
 rm -f "$install_disk$part_postfix""1"
 rm -f "$install_disk$part_postfix""2"
