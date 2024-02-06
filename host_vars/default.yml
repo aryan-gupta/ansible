@@ -2,9 +2,9 @@
 
 hostname: 'default'
 install_disk: "/dev/vda"
-root_vol_size: 13G
-var_vol_size: 5G
-data_vol_size: 1G
+root_vol_size: 10G
+var_vol_size: 9G
+data_vol_size: 128M
 part_postfix: ""
 
 initramfs_modules: []
