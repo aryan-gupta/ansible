@@ -20,7 +20,7 @@ function yes_or_no {
         read -p "$* [y/n]: " yn
         case $yn in
             [Yy]*) return 0  ;;
-            [Nn]*) echo "Aborted" ; return  1 ;;
+            [Nn]*) echo "Did not do anything. Continuing..." ; return  1 ;;
         esac
     done
 }
@@ -31,9 +31,8 @@ function yes_or_no {
 # 	--extra-vars "@group_vars/all_secret.yml" \
 # 	--extra-vars "@host_vars/$1.yml"
 	# --extra-vars "@group_vars/all.yml" \
-yes_or_no "Do you want to WIPE THIS COMPUTER [y/n]"     && \
-    yes_or_no "One more time: DELETE ALL DATA? [y/n]" && \
-    ./scripts/reset.sh $1
+yes_or_no "Do you want to WIPE THIS COMPUTER" && \
+yes_or_no "One more time: DELETE ALL DATA?"   && ./scripts/reset.sh $1
 
 # run ansible playbook
 mkdir -p logs/
