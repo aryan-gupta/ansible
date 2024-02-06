@@ -113,17 +113,16 @@ initramfs_hooks:
 pacstrap_packages:
   - base
   - "{{ kernel }}"
-  - linux-firmware
-  - ansible
 
 base_packages:
   # system automation / maintinance
-  #- ansible-core
-  #- ansible
+  - ansible-core
+  - ansible
   - efibootmgr
   - pacman-contrib
   - fwupd
   - arch-install-scripts
+  - linux-firmware
 
   # bare system
   - base-devel
