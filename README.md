@@ -11,7 +11,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master
 ## Features
 #### Base
   - Arch linux
-    > I have always loved the Arch linux philosphy. From a person who came from M$ Windows, bloatware and unnessary garbage was always a large pet peave of mine. I still run Windows debloating scripts on my gaming hard drive.
+    > I have always loved the Arch linux philosphy. Only install the bare necessities. From a person who came from M$ Windows, bloatware and unnessary garbage was always a large pet peave of mine. I still run Windows debloating scripts on my gaming hard drive.
   - Ansible
     > This project is written in Ansible. It seems the best tool for the job and if a better tool comes along, hopefully porting it to another language (other than ansible yaml) not too difficult to do and debug.
 
@@ -26,12 +26,12 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master
 #### System
   - LUKS
     > The main data partition of the install is LUKS encrypted (see LUKS section for details). The install auto logs in the user using getty so either the LUKS password or keyfile is needed to decrypt the drive. The password is asked by the user at each boot. Sleep is replaced with hybernation on the laptop to ensure data security. LUKS, secureboot, and manual decrypting of the drive ensures chaining of security. Secrets are managed by a secrets script (NOT commited to git) (see Bitwarden section).
-    ```
-      cipher: aes-xts-plain64
-      keysize: 512
-      hash: sha512
-      keyfile_len: 512
-    ```
+    > ```
+    >   cipher: aes-xts-plain64
+    >   keysize: 512
+    >   hash: sha512
+    >   keyfile_len: 512
+    > ```
   - LVM
     > LVM stuff here
 
