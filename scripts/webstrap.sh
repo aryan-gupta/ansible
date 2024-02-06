@@ -43,7 +43,18 @@ pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinj
 
 git clone https://github.com/aryan-gupta/ansible /tmp/ansible
 cd /tmp/ansible
-pwd
-git checkout develop
-sleep 5
+
+secrets_file="/tmp/ansible/group_vars/all_secret.yml"
+while [ ! -f "$secrets_file" ]
+do
+    echo "[ERROR]: $secrets_file doesnt exist."
+    echo "Waiting on secrets file."
+    echo "This will be removed when screts manegment"
+    echo "isnt scp'ing it into the test VM"
+    echo "sleeping 5 more seconds"
+    echo "\n\n\n"
+    sleep 5
+
+done
+
 ./setup.sh $host
