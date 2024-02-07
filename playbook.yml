@@ -38,6 +38,7 @@
       when: "'default' not in {{ hostname }}" # dont run secureboot on VMs
     - role: 'accounts'
     - role: 'folders' # /home/aryan and /life
+      vars: { mode: 'root' }
 
 - hosts: chroot
   name: user setup
@@ -50,7 +51,7 @@
   roles:
     - role: 'user'
     - role: 'dotfile'
-    # - role: 'life'
     - role: 'apps'
-    # user config below
     #- role: 'firefox'
+    - role: 'folders'
+      vars: { mode: "{{ user.name }}" }

@@ -47,5 +47,3 @@
     state: link
     force: yes
   loop: "{{ link_default_home_folders }}"
-
-- include_tasks: life.yml

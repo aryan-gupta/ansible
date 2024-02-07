@@ -1,4 +1,34 @@
 ---
+- name: Create root folders
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+  with_items:
+    - life_folders
+
+- name: Create aol0 folders
+  file:
+    path: "/life/0/{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+  with_items:
+    - aol0_folders
+
+- name: Create aol1 folders
+  file:
+    path: "/life/0/{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+  with_items:
+    - aol0_folders
+
 
 - name: create life folders
   ansible.builtin.file:

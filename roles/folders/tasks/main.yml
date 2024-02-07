@@ -1,6 +1,6 @@
 ---
 - include_tasks: root.yml
-  when: lookup('env', 'USER') == 'root'
+  when: mode == 'root'
 
 - include_tasks: user.yml
-  when: lookup('env', 'USER') == user.name
+  when: mode == user.name
