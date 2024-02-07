@@ -34,6 +34,7 @@ fi
 # https://github.com/zxiiro/ansible-arch-install
 mount -o remount,size=1G /run/archiso/cowspace
 timedatectl set-timezone "America/New_York"
+timedatectl set-ntp true
 sleep 10
 timedatectl # verify date is correct for keys below
 

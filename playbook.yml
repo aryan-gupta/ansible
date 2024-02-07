@@ -17,8 +17,6 @@
 
   roles:
     - role: 'uefi'
-    # - role: 'internet'
-    - role: 'ntp'
     - role: 'disks'
     - role: 'pacstrap'
     - role: 'blobs'
