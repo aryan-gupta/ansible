@@ -10,10 +10,12 @@
     part_end: "{{ item.end }}"
   with_items: "{{ partitions }}"
 
+# ======================== LUKS ============================
+
 # https://stackoverflow.com/questions/24679591
 - name: Create keyfile for luks
   shell: "openssl rand -base64 {{ item.keyfile_len }} | tr -d '\n' | tee {{ item.keyfile }}"
-  args: 
+  args:
     creates: "{{ item.keyfile }}"
   with_items: "{{ crypt }}"
 
@@ -56,10 +58,12 @@
     #passphrase: "{{ item.passphrase }}"
   with_items: "{{ crypt }}"
 
+# ======================== LVM ============================
+
 # - name: Create pvs
 #   shell: "pvcreate {{ item.device }}"
 #   with_items: "{{ lvm.pv }}"
-  
+
 - name: Create LVM vgs
   community.general.lvg:
     vg: "{{ item.name }}"
@@ -72,9 +76,11 @@
     vg: "{{ item.vg }}"
     lv: "{{ item.name }}"
     size: "{{ item.size }}"
-  # args: 
+  # args:
   #   creates: "/dev/mapper/{{ item.vg }}-{{ item.name }}"
   with_items: "{{ lvm.lv }}"
+
+# ======================== FS ============================
 
 - name: format root part
   community.general.filesystem:
@@ -94,8 +100,10 @@
     fstype: "{{ item.fstype }}"
   with_items: "{{ mounts }}"
 
+# ======================== MNT ============================
+
 - name: Create mount points
-  file: 
+  file:
     path: "{{ arch_root }}{{ item.path }}"
     state: directory
     mode: '0755'
@@ -108,6 +116,8 @@
     fstype: "{{ item.fstype }}"
     state: mounted
   with_items: "{{ mounts }}"
+
+# ======================== ETC ============================
 
 - name: Set swapon partitions
   command: "swapon {{ swap_part }}"
@@ -128,15 +138,15 @@
 # again and will not touch my home partition
 # aka allows reinstalls without deleting home
 # I am also creating a file in boot because I
-# dont have this feature implemented yet and 
+# dont have this feature implemented yet and
 # not sure if I should check the boot partition
 # or the actual home partition. Checking the
 # home partition means mounting the luks parts
-# checking for the file, unmounting, then 
+# checking for the file, unmounting, then
 # reformatting. I will decide later and change
 # this accordingly
 # - name: Create no touch files
-#   lineinfile: 
+#   lineinfile:
 #     path: "{{ item }}/ANSIBLE_{{ hostname }}"
 #     line: "{{ ansible_date_time.epoch }}"
 #     create: yes

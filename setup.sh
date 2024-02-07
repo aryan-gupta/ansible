@@ -26,12 +26,14 @@ function yes_or_no {
     done
 }
 
-# WARNING: running this command will WIPE THE DISK
 # ansible-playbook playbook.yml \
 #     --tags "unmount, dd-lvm, dev-remove, dd-crypt, dms-remove, dd-disks" \
 # 	--extra-vars "@group_vars/all_secret.yml" \
 # 	--extra-vars "@host_vars/$1.yml"
 	# --extra-vars "@group_vars/all.yml" \
+echo "Installing on disk: $(grep "install_disk" group_vars/$1.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)"
+
+# WARNING: running this command will WIPE THE DISK
 yes_or_no "Do you want to WIPE THIS COMPUTER" && \
 yes_or_no "One more time: DELETE ALL DATA?"   && echo "Wiping... Bye..." && ./scripts/reset.sh $1
 

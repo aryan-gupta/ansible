@@ -92,7 +92,7 @@
     - "default"
     # - "fallback"
 
-- name: setup boot items
+- name: create NVRAM entry
   shell: >-
     efibootmgr
     --create
@@ -102,5 +102,3 @@
     --loader "/{{ hostname }}-arch-{{ kernel }}-default.efi"
     --unicode
     --verbose
-
-#    'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} root={{ root.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0'

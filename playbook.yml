@@ -26,9 +26,6 @@
   connection: chroot
   tags: ['install']
 
-  vars:
-    hostname: hostvars['localhost']['hostname']
-
   roles:
     - role: 'locale'
     - role: 'hosts'
