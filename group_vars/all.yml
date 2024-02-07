@@ -293,6 +293,7 @@ user:
   groups:
     - "{{ username }}"
     - wheel
+    - video
   shell: /usr/bin/zsh
   email:  "{{ email }}"
 
