@@ -37,7 +37,10 @@
     - role: 'packages'
     - role: 'etc'
     - role: 'aur'
+    - role: 'plymouth'
     - role: 'boot'
+    - role: 'secureboot'
+      when: "'default' not in {{ hostname }}" # dont run secureboot on VMs
     - role: 'accounts'
     - role: 'folders' # /home/aryan and /life
     - role: 'login'
