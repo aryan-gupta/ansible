@@ -136,6 +136,7 @@ base_packages:
   - ntfs-3g
   - dosfstools
   - lvm2
+  - nfs-utils
   - cryptsetup
   - efibootmgr
   - plymouth # boot splash screen
@@ -196,6 +197,7 @@ base_packages:
 
   # user utilities
   - wget
+  - jq
   - iwd
   - rtkit
   - libva-utils
