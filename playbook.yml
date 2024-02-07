@@ -41,7 +41,6 @@
       when: "'default' not in {{ hostname }}" # dont run secureboot on VMs
     - role: 'accounts'
     - role: 'folders' # /home/aryan and /life
-    - role: 'login'
 
 - hosts: chroot
   name: user setup
