@@ -12,6 +12,8 @@ initramfs_modules: []
 # this var cannot be []. The script will fail with nothing but
 #         TASK [packages : install packages] *********************************************************************************************************************************************************************************
 #         fatal: [/mnt]: FAILED! => {"changed": false, "msg": "This is a bug"}
+#
+# github issue created: https://github.com/ansible-collections/community.general/issues/7950
 packages:
   - base
 
