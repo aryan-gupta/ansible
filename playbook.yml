@@ -49,9 +49,9 @@
   tags: ['user']
 
   roles:
-    - role: 'user'
     - role: 'dotfile'
     - role: 'apps'
     #- role: 'firefox'
     - role: 'folders'
       vars: { mode: "{{ user.name }}" }
+    - role: 'user'
