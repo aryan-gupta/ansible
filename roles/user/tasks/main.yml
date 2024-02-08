@@ -1,4 +1,8 @@
 ---
+# @TODO parameterize this
+- name: set firefox as default browser
+  ansible.builtin.command: "xdg-settings set default-web-browser firefox.desktop"
+
 # update to use https://aur.archlinux.org/packages/oh-my-zsh-git ??
 # https://ohmyz.sh/#install
 - name: download omz script
