@@ -12,7 +12,6 @@ fi
 # or set it to a temp password then set it to the actual password if ansible cant handle it
 # move to ansible once we get the script working
 secrets_file="/tmp/ansible/group_vars/all_secret.yml"
-user_password=$(grep "user_password" group_vars/all_secret.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
 #./scripts/secrets.sh $1
 echo "==============================================================="
 echo "[ERROR]: $secrets_file doesnt exist."
@@ -24,6 +23,7 @@ while [ ! -f "$secrets_file" ]
 do
     sleep 5
 done
+user_password=$(grep "user_password" group_vars/all_secret.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
 
 # https://stackoverflow.com/questions/29436275
 function yes_or_no {
