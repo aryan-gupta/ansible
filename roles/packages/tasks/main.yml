@@ -6,8 +6,8 @@
 
 - name: "Populates base system fstab with configured storage devices"
   shell: "/usr/bin/genfstab -U -p {{ arch_root }} >> {{ arch_root }}/etc/fstab"
-  args:
-    creates: "{{ arch_root }}/etc/fstab"
+  # args: # there is already a fstab created and uncommenting this will cause ansible to skip this task
+  #   creates: "{{ arch_root }}/etc/fstab"
   when: "'boot' in modes"
 
 
