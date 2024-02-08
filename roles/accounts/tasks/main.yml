@@ -47,13 +47,15 @@
     line: '%wheel ALL=(ALL:ALL) ALL'
     validate: visudo -cf %s
 
-# - name: create life folder
-#   ansible.builtin.file:
-#     path: /home/life
-#     state: directory
-#     owner: "{{ user.name }}"
-#     group: "{{ user.group }}"
-#     mode: '0755'
+- name: allow restart script nopasswd
+  copy:
+    dest: "/etc/sudoers.d/restart-windows-nopasswd"
+    content: "{{ user.name }} ALL = (root) NOPASSWD: /usr/bin/restart_into_windows.sh"
+
+- name: allow xp pentablet nopasswd
+  copy:
+    dest: "/etc/sudoers.d/xppentablet-nopasswd"
+    content: "{{ user.name }} ALL = (root) NOPASSWD: /usr/lib/pentablet/pentablet.sh"
 
 - name: create getty folder
   file:

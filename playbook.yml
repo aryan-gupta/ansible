@@ -32,7 +32,7 @@
     - role: 'hosts'
     - role: 'packages'
       vars: { modes: [ 'min', 'typ', 'aur' ] }
-    - role: 'etc'
+    - role: 'apps'
     - role: 'plymouth'
     - role: 'boot'
     - role: 'secureboot'
@@ -51,8 +51,6 @@
 
   roles:
     - role: 'dotfile'
-    - role: 'apps'
-    #- role: 'firefox'
     - role: 'folders'
       vars: { mode: "{{ user.name }}" }
     - role: 'user'

@@ -3,8 +3,13 @@
     "Extensions": {
       "Install": [
         "https://addons.mozilla.org/firefox/downloads/file/3551054/ublock_origin-latest.xpi",
+        "https://addons.mozilla.org/firefox/downloads/file/4206186/noscript-latest.xpi",
         "https://addons.mozilla.org/firefox/downloads/file/4128403/bitwarden_password_manager-latest.xpi",
+
 	      "https://addons.mozilla.org/firefox/downloads/file/3756025/videospeed-latest.xpi",
+        "https://addons.mozilla.org/firefox/downloads/file/4223104/darkreader-latest.xpi",
+        "https://addons.mozilla.org/firefox/downloads/file/3535009/redirector-latest.xpi",
+
 	      "https://addons.mozilla.org/firefox/downloads/file/3914147/matte_black_violet-latest.xpi"
       ]
     },

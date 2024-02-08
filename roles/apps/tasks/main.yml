@@ -1,5 +1,31 @@
 ---
 
+- name: load modules boot
+  copy:
+    dest: "/etc/modules-load.d/load-{{ item }}.conf"
+    content: "{{ item }}"
+  loop: "{{ modprobe_modules }}"
+
+# @TODO BETTER WAY TO HANDLE SCRIPTS
+- name: link game mode script
+  ansible.builtin.file:
+    src: "{{ godfile_dir }}/{{ scripts_repo }}/nix/game_mode/restart_into_windows.sh"
+    dest: "/usr/bin/restart_into_windows.sh"
+    state: link
+    force: true
+
+- name: Creates firefox policies directory
+  file:
+    path: /etc/firefox/policies
+    state: directory
+    recurse: yes
+
+- name: copy firefox policies file
+  template:
+    src: policies.json
+    dest: /etc/firefox/policies
+    mode: 644
+
 - name: enable NetworkManager
   ansible.builtin.systemd:
     enabled: true
