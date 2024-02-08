@@ -1,9 +1,9 @@
 # ansible
-An Ansible Playbook to setup my Linux machines. From the platform of Arch linux and wanting to automate my install was born this project. [btws I use Arch](https://i.kym-cdn.com/photos/images/original/002/243/383/c00.png)
+An Ansible Playbook to setup my Linux machines. From the platform of Arch linux and wanting to automate my install was born this project. [btw, I use Arch](https://i.kym-cdn.com/photos/images/original/002/243/383/c00.png)
 
 
 ## Installing
-Run this command to start the install. It will ask you if you want to destroy the disk.
+Run this command to start the install. It will ask you if you want to wipe the disk.
 ```shell
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
 ```
@@ -26,14 +26,23 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master
 #### System
   - LUKS
     > The main data partition of the install is LUKS encrypted (see LUKS section for details). The install auto logs in the user using getty so either the LUKS password or keyfile is needed to decrypt the drive. The password is asked by the user at each boot. Sleep is replaced with hybernation on the laptop to ensure data security. LUKS, secureboot, and manual decrypting of the drive ensures chaining of security. Secrets are managed by a secrets script (NOT commited to git) (see Bitwarden section).
+    >
     > ```
     >   cipher: aes-xts-plain64
     >   keysize: 512
     >   hash: sha512
     >   keyfile_len: 512
     > ```
+    >
   - LVM
-    > LVM stuff here
+    > The luks partition is then broken into 3 LVM partitions:
+    >
+    > - root
+    > - var
+    > - data
+    >
+    > I made the code modular so I can move to a different schema if I think of something better later
+    >
 
 #### User
   - Autologin (getty) / single user
@@ -102,6 +111,7 @@ Since `default` was the chosen hostname, the file `host_vars/default.yml` gets l
 > ```
 >
 
+## SSH
 If `ssh` is available, after booting into the arch iso, run this command and type in any password:
 
 > This needs to be as secure as you need it. Since the connection is local on a VM it can be simple.
@@ -118,44 +128,64 @@ From another box connected to the same network (My host box since this is a VM e
 > example uses 192.168.122.128 as the ip. Substitute the ip of the guest as needed.
 
 ```
-➜ ssh root@192.168.122.128
-The authenticity of host '192.168.122.128 (192.168.122.128)' can't be established.
-ED25519 key fingerprint is SHA256:jVLpn2MEqLm7MkCSHyxzIQSi1kubdjS27+XhCUFqLHM.
-This key is not known by any other names.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '192.168.122.128' (ED25519) to the list of known hosts.
-root@192.168.122.128's password:
+➜ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@192.168.122.128
+Warning: Permanently added '192.168.122.213' (ED25519) to the list of known hosts.
+root@192.168.122.213's password:
+To install Arch Linux follow the installation guide:
+https://wiki.archlinux.org/title/Installation_guide
+
+For Wi-Fi, authenticate to the wireless network using the iwctl utility.
+For mobile broadband (WWAN) modems, connect with the mmcli utility.
+Ethernet, WLAN and WWAN interfaces using DHCP should work automatically.
+
+After connecting to the internet, the installation guide can be accessed
+via the convenience script Installation_guide.
+
+
+Last login: Thu Feb  8 21:50:01 2024
+root@archiso ~ #
 
 ```
 
-You can now copy and paste the command into your host shell:
+You can now copy and paste the command into your host shell. Please note that this is the develop webstrap script. Replace develop with master for mainline. Enter the hostname to start the install.
 
 ```
-root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
+root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/scripts/webstrap.sh)"
+Host Name: default
 
 ```
 
 At some point you will get this error:
 
 ```
+===============================================================
 [ERROR]: /tmp/ansible/group_vars/all_secret.yml doesnt exist.
 Waiting on secrets file.
 This will be removed when screts manegment
 isnt scp'ing it into the test VM
-sleeping 5 more seconds
-\n\n\n
+===============================================================
 
 ```
 
 If you are me, you can do this command to move the secrets file to the VM. At some point I do need to stop using this `.gitignore`'d file and finish the bitwarden script
 
 ```
-scp /godfile/ansible/group_vars/all_secret.yml root@192.168.122.128:/tmp/ansible/group_vars/all_secret.yml
+scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /godfile/ansible/group_vars/all_secret.yml root@192.168.122.128:/tmp/ansible/group_vars/all_secret.yml
 root@192.168.122.128's password:
 all_secret.yml                                                   100% ----   479.8KB/s   00:00
 
 ```
+Finally, choose if the disk should be wiped:
 
+```
+[...]
+===============================================================
+Install Disk: /dev/vda
+===============================================================
+[WARNING] Do you want to WIPE THIS COMPUTER [y/N]: y
+One more time: DELETE ALL DATA on /dev/vda? [y/N]: y
+
+```
 
 ## Issues
 This section will never be updated and will be removed once issues have been resolved
