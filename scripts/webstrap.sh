@@ -48,20 +48,7 @@ git clone $this_repo $repo_path
 cd $repo_path
 git checkout develop
 
-# if we are in a ssh shell, then delete the password (as a test)
 # @TODO I need to figure out how to enable public
 # key ssh'ing as I belive archiso does support it
-# if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-#   SESSION_TYPE=remote/ssh
-# # many other tests omitted
-# else
-#   case $(ps -o comm= -p "$PPID") in
-#     sshd|*/sshd) SESSION_TYPE=remote/ssh;;
-#   esac
-# fi
-
-# if [ "$SESSION_TYPE" = "remote/ssh" ]; then
-#   passwd -d `whoami`
-# fi
 
 sh ./setup.sh $host
