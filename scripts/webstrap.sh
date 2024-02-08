@@ -2,7 +2,6 @@
 
 this_repo="https://github.com/aryan-gupta/ansible"
 repo_path="/tmp/ansible"
-secrets_file="/tmp/ansible/group_vars/all_secret.yml"
 
 if [ $# -eq 0 ]; then
     echo -n "Host Name: "
@@ -48,18 +47,6 @@ pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinj
 git clone $this_repo $repo_path
 cd $repo_path
 git checkout develop
-
-while [ ! -f "$secrets_file" ]
-do
-    echo "[ERROR]: $secrets_file doesnt exist."
-    echo "Waiting on secrets file."
-    echo "This will be removed when screts manegment"
-    echo "isnt scp'ing it into the test VM"
-    echo "sleeping 5 more seconds"
-    echo "\n\n\n"
-    sleep 5
-
-done
 
 # if we are in a ssh shell, then delete the password (as a test)
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then

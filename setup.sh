@@ -11,8 +11,19 @@ fi
 # do not set the user password until the end so this is not needed
 # or set it to a temp password then set it to the actual password if ansible cant handle it
 # move to ansible once we get the script working
+secrets_file="/tmp/ansible/group_vars/all_secret.yml"
 user_password=$(grep "user_password" group_vars/all_secret.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
 #./scripts/secrets.sh $1
+echo "==============================================================="
+echo "[ERROR]: $secrets_file doesnt exist."
+echo "Waiting on secrets file."
+echo "This will be removed when screts manegment"
+echo "isnt scp'ing it into the test VM"
+echo "==============================================================="
+while [ ! -f "$secrets_file" ]
+do
+    sleep 5
+done
 
 # https://stackoverflow.com/questions/29436275
 function yes_or_no {
@@ -31,11 +42,14 @@ function yes_or_no {
 # 	--extra-vars "@group_vars/all_secret.yml" \
 # 	--extra-vars "@host_vars/$1.yml"
 	# --extra-vars "@group_vars/all.yml" \
-echo "Installing on disk: $(grep "install_disk" group_vars/$1.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)"
-
+install_disk="$(grep "install_disk" host_vars/$1.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)"
+echo "==============================================================="
+echo "Install Disk: $install_disk"
+echo "==============================================================="
 # WARNING: running this command will WIPE THE DISK
 yes_or_no "Do you want to WIPE THIS COMPUTER" && \
-yes_or_no "One more time: DELETE ALL DATA?"   && echo "Wiping... Bye..." && ./scripts/reset.sh $1
+yes_or_no "One more time: DELETE ALL DATA on $install_disk?" && \
+echo "Wiping... Bye..." && ./scripts/reset.sh $1
 
 # run ansible playbook
 mkdir -p logs/
