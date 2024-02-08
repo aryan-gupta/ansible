@@ -1,0 +1,47 @@
+# ======================== LUKS ============================
+
+# https://stackoverflow.com/questions/24679591
+- name: Create keyfile for luks
+  shell: "openssl rand -base64 {{ item.keyfile_len }} | tr -d '\n' | tee {{ item.keyfile }}"
+  args:
+    creates: "{{ item.keyfile }}"
+  with_items: "{{ crypt }}"
+
+- name: Setup luks partitions
+  community.crypto.luks_device:
+    device: "{{ item.device }}"
+    state: "present"
+    name: "{{ item.name }}"
+    label: "{{ item.name }}"
+    type: "{{ item.type }}"
+    cipher: "{{ item.cipher }}"
+    keysize: "{{ item.keysize }}"
+    hash: "{{ item.hash }}"
+    keyfile: "{{ item.keyfile }}"
+    #passphrase: "{{ item.passphrase }}"
+  with_items: "{{ crypt }}"
+
+# The reason we remove then add the passphrase
+# is so that there is idempotency for this passphrase
+# - name: Attempt to remove the passphrase
+#   community.crypto.luks_device:
+#     device: "{{ item.device }}"
+#     keyfile: "{{ item.keyfile }}"
+#     new_passphrase: "{{ item.passphrase }}"
+#   with_items: "{{ crypt }}"
+
+- name: Add luks passprase
+  community.crypto.luks_device:
+    device: "{{ item.device }}"
+    keyfile: "{{ item.keyfile }}"
+    new_passphrase: "{{ item.passphrase }}"
+  with_items: "{{ crypt }}"
+
+- name: Open luks partitions
+  community.crypto.luks_device:
+    device: "{{ item.device }}"
+    state: "opened"
+    name: "{{ item.name }}"
+    keyfile: "{{ item.keyfile }}"
+    #passphrase: "{{ item.passphrase }}"
+  with_items: "{{ crypt }}"

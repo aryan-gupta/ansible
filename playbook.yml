@@ -15,9 +15,15 @@
   connection: local
   tags: ['pre']
 
+  pre_tasks:
+    - include_vars: "group_vars/disks.yml"
+
   roles:
     - role: 'uefi'
-    - role: 'disks'
+    - role: 'part'
+    - role: 'luks'
+    - role: 'lvm'
+    - role: 'fsmnt'
     - role: 'packages'
       vars: { modes: [ 'boot' ] }
     - role: 'blobs'

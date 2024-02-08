@@ -1,0 +1,77 @@
+---
+# This is the partition layout for typical install
+
+partitions:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}"
+    flags: [ 'boot' ]
+    name: efi
+    number: 1
+    start: 0%
+    end: 512MiB
+    label: "{{ system_name }}"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 2
+    start: 512MiB
+    end: 100%
+    label: "{{ hostname }}_crypt"
+
+crypt:
+  - device: "{{ install_disk }}{{ part_postfix }}2"
+    name: "{{ partitions[1].label }}"
+    type: luks2
+    cipher: aes-xts-plain64
+    keysize: 512
+    hash: sha512
+    passphrase: "{{ luks_password }}"
+    keyfile_name: "{{ partitions[1].label }}_{{ ansible_date_time.date }}"
+    keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
+    keyfile_len: 64
+
+lvm_postfix: "_lv"
+lvm:
+  pv:
+    - device: "/dev/mapper/{{ crypt[0].name }}"
+  vg:
+    - name: "{{ hostname }}{{ lvm_postfix }}"
+      pvresize: yes
+      pvs: [ "/dev/mapper/{{ crypt[0].name }}" ]
+  lv:
+    - name: root
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ root_vol_size }}"
+    - name: var
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ var_vol_size }}"
+    - name: data
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ data_vol_size }}"
+      #size: 100%FREE
+    # - name: swap
+    #   vg: "{{ hostname }}{{ lvm_postfix }}"
+    #   size: 100%FREE
+
+root:
+  device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  path: "/"
+  chroot_path: "/mnt"
+  fstype: ext4
+
+mounts:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}{{ part_postfix }}1"
+    path: "/efi"
+    fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-var"
+    path: "/var"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-data"
+    path: "/data"
+    fstype: ext4
+
+# I dont have a swap on my laptop since I dont want
+# too many writes on my nvme flash. I have a script
+# that warns me whenever I have filled up my RAM
+# swap_part:

@@ -1,4 +1,15 @@
 ---
+- name: create secure folder on data drive
+  file:
+    path: "{{ arch_root }}/data/secure"
+    state: directory
+
+- name: copy encryption key into root partition
+  copy:
+    src: "{{ item.keyfile }}"
+    dest: "{{ arch_root }}/data/secure/{{ item.keyfile_name }}"
+  with_items: "{{ crypt }}"
+
 - stat: path="{{ secureboot_keytarpacket.src }}"
   register: optional_file
 

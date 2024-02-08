@@ -1,0 +1,65 @@
+---
+# This is the partition layout for typical install
+
+partitions:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}"
+    flags: [ 'boot' ]
+    name: efi
+    number: 1
+    start: 0%
+    end: 512MiB
+    label: "{{ system_name }}"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 2
+    start: 512MiB
+    end: 100%
+    label: "{{ hostname }}"
+
+lvm_postfix: "_lv"
+lvm:
+  pv:
+    - device: "{{ install_disk }}{{ part_postfix }}2"
+  vg:
+    - name: "{{ hostname }}{{ lvm_postfix }}"
+      pvresize: yes
+      pvs: [ "{{ install_disk }}{{ part_postfix }}2" ]
+  lv:
+    - name: root
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ root_vol_size }}"
+    - name: var
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ var_vol_size }}"
+    - name: data
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ data_vol_size }}"
+      #size: 100%FREE
+    # - name: swap
+    #   vg: "{{ hostname }}{{ lvm_postfix }}"
+    #   size: 100%FREE
+
+root:
+  device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  path: "/"
+  chroot_path: "/mnt"
+  fstype: ext4
+
+mounts:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}{{ part_postfix }}1"
+    path: "/efi"
+    fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-var"
+    path: "/var"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-data"
+    path: "/data"
+    fstype: ext4
+
+# I dont have a swap on my laptop since I dont want
+# too many writes on my nvme flash. I have a script
+# that warns me whenever I have filled up my RAM
+# swap_part:

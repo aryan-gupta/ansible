@@ -78,14 +78,18 @@ if [ ! -z "$2" ]; then
         --start-at-task="$2" \
         --extra-vars "ansible_become_pass=$user_password" \
         --extra-vars "@group_vars/all_secret.yml" \
-        --extra-vars "@host_vars/$1.yml" "${@:3}"
+        --extra-vars "@host_vars/$1.yml" \
+        --extra-vars "@group_vars/disks.yml" \
+         "${@:3}"
         # --extra-vars "@group_vars/all.yml" \
         # --extra-vars "hostname=$1"\
 else
     ansible-playbook playbook.yml \
         --extra-vars "ansible_become_pass=$user_password" \
         --extra-vars "@group_vars/all_secret.yml" \
-        --extra-vars "@host_vars/$1.yml" "${@:3}"
+        --extra-vars "@host_vars/$1.yml" \
+        --extra-vars "@group_vars/disks.yml" \
+         "${@:3}"
         # --extra-vars "@group_vars/all.yml" \
         # --extra-vars "hostname=$1"\
 fi

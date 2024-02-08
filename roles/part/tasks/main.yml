@@ -1,0 +1,12 @@
+---
+- name: Create on disk partitions
+  community.general.parted:
+    state: present
+    device: "{{ item.device }}"
+    label: gpt
+    flags: "{{ item.flags }}"
+    name: "{{ item.name }}"
+    number: "{{ item.number }}"
+    part_start: "{{ item.start }}"
+    part_end: "{{ item.end }}"
+  with_items: "{{ partitions }}"
