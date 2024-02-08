@@ -1,5 +1,33 @@
 ---
 
+- name: enable NetworkManager
+  ansible.builtin.systemd:
+    enabled: true
+    name: NetworkManager.service
+
+- name: enable ntpd
+  ansible.builtin.systemd:
+    enabled: true
+    name: ntpd.service
+
+- name: mask accessibility service
+  ansible.builtin.systemd:
+    enabled: false
+    masked: true
+    name: at-spi-dbus-bus.service
+    scope: "global" # "user" # "system"
+      #  ignore_errors: true
+
+- name: enable fresh clamav
+  ansible.builtin.systemd:
+    enabled: true
+    name: clamav-freshclam.service
+
+- name: enable piavpn service
+  ansible.builtin.systemd:
+    enabled: true
+    name: piavpn.service
+
 - name: Create pia username and password file
   template:
     src: pia_passwd.j2

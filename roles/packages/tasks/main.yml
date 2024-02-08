@@ -1,33 +1,89 @@
 ---
+
+- name: "Installs base system using pacstrap"
+  command: "/usr/bin/pacstrap {{ arch_root }} {{ pacstrap_packages | join(' ') }}"
+  when: "'boot' in modes"
+
+- name: "Populates base system fstab with configured storage devices"
+  shell: "/usr/bin/genfstab -U -p {{ arch_root }} >> {{ arch_root }}/etc/fstab"
+  args:
+    creates: "{{ arch_root }}/etc/fstab"
+  when: "'boot' in modes"
+
+
+# - name: "Clone ansible repo into chroot enviroment"
+#   shell: /bin/git clone "" /mnt/root/ansible-linux
+
+# - name: "Chroots into new enviroment to start install"
+#   shell: /bin/archchroot /mnt ansible
+
 - name: install base packages
   pacman:
     name: "{{ base_packages }}"
     extra_args: --needed
+  when: "'min' in modes"
 
 - name: install packages
   pacman:
     name: "{{ packages }}"
     extra_args: --needed
+  when: "'typ' in modes"
 
-- name: enable NetworkManager
-  ansible.builtin.systemd:
-    enabled: true
-    name: NetworkManager.service
+- name: allow nobody sudoers
+  copy:
+    dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
+    content: "nobody ALL=(ALL:ALL) NOPASSWD: ALL"
+  when: "'aur' in modes"
 
-- name: enable ntpd
-  ansible.builtin.systemd:
-    enabled: true
-    name: ntpd.service
+- name: clone yay repo
+  ansible.builtin.git:
+    clone: yes
+    repo: "https://aur.archlinux.org/{{ item }}.git"
+    dest: "/var/tmp/{{ item }}"
+  loop: "{{ aur_base_packages }}"
+  when: "'aur' in modes"
 
-- name: mask accessibility service
-  ansible.builtin.systemd:
-    enabled: false
-    masked: true
-    name: at-spi-dbus-bus.service
-    scope: "global" # "user" # "system"
-      #  ignore_errors: true
+- name: set folder permissions
+  file:
+    dest: "/var/tmp/{{ item }}"
+    owner: nobody
+    group: nobody
+    mode: '777'
+    recurse: yes
+  loop: "{{ aur_base_packages }}"
+  when: "'aur' in modes"
 
-- name: enable fresh clamav
-  ansible.builtin.systemd:
-    enabled: true
-    name: clamav-freshclam.service
+- name: build aur packages
+  ansible.builtin.command:
+    cmd: "sudo -u nobody HOME=/tmp makepkg -s --noconfirm --needed"
+    chdir: "/var/tmp/{{ item }}"
+  loop: "{{ aur_base_packages }}"
+  when: "'aur' in modes"
+
+- name: get package names
+  find:
+    paths: "/var/tmp/"
+    patterns: "*.pkg.*"
+    file_type: "file"
+    recurse: true
+    depth: 2
+  register: install_package
+  when: "'aur' in modes"
+
+- name: install aur packages
+  pacman:
+    name: "{{ item.path }}"
+    state: present
+  loop: "{{ install_package.files }}"
+  when: "'aur' in modes"
+
+# - name: install aur packages
+#   ansible.builtin.command:
+#     cmd: "yay --noconfirm -S {{ item }}"
+#   loop: "{{ aur_base_packages }}"
+
+- name: remove nobody sudoers file
+  file:
+    dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
+    state: absent
+  when: "'aur' in modes"

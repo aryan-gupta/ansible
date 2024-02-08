@@ -18,7 +18,8 @@
   roles:
     - role: 'uefi'
     - role: 'disks'
-    - role: 'pacstrap'
+    - role: 'packages'
+      vars: { modes: [ 'boot' ] }
     - role: 'blobs'
 
 - hosts: chroot
@@ -30,8 +31,8 @@
     - role: 'locale'
     - role: 'hosts'
     - role: 'packages'
+      vars: { modes: [ 'min', 'typ', 'aur' ] }
     - role: 'etc'
-    - role: 'aur'
     - role: 'plymouth'
     - role: 'boot'
     - role: 'secureboot'
