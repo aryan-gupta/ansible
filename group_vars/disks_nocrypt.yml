@@ -18,7 +18,7 @@ partitions:
     end: 100%
     label: "{{ hostname }}"
 
-lvm_postfix: "_lv"
+lvm_postfix: "-lv"
 lvm:
   pv:
     - device: "{{ install_disk }}{{ part_postfix }}2"

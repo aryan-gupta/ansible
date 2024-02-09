@@ -11,7 +11,11 @@ umount /mnt/efi -rf
 umount /mnt/var -rf
 umount /mnt -rf
 
-LVM="_lv"
+# I know this is bad
+# a future update will move this entire script into ansible so I
+# can support a partial install
+# @TODO remove this
+LVM="$(grep "lvm_postfix" group_vars/disks.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)"
 lvremove -ff "$HOST""$LVM""-home"
 lvremove -ff "$HOST""$LVM""-data"
 lvremove -ff "$HOST""$LVM""-root"

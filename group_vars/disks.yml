@@ -30,7 +30,7 @@ crypt:
     keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
     keyfile_len: 64
 
-lvm_postfix: "_lv"
+lvm_postfix: "-lv"
 lvm:
   pv:
     - device: "/dev/mapper/{{ crypt[0].name }}"
