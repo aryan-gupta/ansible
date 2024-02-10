@@ -14,6 +14,12 @@
 # partitions[0].number
 # partitions[0].label
 
+- name: include vars from part
+  include_vars: roles/luks/defaults/main.yml
+  when: nocrypt == False
+# needed_vars:
+# crypt[0].name
+
 - name: install intel microcode
   pacman:
     name: intel-ucode
