@@ -15,7 +15,7 @@ partitions:
     number: 2
     start: 512MiB
     end: 100%
-    label: "{{ (hostname) if nocrypt == True else (hostname + crypt_postfix) }}"
+    label: "{{ (hostname) if nocrypt == true else (hostname + crypt_postfix) }}"
 
 crypt_partitions:
   - device: "{{ install_disk }}"

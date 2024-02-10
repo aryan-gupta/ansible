@@ -17,27 +17,27 @@
 
   pre_tasks:
     - include_vars: "host_vars/disks.yml"
-      when: '(nocrypt == False) and (nolvm == False)'
+      when: '(nocrypt == false) and (nolvm == false)'
     - include_vars: "host_vars/nocrypt.yml"
-      when: '(nocrypt == True ) and (nolvm == False)'
+      when: '(nocrypt == true ) and (nolvm == false)'
     - include_vars: "host_vars/nolvm.yml"
-      when: '(nocrypt == False) and (nolvm == True )'
+      when: '(nocrypt == false) and (nolvm == true )'
     - include_vars: "host_vars/plain.yml"
-      when: '(nocrypt == True ) and (nolvm == True )'
+      when: '(nocrypt == true ) and (nolvm == true )'
 
   roles:
     - role: 'uefi'
     - role: 'part'
       vars: { mode: 'plain' }
-      when: '(nocrypt == True ) and (nolvm == True )'
+      when: '(nocrypt == true ) and (nolvm == true )'
     - role: 'part'
       vars: { mode: 'disk'  }
-      when: '(nocrypt == False) and (nolvm == False)'
+      when: 'nolvm == false'
     - role: 'luks'
     - role: 'lvm'
     - role: 'part'
       vars: { mode: 'luks'  }
-      when: 'nolvm == True'
+      when: 'nolvm == true'
     - role: 'fsmnt'
     - role: 'packages'
       vars: { modes: [ 'boot' ] }
@@ -57,7 +57,7 @@
     - role: 'plymouth'
     - role: 'boot'
     - role: 'secureboot'
-      when: 'secureboot == True'
+      when: 'secureboot == true'
     - role: 'accounts'
     - role: 'folders' # /home/aryan and /life
       vars: { mode: 'root' }

@@ -9,7 +9,7 @@
     src: "{{ item.keyfile }}"
     dest: "{{ arch_root }}/data/secure/{{ item.keyfile_name }}"
   with_items: "{{ crypt }}"
-  when: nocrypt == False
+  when: nocrypt == false
 
 - name: check secureboot
   stat:
@@ -21,7 +21,7 @@
     path: "{{ secureboot_keytarpacket.unzippath }}"
     state: 'directory'
   when: secureboot_file.stat.exists
-  ignore_errors: True
+  ignore_errors: true
 
 - name: copy secureboot file into chroot
   copy:
@@ -30,4 +30,4 @@
     owner: root
     group: root
   when: secureboot_file.stat.exists
-  ignore_errors: True
+  ignore_errors: true

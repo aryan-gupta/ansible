@@ -16,7 +16,7 @@
 
 - name: include vars from part
   include_vars: roles/luks/defaults/main.yml
-  when: nocrypt == False
+  when: nocrypt == false
 # needed_vars:
 # crypt[0].name
 
@@ -82,7 +82,7 @@
 - name: get root UUID
   command: blkid -s UUID -o value {{ root.disk }}
   register: root_uuid
-  changed_when: False
+  changed_when: false
   check_mode: no
 
 # @TODO see if we can combine these two tasks so it doesnt rely on the when
@@ -90,13 +90,13 @@
   copy:
     dest: /etc/kernel/cmdline
     content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} rd.luks.options=timeout=0 root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
-  when: nocrypt == False
+  when: nocrypt == false
 
 - name: save cmdline boot no crypt
   copy:
     dest: /etc/kernel/cmdline
     content: 'root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
-  when: nocrypt == True
+  when: nocrypt == true
 
 - name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}

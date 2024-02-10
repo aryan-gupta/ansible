@@ -8,19 +8,19 @@
 - name: download omz script
   ansible.builtin.command: "wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O /var/tmp/install.sh"
   when: not omzsh_installed.stat.exists
-  ignore_errors: True
+  ignore_errors: true
 
 - name: set executable omz script
   file:
     path: "/var/tmp/install.sh"
     mode: "0777"
   when: not omzsh_installed.stat.exists
-  ignore_errors: True
+  ignore_errors: true
 
 - name: install omz
   ansible.builtin.command: "/bin/bash -c /var/tmp/install.sh"
   when: not omzsh_installed.stat.exists
-  ignore_errors: True
+  ignore_errors: true
 
 # replace with https://aur.archlinux.org/packages/spaceship-prompt ??
 # https://spaceship-prompt.sh/getting-started/#Requirements

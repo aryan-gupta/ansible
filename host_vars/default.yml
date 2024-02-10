@@ -3,18 +3,15 @@
 hostname: 'default'
 
 install_disk: "/dev/vda"
+part_postfix: ""
+
 root_vol_size: 10G
 var_vol_size: 9G
 data_vol_size: 128M
 
-part_postfix: ""
-dev_postfix: "{{ lvm_postfix }}"
-pv_device: "/dev/mapper/{{ hostname + '_crypt' }}"
-root_disk: "{{ install_disk }}{{ part_postfix }}2"
-
-nocrypt: False
-nolvm: False
-secureboot: False
+nocrypt: false
+nolvm: false
+secureboot: false
 
 initramfs_modules: []
 

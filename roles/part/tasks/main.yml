@@ -23,7 +23,7 @@
     part_start: "{{ item.start }}"
     part_end: "{{ item.end }}"
   with_items: "{{ crypt_partitions }}"
-  when: "(nolvm == True) and (mode == 'luks')"
+  when: "(nolvm == true) and (mode == 'luks')"
 
 - name: Create on crypt partitions
   community.general.parted:
@@ -36,4 +36,4 @@
     part_start: "{{ item.start }}"
     part_end: "{{ item.end }}"
   with_items: "{{ plain_partitions }}"
-  when: "(nolvm == True) and (nocrypt == True) and (mode == 'plain')"
+  when: "(nolvm == true) and (nocrypt == true) and (mode == 'plain')"
