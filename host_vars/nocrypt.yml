@@ -11,7 +11,7 @@ part_postfix: ""
 pv_device: "{{ install_disk }}{{ part_postfix }}2"
 root_disk: "{{ pv_device }}"
 
-crypt: null
+nocrypt: True
 
 initramfs_modules: []
 

@@ -15,4 +15,4 @@ partitions:
     number: 2
     start: 512MiB
     end: 100%
-    label: "{{ (hostname + '_crypt') if crypt is null else (hostname) }}"
+    label: "{{ (hostname + '_luks') if nocrypt == False else (hostname) }}"
