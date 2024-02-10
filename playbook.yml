@@ -15,18 +15,28 @@
   connection: local
   tags: ['bootstrap']
 
-  # pre_tasks:
-  #   - include_vars: "group_vars/disks.yml"
-  #     when: '"disk_schema" is not defined'
+  pre_tasks:
+    - include_vars: "host_vars/disks.yml"
+      when: '(nocrypt == False) and (nolvm == False)'
+    - include_vars: "host_vars/nocrypt.yml"
+      when: '(nocrypt == True ) and (nolvm == False)'
+    - include_vars: "host_vars/nolvm.yml"
+      when: '(nocrypt == False) and (nolvm == True )'
+    - include_vars: "host_vars/plain.yml"
+      when: '(nocrypt == True ) and (nolvm == True )'
 
   roles:
     - role: 'uefi'
     - role: 'part'
-      vars: { mode: 'disk' }
+      vars: { mode: 'plain' }
+      when: '(nocrypt == True ) and (nolvm == True )'
+    - role: 'part'
+      vars: { mode: 'disk'  }
+      when: '(nocrypt == False) and (nolvm == False)'
     - role: 'luks'
     - role: 'lvm'
     - role: 'part'
-      vars: { mode: 'luks' }
+      vars: { mode: 'luks'  }
       when: 'nolvm == True'
     - role: 'fsmnt'
     - role: 'packages'
@@ -37,10 +47,6 @@
   name: install Archlinux
   connection: chroot
   tags: ['install']
-
-  # pre_tasks:
-  #   - include_vars: "group_vars/disks.yml"
-  #     when: '"disk_schema" is not defined'
 
   roles:
     - role: 'locale'

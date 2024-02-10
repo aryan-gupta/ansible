@@ -1,29 +1,3 @@
 ---
-
-hostname: 'nolvm'
-
-install_disk: "/dev/vda"
-root_vol_size: 10G
-var_vol_size: 9G
-data_vol_size: 128M
-
-part_postfix: ""
 dev_postfix: "{{ crypt_postfix }}"
 root_disk: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-root"
-
-nocrypt: False
-nolvm: True
-
-initramfs_modules: []
-
-# this var cannot be []. The script will fail with nothing but
-#         TASK [packages : install packages] *********************************************************************************************************************************************************************************
-#         fatal: [/mnt]: FAILED! => {"changed": false, "msg": "This is a bug"}
-#
-# github issue created: https://github.com/ansible-collections/community.general/issues/7950
-packages:
-  - base
-
-# only intel and amd are valid. All others are ignored
-# and no ucode will be installed
-cpu_manufacturer: null

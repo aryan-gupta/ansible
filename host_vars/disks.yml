@@ -1,0 +1,5 @@
+---
+
+dev_postfix: "{{ lvm_postfix }}"
+pv_device: "/dev/mapper/{{ hostname + '_crypt' }}"
+root_disk: "{{ install_disk }}{{ part_postfix }}2"
