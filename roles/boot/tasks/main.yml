@@ -1,4 +1,19 @@
 ---
+
+- name: include vars from fsmnt
+  include_vars: roles/fsmnt/defaults/main.yml
+# needed_vars:
+# mounts[0].path
+# root.disk
+# root.device
+
+- name: include vars from part
+  include_vars: roles/part/defaults/main.yml
+# needed_vars:
+# partitions[0].device
+# partitions[0].number
+# partitions[0].label
+
 - name: install intel microcode
   pacman:
     name: intel-ucode
@@ -69,13 +84,13 @@
   copy:
     dest: /etc/kernel/cmdline
     content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} rd.luks.options=timeout=0 root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
-  when: crypt is defined
+  when: nocrypt == False
 
 - name: save cmdline boot no crypt
   copy:
     dest: /etc/kernel/cmdline
     content: 'root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
-  when: not crypt is defined
+  when: nocrypt == True
 
 - name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}
