@@ -51,7 +51,7 @@
     - role: 'plymouth'
     - role: 'boot'
     - role: 'secureboot'
-      when: 'hostname not in [ "default", "nocrypt" ]' # dont run secureboot on VMs
+      when: 'secureboot == True'
     - role: 'accounts'
     - role: 'folders' # /home/aryan and /life
       vars: { mode: 'root' }

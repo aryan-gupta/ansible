@@ -14,6 +14,7 @@ root_disk: "{{ install_disk }}{{ part_postfix }}2"
 
 nocrypt: False
 nolvm: False
+secureboot: False
 
 initramfs_modules: []
 
