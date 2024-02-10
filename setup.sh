@@ -2,7 +2,7 @@
 
 if [ $# -eq 0 ]; then
     echo "No arguments provided"
-    echo "./setup.sh HOSTNAME"
+    echo "./setup.sh HOSTNAME --additional-arguments=\"ARGS\""
     exit 1
 fi
 
@@ -59,10 +59,11 @@ mkdir -p logs/
 export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 
 #
-# "${@:3}" passes the 3rd argument onwards to ansible
+# "${@:2}" passes the 2rd argument onwards to ansible
 # allows you to do
 #
 # > ./setup.sh default --start-at-task="START_AT_TASK"
+# > ./setup.sh default --extra-vars="var_name=var_value"
 #
 # https://stackoverflow.com/questions/3811345/
 #
@@ -76,4 +77,4 @@ ansible-playbook playbook.yml \
     --extra-vars "@group_vars/all_secret.yml" \
     --extra-vars "@host_vars/$1.yml" \
     --extra-vars "@group_vars/disks.yml" \
-        "${@:3}"
+        "${@:2}"
