@@ -64,7 +64,7 @@
     - "/boot/initramfs-{{ kernel }}-fallback.img"
 
 - name: get root UUID
-  command: blkid -s UUID -o value {{ crypt[0].device }}
+  command: blkid -s UUID -o value {{ root.disk }}
   register: root_uuid
   changed_when: False
   check_mode: no
@@ -73,6 +73,13 @@
   copy:
     dest: /etc/kernel/cmdline
     content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} rd.luks.options=timeout=0 root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
+  when: crypt is defined
+
+- name: save cmdline boot no crypt
+  copy:
+    dest: /etc/kernel/cmdline
+    content: 'root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
+  when: not crypt is defined
 
 - name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}

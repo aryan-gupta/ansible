@@ -9,6 +9,7 @@
     src: "{{ item.keyfile }}"
     dest: "{{ arch_root }}/data/secure/{{ item.keyfile_name }}"
   with_items: "{{ crypt }}"
+  when: crypt is defined
 
 - stat: path="{{ secureboot_keytarpacket.src }}"
   register: optional_file

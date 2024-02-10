@@ -6,6 +6,7 @@
   args:
     creates: "{{ item.keyfile }}"
   with_items: "{{ crypt }}"
+  when: crypt is defined
 
 - name: Setup luks partitions
   community.crypto.luks_device:
@@ -20,6 +21,7 @@
     keyfile: "{{ item.keyfile }}"
     #passphrase: "{{ item.passphrase }}"
   with_items: "{{ crypt }}"
+  when: crypt is defined
 
 # The reason we remove then add the passphrase
 # is so that there is idempotency for this passphrase
@@ -36,6 +38,7 @@
     keyfile: "{{ item.keyfile }}"
     new_passphrase: "{{ item.passphrase }}"
   with_items: "{{ crypt }}"
+  when: crypt is defined
 
 - name: Open luks partitions
   community.crypto.luks_device:
@@ -45,3 +48,4 @@
     keyfile: "{{ item.keyfile }}"
     #passphrase: "{{ item.passphrase }}"
   with_items: "{{ crypt }}"
+  when: crypt is defined

@@ -13,10 +13,7 @@
   name: bootstrap ArchLinux system
   become: yes
   connection: local
-  tags: ['pre']
-
-  pre_tasks:
-    - include_vars: "group_vars/disks.yml"
+  tags: ['bootstrap']
 
   roles:
     - role: 'uefi'

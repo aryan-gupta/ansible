@@ -30,7 +30,7 @@ crypt:
     keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
     keyfile_len: 64
 
-lvm_postfix: "-lv"
+lvm_postfix: "_lv"
 lvm:
   pv:
     - device: "/dev/mapper/{{ crypt[0].name }}"
@@ -55,6 +55,7 @@ lvm:
 
 root:
   device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  disk: "{{ crypt[0].device }}"
   path: "/"
   chroot_path: "/mnt"
   fstype: ext4

@@ -18,7 +18,7 @@ partitions:
     end: 100%
     label: "{{ hostname }}"
 
-lvm_postfix: "-lv"
+lvm_postfix: "_lv"
 lvm:
   pv:
     - device: "{{ install_disk }}{{ part_postfix }}2"
@@ -43,6 +43,7 @@ lvm:
 
 root:
   device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  disk: "{{ lvm.pv[0].device }}"
   path: "/"
   chroot_path: "/mnt"
   fstype: ext4
