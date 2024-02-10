@@ -16,7 +16,7 @@ partitions:
     number: 2
     start: 512MiB
     end: 100%
-    label: "{{ hostname }}_crypt"
+    label: "{{ (hostname + '_crypt') if crypt is null else (hostname) }}"
 
 crypt:
   - device: "{{ install_disk }}{{ part_postfix }}2"
@@ -30,14 +30,13 @@ crypt:
     keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
     keyfile_len: 64
 
-lvm_postfix: "_lv"
 lvm:
   pv:
-    - device: "/dev/mapper/{{ crypt[0].name }}"
+    - device: "{{ pv_device }}"
   vg:
     - name: "{{ hostname }}{{ lvm_postfix }}"
       pvresize: yes
-      pvs: [ "/dev/mapper/{{ crypt[0].name }}" ]
+      pvs: [ "{{ pv_device }}" ]
   lv:
     - name: root
       vg: "{{ hostname }}{{ lvm_postfix }}"
@@ -55,7 +54,7 @@ lvm:
 
 root:
   device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
-  disk: "{{ crypt[0].device }}"
+  disk: "{{ root_disk }}"
   path: "/"
   chroot_path: "/mnt"
   fstype: ext4

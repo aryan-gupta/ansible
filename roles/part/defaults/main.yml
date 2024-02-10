@@ -1,0 +1,18 @@
+---
+
+partitions:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}"
+    flags: [ 'boot' ]
+    name: efi
+    number: 1
+    start: 0%
+    end: 512MiB
+    label: "{{ system_name }}"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 2
+    start: 512MiB
+    end: 100%
+    label: "{{ (hostname + '_crypt') if crypt is null else (hostname) }}"

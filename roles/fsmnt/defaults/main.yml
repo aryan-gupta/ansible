@@ -1,0 +1,25 @@
+---
+
+root:
+  device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  disk: "{{ root_disk }}"
+  path: "/"
+  chroot_path: "/mnt"
+  fstype: ext4
+
+mounts:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}{{ part_postfix }}1"
+    path: "/efi"
+    fstype: vfat
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-var"
+    path: "/var"
+    fstype: ext4
+  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-data"
+    path: "/data"
+    fstype: ext4
+
+# I dont have a swap on my laptop since I dont want
+# too many writes on my nvme flash. I have a script
+# that warns me whenever I have filled up my RAM
+# swap_part:

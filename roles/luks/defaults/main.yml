@@ -1,0 +1,12 @@
+---
+crypt:
+  - device: "{{ install_disk }}{{ part_postfix }}2"
+    name: "{{ partitions[1].label }}"
+    type: luks2
+    cipher: aes-xts-plain64
+    keysize: 512
+    hash: sha512
+    passphrase: "{{ luks_password }}"
+    keyfile_name: "{{ partitions[1].label }}_{{ ansible_date_time.date }}"
+    keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
+    keyfile_len: 64

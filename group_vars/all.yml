@@ -6,6 +6,7 @@ github_username: aryan-gupta
 email: "me@theguptaempire.net"
 
 arch_root: /mnt
+lvm_postfix: "_lv"
 domain_suffix: gempi.re
 
 kernel: linux-lts

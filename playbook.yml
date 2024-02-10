@@ -15,6 +15,10 @@
   connection: local
   tags: ['bootstrap']
 
+  # pre_tasks:
+  #   - include_vars: "group_vars/disks.yml"
+  #     when: '"disk_schema" is not defined'
+
   roles:
     - role: 'uefi'
     - role: 'part'
@@ -30,6 +34,10 @@
   connection: chroot
   tags: ['install']
 
+  # pre_tasks:
+  #   - include_vars: "group_vars/disks.yml"
+  #     when: '"disk_schema" is not defined'
+
   roles:
     - role: 'locale'
     - role: 'hosts'
@@ -39,7 +47,7 @@
     - role: 'plymouth'
     - role: 'boot'
     - role: 'secureboot'
-      when: '"default" not in hostname' # dont run secureboot on VMs
+      when: 'hostname not in [ "default", "nocrypt" ]' # dont run secureboot on VMs
     - role: 'accounts'
     - role: 'folders' # /home/aryan and /life
       vars: { mode: 'root' }

@@ -76,5 +76,4 @@ ansible-playbook playbook.yml \
     --extra-vars "ansible_become_pass=$user_password" \
     --extra-vars "@group_vars/all_secret.yml" \
     --extra-vars "@host_vars/$1.yml" \
-    --extra-vars "@group_vars/disks.yml" \
         "${@:2}"

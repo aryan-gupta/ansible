@@ -1,0 +1,23 @@
+---
+
+lvm:
+  pv:
+    - device: "{{ pv_device }}"
+  vg:
+    - name: "{{ hostname }}{{ lvm_postfix }}"
+      pvresize: yes
+      pvs: [ "{{ pv_device }}" ]
+  lv:
+    - name: root
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ root_vol_size }}"
+    - name: var
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ var_vol_size }}"
+    - name: data
+      vg: "{{ hostname }}{{ lvm_postfix }}"
+      size: "{{ data_vol_size }}"
+      #size: 100%FREE
+    # - name: swap
+    #   vg: "{{ hostname }}{{ lvm_postfix }}"
+    #   size: 100%FREE
