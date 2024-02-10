@@ -45,12 +45,7 @@
     - "default"
     # - "fallback"
 
-# - name: add preset file splash
-#   lineinfile:
-#     path: /etc/mkinitcpio.d/{{ kernel }}.preset
-#     regexp: '^#default_options'
-#     line: 'default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"'
-
+# @TODO make this idempotent
 - name: delete old boot entries
   shell: >-
     variable=$(efibootmgr | grep "{{ partitions[0].label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
@@ -69,6 +64,7 @@
   changed_when: False
   check_mode: no
 
+# @TODO see if we can combine these two tasks so it doesnt rely on the when
 - name: save cmdline boot
   copy:
     dest: /etc/kernel/cmdline
@@ -83,9 +79,6 @@
 
 - name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}
-# WARNING: THIS IS BAD and will be replaced when sbctl is working
-#  register: mkinit_res
-#  failed_when: ( mkinit_res.rc not in [ 0, 1 ] )
   args:
     creates:
       - "{{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
@@ -109,3 +102,4 @@
     --loader "/{{ hostname }}-arch-{{ kernel }}-default.efi"
     --unicode
     --verbose
+# when: delete old boot entries runs
