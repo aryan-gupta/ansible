@@ -35,7 +35,7 @@ function yes_or_no {
         case $yn in
             [Yy]*) return 0  ;;
             [Nn]*) echo "Did not do anything. Continuing..." ; return 1 ;;
-            *)     echo "Did not do anything. Defaulting..." ; return 0 ;;
+            *)     echo "Did not do anything. Defaulting..." ; return 1 ;;
         esac
     done
 }
