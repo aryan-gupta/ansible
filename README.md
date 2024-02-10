@@ -5,7 +5,8 @@ An Ansible Playbook to setup my Linux machines. From the platform of Arch linux 
 ## Installing
 Run this command to start the install. It will ask you if you want to wipe the disk.
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"
+curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh | sh -s "default"
+
 ```
 
 ## Features
