@@ -22,8 +22,12 @@
   roles:
     - role: 'uefi'
     - role: 'part'
+      vars: { mode: 'disk' }
     - role: 'luks'
     - role: 'lvm'
+    - role: 'part'
+      vars: { mode: 'luks' }
+      when: 'nolvm == True'
     - role: 'fsmnt'
     - role: 'packages'
       vars: { modes: [ 'boot' ] }

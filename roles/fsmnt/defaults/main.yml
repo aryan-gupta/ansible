@@ -1,7 +1,7 @@
 ---
 
 root:
-  device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-root"
+  device: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-root"
   disk: "{{ root_disk }}"
   path: "/"
   chroot_path: "/mnt"
@@ -12,10 +12,10 @@ mounts:
   - device: "{{ install_disk }}{{ part_postfix }}1"
     path: "/efi"
     fstype: vfat
-  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-var"
+  - device: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-var"
     path: "/var"
     fstype: ext4
-  - device: "/dev/mapper/{{ hostname }}{{ lvm_postfix }}-data"
+  - device: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-data"
     path: "/data"
     fstype: ext4
 

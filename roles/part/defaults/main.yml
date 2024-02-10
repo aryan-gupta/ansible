@@ -15,4 +15,58 @@ partitions:
     number: 2
     start: 512MiB
     end: 100%
-    label: "{{ (hostname + '_crypt') if nocrypt == False else (hostname) }}"
+    label: "{{ (hostname) if nocrypt == True else (hostname + crypt_postfix) }}"
+
+crypt_partitions:
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 1
+    start: 0%
+    end: "{{ root_vol_size }}"
+    label: "{{ hostname }}{{ dev_postfix }}-root"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 2
+    start: "{{ root_vol_size }}"
+    end: "{{ var_vol_size }}"
+    label: "{{ hostname }}{{ dev_postfix }}-var"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 3
+    start: "{{ var_vol_size }}"
+    end: "{{ data_vol_size }}"
+    label: "{{ hostname }}{{ dev_postfix }}-data"
+
+plain_partitions:
+  # index 0 must be esp/efi/boot partition
+  - device: "{{ install_disk }}"
+    flags: [ 'boot' ]
+    name: efi
+    number: 1
+    start: 0%
+    end: 512MiB
+    label: "{{ system_name }}"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 2
+    start: 512MiB
+    end: "{{ root_vol_size }}"
+    label: "{{ hostname }}-root"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 3
+    start: "{{ root_vol_size }}"
+    end: "{{ var_vol_size }}"
+    label: "{{ hostname }}-var"
+  - device: "{{ install_disk }}"
+    flags: [  ]
+    name: linux
+    number: 4
+    start: "{{ var_vol_size }}"
+    end: "{{ data_vol_size }}"
+    label: "{{ hostname }}-data"

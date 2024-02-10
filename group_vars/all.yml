@@ -7,6 +7,7 @@ email: "me@theguptaempire.net"
 
 arch_root: /mnt
 lvm_postfix: "_lv"
+crypt_postfix: "_crypt"
 domain_suffix: gempi.re
 
 kernel: linux-lts

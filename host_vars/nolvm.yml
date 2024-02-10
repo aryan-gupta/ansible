@@ -1,6 +1,6 @@
 ---
 
-hostname: 'nocrypt'
+hostname: 'nolvm'
 
 install_disk: "/dev/vda"
 root_vol_size: 10G
@@ -8,12 +8,11 @@ var_vol_size: 9G
 data_vol_size: 128M
 
 part_postfix: ""
-dev_postfix: "{{ lvm_postfix }}"
-pv_device: "{{ install_disk }}{{ part_postfix }}2"
-root_disk: "{{ pv_device }}"
+dev_postfix: "{{ crypt_postfix }}"
+root_disk: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-root"
 
-nocrypt: True
-nolvm: False
+nocrypt: False
+nolvm: True
 
 initramfs_modules: []
 
