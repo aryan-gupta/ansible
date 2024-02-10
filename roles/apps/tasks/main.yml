@@ -63,3 +63,9 @@
 #- name: pia login
 #  ansible.builtin.command:
 #    cmd: "piactl login /var/tmp/pia_passwd"
+
+- name: enable openssh if default
+  ansible.builtin.systemd:
+    enabled: true
+    name: piavpn.service
+  when: '"default" in hostname'
