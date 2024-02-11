@@ -14,7 +14,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master
 - The disk style can be changed using these extra arguments. `-e` is short for `--extra-vars`
   - `-e '{"nocrypt":false, "nolvm":false}'` : Redundantly specify default config
   - `-e '{"nocrypt":true}'`                 : Do not setup luks
-  - `-e '{"nolvm":true}'`                   : Do not setup LVM
+  - `-e '{"nolvm":true}'`                   : Do not setup LVM [BROKEN](https://bbs.archlinux.org/viewtopic.php?id=281802)
   - `-e '{"nocrypt":true, "nolvm":true}'`   : Do not setup luks or LVM
 - The `--start-at-task` argument can be used to resume playbook after resolving an failure
 
