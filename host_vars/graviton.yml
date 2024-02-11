@@ -1,28 +1,30 @@
 ---
 
 hostname: 'graviton'
+
 install_disk: "/dev/disk/by-id/ata-Samsung_SSD_860_EVO_500GB_S3Z1NB0KA20685D"
+part_postfix: "-part"
+
+boot_vol_size: 512M
 root_vol_size: 64G
 var_vol_size: 8G
 data_vol_size: 384G
-part_postfix: "-part"
+
+nocrypt: false
+nolvm: false
+secureboot: false
 
 initramfs_modules:
   - amdgpu
   - radeon
 
 packages:
-  - sof-firmware
   - xf86-video-amdgpu
   - libva-mesa-driver
   - xf86-input-evdev
+  - vulkan-radeon
   - virt-manager
   - qemu-base
   - dnsmasq
-  # - lib32-libva-mesa-driver
-
 
 cpu_manufacturer: amd
-
-
-# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/assert_module.html
