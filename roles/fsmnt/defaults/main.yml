@@ -1,8 +1,29 @@
 ---
+root_superblock: "{{ install_disk }}{{ part_postfix }}2"
+
+boot_postfix: "{{            (0 | int)     if nolvm == true else (1 | int) }}"
+root_postfix: "{{ (boot_postfix | int + 1) if nolvm == true else  '-root'  }}"
+var_postfix:  "{{ (root_postfix | int + 1) if nolvm == true else  '-var'   }}"
+data_postfix: "{{ ( var_postfix | int + 1) if nolvm == true else  '-data'  }}"
+
+pre_disk: >-
+  {{
+    install_disk
+    if (nocrypt == true ) and (nolvm == true ) else
+    ('/dev/mapper/' + hostname)
+  }}
+
+dev_postfix: >-
+  {{
+    lvm_postfix
+    if nolvm == false else
+    part_postfix
+    if nocrypt == true else
+    crypt_postfix
+  }}
 
 root:
-  device: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-root"
-  disk: "{{ root_disk }}"
+  device: "{{ pre_disk }}{{ dev_postfix }}{{ root_postfix }}"
   path: "/"
   chroot_path: "/mnt"
   fstype: ext4
@@ -12,10 +33,10 @@ mounts:
   - device: "{{ install_disk }}{{ part_postfix }}1"
     path: "/efi"
     fstype: vfat
-  - device: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-var"
+  - device: "{{ pre_disk }}{{ dev_postfix }}{{ var_postfix }}"
     path: "/var"
     fstype: ext4
-  - device: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-data"
+  - device: "{{ pre_disk }}{{ dev_postfix }}{{ data_postfix }}"
     path: "/data"
     fstype: ext4
 

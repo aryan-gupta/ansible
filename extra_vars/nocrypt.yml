@@ -1,5 +1,0 @@
----
-
-dev_postfix: "{{ lvm_postfix }}"
-pv_device: "{{ install_disk }}{{ part_postfix }}2"
-root_disk: "{{ pv_device }}"

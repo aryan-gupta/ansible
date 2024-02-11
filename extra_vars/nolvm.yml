@@ -1,3 +1,0 @@
----
-dev_postfix: "{{ crypt_postfix }}"
-root_disk: "/dev/mapper/{{ hostname }}{{ dev_postfix }}-root"

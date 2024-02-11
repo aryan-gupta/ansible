@@ -7,37 +7,38 @@ partitions:
     name: efi
     number: 1
     start: 0%
-    end: 512MiB
+    end: "{{ boot_vol_size }}iB"
     label: "{{ system_name }}"
   - device: "{{ install_disk }}"
     flags: [  ]
     name: linux
     number: 2
-    start: 512MiB
+    start: "{{ boot_vol_size }}iB"
     end: 100%
     label: "{{ (hostname) if nocrypt == true else (hostname + crypt_postfix) }}"
 
+# @TODO remove the GiB and use the unit argument
 crypt_partitions:
-  - device: "{{ install_disk }}"
+  - device: "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
     flags: [  ]
     name: linux
     number: 1
     start: 0%
-    end: "{{ root_vol_size }}"
+    end: "{{ root_vol_size }}iB"
     label: "{{ hostname }}{{ dev_postfix }}-root"
-  - device: "{{ install_disk }}"
+  - device: "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
     flags: [  ]
     name: linux
     number: 2
-    start: "{{ root_vol_size }}"
-    end: "{{ var_vol_size }}"
+    start: "{{ root_vol_size }}iB"
+    end: "{{ (root_vol_size[:-1] | int) + (var_vol_size[:-1] | int) }}GiB"
     label: "{{ hostname }}{{ dev_postfix }}-var"
-  - device: "{{ install_disk }}"
+  - device: "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
     flags: [  ]
     name: linux
     number: 3
-    start: "{{ var_vol_size }}"
-    end: "{{ data_vol_size }}"
+    start: "{{ (root_vol_size[:-1] | int) + (var_vol_size[:-1] | int) }}GiB"
+    end: "{{ (root_vol_size[:-1] | int)*1024 + (var_vol_size[:-1] | int)*1024 + (data_vol_size[:-1] | int) }}MiB"
     label: "{{ hostname }}{{ dev_postfix }}-data"
 
 plain_partitions:
@@ -47,26 +48,26 @@ plain_partitions:
     name: efi
     number: 1
     start: 0%
-    end: 512MiB
+    end: "{{ boot_vol_size }}iB"
     label: "{{ system_name }}"
   - device: "{{ install_disk }}"
     flags: [  ]
     name: linux
     number: 2
-    start: 512MiB
-    end: "{{ root_vol_size }}"
+    start: "{{ boot_vol_size }}iB"
+    end: "{{ (boot_vol_size[:-1] | int) + (root_vol_size[:-1] | int)*1024 }}MiB"
     label: "{{ hostname }}-root"
   - device: "{{ install_disk }}"
     flags: [  ]
     name: linux
     number: 3
-    start: "{{ root_vol_size }}"
-    end: "{{ var_vol_size }}"
+    start: "{{ (boot_vol_size[:-1] | int) + (root_vol_size[:-1] | int) }}MiB"
+    end: "{{ (boot_vol_size[:-1] | int) + (root_vol_size[:-1] | int)*1024 + (var_vol_size[:-1] | int)*1024 }}MiB"
     label: "{{ hostname }}-var"
   - device: "{{ install_disk }}"
     flags: [  ]
     name: linux
     number: 4
-    start: "{{ var_vol_size }}"
-    end: "{{ data_vol_size }}"
+    start: "{{ (boot_vol_size[:-1] | int) + (root_vol_size[:-1] | int)*1024 + (var_vol_size[:-1] | int)*1024 }}MiB"
+    end: "{{ (boot_vol_size[:-1] | int) + (root_vol_size[:-1] | int)*1024 + (var_vol_size[:-1] | int)*1024 + (data_vol_size[:-1] | int)*1024 }}MiB"
     label: "{{ hostname }}-data"

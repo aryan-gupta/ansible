@@ -1,5 +1,12 @@
 ---
 
+pv_device: >-
+  {{
+    (install_disk + part_postfix + '2')
+    if nocrypt == true else
+    ('/dev/mapper/' + hostname + crypt_postfix)
+  }}
+
 lvm:
   pv:
     - device: "{{ pv_device }}"

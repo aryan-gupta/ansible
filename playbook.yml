@@ -15,29 +15,27 @@
   connection: local
   tags: ['bootstrap']
 
-  pre_tasks:
-    - include_vars: "extra_vars/disks.yml"
-      when: '(nocrypt == false) and (nolvm == false)'
-    - include_vars: "extra_vars/nocrypt.yml"
-      when: '(nocrypt == true ) and (nolvm == false)'
-    - include_vars: "extra_vars/nolvm.yml"
-      when: '(nocrypt == false) and (nolvm == true )'
-    - include_vars: "extra_vars/plain.yml"
-      when: '(nocrypt == true ) and (nolvm == true )'
-
   roles:
     - role: 'uefi'
-    - role: 'part'
-      vars: { mode: 'plain' }
-      when: '(nocrypt == true ) and (nolvm == true )'
-    - role: 'part'
+
+    - role: 'part' # default and nocrypt and nolvm and !plain
       vars: { mode: 'disk'  }
+      when: '(nocrypt == false) or (nolvm == false)'
+
+    - role: 'part' # !default and !nocrypt and !nolvm and plain
+      vars: { mode: 'plain' }
+      when: '(nocrypt == true) and (nolvm == true)'
+
+    - role: 'luks' # default and !nocrypt and nolvm and !plain
+      when: 'nocrypt == false'
+
+    - role: 'lvm' # default and nocrypt and !nolvm and !plain
       when: 'nolvm == false'
-    - role: 'luks'
-    - role: 'lvm'
-    - role: 'part'
-      vars: { mode: 'luks'  }
-      when: 'nolvm == true'
+
+    - role: 'part' # !default and !nocrypt and nolvm and !plain
+      vars: { mode: 'luks' }
+      when: '(nocrypt == false) and (nolvm == true)'
+
     - role: 'fsmnt'
     - role: 'packages'
       vars: { modes: [ 'boot' ] }
