@@ -17,6 +17,8 @@
 
   roles:
     - role: 'uefi'
+    - role: 'wipe'
+      when: never # [TESTING] needed
 
     - role: 'part' # default and nocrypt and nolvm and !plain
       vars: { mode: 'disk'  }

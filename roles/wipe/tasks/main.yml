@@ -1,0 +1,80 @@
+---
+- name: sync disks
+  cmd: sync
+
+- name: unmount other fs
+  mount: "{{ arch_root }}/{{ item.path }}"
+  state: unmounted
+  with_items: "{{ mounts }}"
+  tags: unmount
+
+- name: unmount root fs
+  mount: "{{ root.path }}"
+  state: unmounted
+  tags: unmount
+
+- name: remove lvs
+  community.general.lvol:
+    vg: "{{ item.vg }}"
+    lv: "{{ item.name }}"
+    state: absent
+    force: true
+  with_items: "{{ lvm.lv }}"
+  tags: dev-remove
+
+- name: remove vgs
+  community.general.lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.pvs }}"
+    state: absent
+    force: true
+  with_items: "{{ lvm.vg }}"
+  tags: dev-remove
+
+- name: remove pvs
+  cmd: "pvremove -y -ff {{ pv_device }}"
+  tags: dev-remove
+
+- name: dd the vol
+  community.general.filesize:
+    path: "{{ pv_device }}"
+    blocksize: 1M
+    blocks: 32
+    source: "/dev/zero"
+  tags: dd-crypt
+
+- name: remove crypt
+  community.crypto.luks_device:
+    device: "/dev/mapper/{{ crypt[0].name }}"
+    state: "absent"
+  tags: dd-crypt
+
+- name: run dmsetup
+  cmd: "dmsetup remove {{ item.vg }}-{{ item.name }}"
+  with_items: "{{ lvm.lv }}"
+  tags: dms-remove
+
+- name: run dmsetup
+  cmd: "dmsetup remove /dev/mapper/{{ crypt[0].name }}"
+  tags: dms-remove
+
+- name: dd the disks
+  community.general.filesize:
+    path: "{{ item }}"
+    blocksize: 1M
+    blocks: 32
+    source: "/dev/zero"
+  with_items:
+    - "{{ install_disk }}{{ part_postfix }}1"
+    - "{{ install_disk }}{{ part_postfix }}2"
+    - "{{ install_disk }}"
+  tags: dd-disks
+
+- name: sync disks
+  cmd: sync
+
+- name: update kernel vols
+  cmd: "lvmdiskscan"
+
+- name: update kernel parts
+  cmd: "partprobe"
