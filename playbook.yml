@@ -67,6 +67,8 @@
   connection: chroot
   become_user: "{{ user.name }}"
   tags: ['user']
+  vars:
+    ansible_become_pass: "{{ user_password }}"
 
   roles:
     - role: 'dotfile'

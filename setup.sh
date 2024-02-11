@@ -73,7 +73,6 @@ export ANSIBLE_LOG_PATH="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 #
 
 ansible-playbook playbook.yml \
-    --extra-vars "ansible_become_pass=$user_password" \
     --extra-vars "@group_vars/all_secret.yml" \
     --extra-vars "@host_vars/$1.yml" \
         "${@:2}"
