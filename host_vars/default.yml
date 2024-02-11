@@ -7,8 +7,8 @@ part_postfix: ""
 
 boot_vol_size: 512M
 root_vol_size: 10G
-var_vol_size: 9G
-data_vol_size: 128M
+var_vol_size: 8G
+data_vol_size: 1G
 
 nocrypt: false
 nolvm: false
