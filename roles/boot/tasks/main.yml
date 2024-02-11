@@ -13,7 +13,7 @@
 # partitions[0].number
 # partitions[0].label
 
-- name: include vars from part
+- name: include vars from crypt
   include_vars: roles/luks/defaults/main.yml
   when: nocrypt == false
 # needed_vars:

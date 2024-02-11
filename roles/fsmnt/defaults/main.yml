@@ -1,6 +1,10 @@
 ---
 root_superblock: "{{ install_disk }}{{ part_postfix }}2"
 
+# boot_postfix changes depending on the context. If plain disk prov is used
+# root_postfix is 2 (see [README.md](README.md#plain)). If any other is used
+# the root_postfix is 1 since the root partition is on the crypt device
+# ot the root_postfix is -root if LVM is used
 boot_postfix: "{{ (1 | int) if (nocrypt == true) and (nolvm == true) else (0 | int) }}"
 root_postfix: "{{ (boot_postfix | int + 1) if nolvm == true else  '-root'  }}"
 var_postfix:  "{{ (root_postfix | int + 1) if nolvm == true else  '-var'   }}"
@@ -22,10 +26,12 @@ dev_postfix: >-
     crypt_postfix
   }}
 
+# @TODO merge this into mounts
+# use `root_part_idx: 1` instead of this
 root:
   device: "{{ pre_disk }}{{ dev_postfix }}{{ root_postfix }}"
   path: "/"
-  chroot_path: "/mnt"
+  chroot_path: "{{ arch_root }}"
   fstype: ext4
 
 mounts:

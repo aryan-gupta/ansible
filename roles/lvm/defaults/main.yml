@@ -1,5 +1,7 @@
 ---
 
+# the device that LVM resides on. This is disk partition 2 if
+# nocrypt else it is the crypt name
 pv_device: >-
   {{
     (install_disk + part_postfix + '2')

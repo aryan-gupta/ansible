@@ -230,6 +230,56 @@ Install Disk: /dev/vda
 One more time: DELETE ALL DATA on /dev/vda? [y/N]: y
 ```
 
+## Disk Schema
+At some point I thought that it would be easy to abstract away LVM and LUKS and created two variables: `nocrypt` and `nolvm`. This made this ansible code 9000% more complicated and well, I refuse to throw away the time I spent on it. I doubt I will ever be using the `nolvm` flag but `nocrypt` may be used on my server. This is TBD. The 4 different disk schema are documented below:
+
+#### default
+My default config. [LVM on LUKS](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS). Offers the best best balence between usability and security. `sda1` only contains signed efi binaries from secureboot (if enabled) to protect the LUKS dev. The password must be used to unlock the drive. User is automatically logged in. The LUKS password is "the password", having a user password makes no sense since it offers no additional protection other than annoyance that I have to put in a password twice to login. If the LUKS password is compromised, the machine is compromised. The user does have a password to prevent human stupidity.
+
+```
+sda                   disk
+├─sda1                part  /efi
+└─sda2                part
+  └─default_crypt     crypt
+    ├─default_lv-root lvm   /
+    ├─default_lv-var  lvm   /var
+    └─default_lv-data lvm   /data
+```
+
+#### nocrypt
+This is the same as the previous config but without a LUKS layer.
+
+```
+sda                   disk
+├─sda1                part  /efi
+└─sda2                part
+  ├─default_lv-root   lvm   /
+  ├─default_lv-var    lvm   /var
+  └─default_lv-data   lvm   /data
+```
+#### nolvm
+This does not work. See [(https://bbs.archlinux.org/viewtopic.php?id=281802)](https://bbs.archlinux.org/viewtopic.php?id=281802). It seems that partprobe is not run after a sucessful decryption of `*_crypt`
+
+```
+sda                   disk
+├─sda1                part  /efi
+└─sda2                part
+  └─default_crypt     crypt
+    ├─default_crypt1  part  /
+    ├─default_crypt2  part  /var
+    └─default_crypt3  part  /data
+```
+#### plain
+This implies both nocrypt and nolvm. This is a flat partitioning schema
+
+```
+sda                   disk
+├─sda1                part  /efi
+├─sda2                part  /
+├─sda3                part  /var
+└─sda4                part  /data
+
+```
 ## Issues
 This section will never be updated and will be removed once issues have been resolved
 [ommited](https://en.wikipedia.org/wiki/Security_through_obscurity)
@@ -250,3 +300,114 @@ This section will never be updated and will be removed once issues have been res
   - retired ~~Asus Z97 Custom Build~~
 - default
   - reserved for VM test installs
+
+<!-- ## Reservations
+- axion : VPN site-to-site local / Firewall / Router
+  - axion: network
+  - OPNsense
+- charm :  Proxmox / Low energy VMs
+  - ODroid H2 - https://www.hardkernel.com/shop/odroid-h2/
+- muon : TCL TV
+- higgs : Intel Stick server
+- photon : ODroid N2 server
+<!-- - tachyon : Desk Smartclock ->
+- dyon : docker swarm cluster
+  - dyon: DHCP/DNS
+  - https://medium.com/@jsakov/kea-host-reservation-with-mysql-database-caae804538e2
+  - naming: dyon00, dyon01
+  - items: Home Assistant, InfluxDB, HA Bridge, Grafana, PiHole, Gogs, Jenkins, MQTT, Ansible, Print server, Kea DHCP/DNS
+- electron : Old ASUS EeeBook Laptop
+- tachyon : KVM VM System
+  - Torrents, Windows 10 Office, Work VM
+- zino : IOT Devices
+  - naming - zino-ir
+  - postfixes:
+    - ir : IR Remotes
+    - relay : Replay controlled outlets
+    - light : lights
+-->
+
+<!--
+## Next Devices (alpha-unique)
+- fermion
+- inflaton
+- j
+- kaon
+- lepton
+- neutrino
+- o
+- quark
+- r
+- saxion
+- upquark
+- v
+- wino
+- x
+- y
+
+## Future Devices
+- anyon
+- axino
+    - axion
+- baryon
+    - boson
+- bradyon
+- branon
+- chargino
+- dilatino
+- dilaton
+- dyon
+- electron
+- exciton
+- fermions
+- geon
+- glueball
+- gluino
+- goldstino
+- goldstone
+- graviphoton
+- graviscalar
+    - graviton
+- hadron
+    - higgs
+- higgsino
+- hyperon
+- inflaton
+- instanton
+- isotope
+- kaon
+- lepton
+- luxon
+- magnon
+- majoron
+- majorona
+- meson
+- muon
+- neutralino
+- neutrino
+- neutron
+- pentaquark
+- phonon
+- photino
+    - photon
+- pion
+- plasmon
+- plekton
+- polariton
+- polaron
+- positron
+- preon
+- proton
+- quark
+- saxino
+- skyrmion
+- slepton
+- sneutron
+- spurion
+- squark
+    - tachyon
+- tardyon
+- tauon
+- tetraquark
+- wino
+- zino -->

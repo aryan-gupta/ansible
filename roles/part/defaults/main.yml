@@ -1,4 +1,7 @@
 ---
+# convert all the sizes to KB since after much frustration
+# I have found this to be easier to use. Will replace if I
+# think of something better to use
 boot_vol_size_kb: >-
   {{
     (boot_vol_size[:-1] | int)
@@ -43,7 +46,7 @@ data_vol_size_kb: >-
     (data_vol_size[:-1] | int * 1024 * 1024 * 1024)
   }}
 
-
+# partitioning schema for default, nocrypt, nolvm
 partitions:
   # index 0 must be esp/efi/boot partition
   - device: "{{ install_disk }}"
@@ -61,6 +64,7 @@ partitions:
     end: 100%
     label: "{{ (hostname) if nocrypt == true else (hostname + crypt_postfix) }}"
 
+# secondary partitioning schema for nolvm
 crypt_partitions:
   - device: "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
     flags: [  ]
@@ -84,6 +88,7 @@ crypt_partitions:
     end:   "{{ root_vol_size_kb | int + var_vol_size_kb | int + data_vol_size_kb | int }}KiB"
     label: "{{ hostname }}{{ dev_postfix }}-data"
 
+# secondary partitioning schema for plain
 plain_partitions:
   # index 0 must be esp/efi/boot partition
   - device: "{{ install_disk }}"

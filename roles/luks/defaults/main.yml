@@ -1,12 +1,14 @@
 ---
+# @TODO do not use date_time for keyfile nameing
+# use the UUID of the disk or crypt partition
 crypt:
   - device: "{{ install_disk }}{{ part_postfix }}2"
-    name: "{{ partitions[1].label }}"
+    name: "{{ hostname + crypt_postfix }}"
     type: luks2
     cipher: aes-xts-plain64
     keysize: 512
     hash: sha512
     passphrase: "{{ luks_password }}"
-    keyfile_name: "{{ partitions[1].label }}_{{ ansible_date_time.date }}"
-    keyfile: "/tmp/{{ partitions[1].label }}_{{ ansible_date_time.date }}"
+    keyfile_name: "{{ hostname + crypt_postfix }}_{{ ansible_date_time.date }}"
+    keyfile: "/tmp/{{ hostname + crypt_postfix }}_{{ ansible_date_time.date }}"
     keyfile_len: 64
