@@ -6,16 +6,16 @@ github_username: aryan-gupta
 email: "me@theguptaempire.net"
 
 arch_root: /mnt
-lvm_postfix: "_lv"
-crypt_postfix: "_crypt"
-domain_suffix: gempi.re
 
 kernel: linux-lts
+lvm_postfix: "_lv"
+crypt_postfix: "_crypt"
 
 locales:
   - en_US.UTF-8
 country: United States
 timezone: America/New_York
+domain_suffix: gempi.re
 
 modprobe_modules:
   - tun
