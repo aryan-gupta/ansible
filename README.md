@@ -25,6 +25,17 @@ sh -c "$(curl -fsSL $WEBSTRAP_URL)" "boson" --start-at-task="Check if in UEFI mo
 sh -c "$(curl -fsSL $WEBSTRAP_URL)" "graviton" --extra-vars '{"nocrypt":true}' --start-at-task="Check if in UEFI mode"
 ```
 
+### Secrets
+Currently I have not figured out a way to handle secrets and is just a file I `scp` around. I hope to have a secrets manegment system so I can more easily handle keys and the like. A minimal secrets file is shown below.
+
+```yaml
+---
+user_password: "<user-passwd>"
+root_password: "<root-passwd>"
+luks_password: "<luks-passwd>"
+
+```
+
 ## Features
 ### Base
 - Arch linux

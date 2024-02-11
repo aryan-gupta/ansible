@@ -59,6 +59,7 @@
     src: pia_passwd.j2
     dest: /var/tmp/pia_passwd
     mode: 777
+  when: pia_username is defined
 
 #- name: pia login
 #  ansible.builtin.command:
