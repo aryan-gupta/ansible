@@ -1,7 +1,7 @@
 ---
 root_superblock: "{{ install_disk }}{{ part_postfix }}2"
 
-boot_postfix: "{{            (0 | int)     if nolvm == true else (1 | int) }}"
+boot_postfix: "{{ (1 | int) if (nocrypt == true) and (nolvm == true) else (0 | int) }}"
 root_postfix: "{{ (boot_postfix | int + 1) if nolvm == true else  '-root'  }}"
 var_postfix:  "{{ (root_postfix | int + 1) if nolvm == true else  '-var'   }}"
 data_postfix: "{{ ( var_postfix | int + 1) if nolvm == true else  '-data'  }}"
