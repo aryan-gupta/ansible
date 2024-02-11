@@ -1,5 +1,4 @@
 ---
-
 - name: create life folders
   ansible.builtin.file:
     state: directory

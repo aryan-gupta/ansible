@@ -1,13 +1,27 @@
 ---
-- stat: path="{{ secureboot_keytarpacket.src }}"
-  register: optional_file
+- name: create secure folder on data drive
+  file:
+    path: "{{ arch_root }}/data/secure"
+    state: directory
+
+- name: copy encryption key into root partition
+  copy:
+    src: "{{ item.keyfile }}"
+    dest: "{{ arch_root }}/data/secure/{{ item.keyfile_name }}"
+  with_items: "{{ crypt }}"
+  when: nocrypt == false
+
+- name: check secureboot
+  stat:
+    path: "{{ secureboot_keytarpacket.src }}"
+  register: secureboot_file
 
 - name: create secureboot directory
   file:
     path: "{{ secureboot_keytarpacket.unzippath }}"
     state: 'directory'
-  when: optional_file.stat.exists
-  ignore_errors: True
+  when: secureboot_file.stat.exists
+  ignore_errors: true
 
 - name: copy secureboot file into chroot
   copy:
@@ -15,5 +29,5 @@
     dest: "{{ arch_root }}/{{ secureboot_keytarpacket.dest }}"
     owner: root
     group: root
-  when: optional_file.stat.exists
-  ignore_errors: True
+  when: secureboot_file.stat.exists
+  ignore_errors: true

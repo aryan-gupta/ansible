@@ -1,20 +1,24 @@
 ---
 
 hostname: 'default'
+
 install_disk: "/dev/vda"
-root_vol_size: 10G
-var_vol_size: 9G
-data_vol_size: 128M
 part_postfix: ""
+
+boot_vol_size: 512M
+root_vol_size: 10G
+var_vol_size: 8G
+data_vol_size: 1G
+
+nocrypt: false
+nolvm: false
+secureboot: false
 
 initramfs_modules: []
 
-# this var cannot be []. The script will fail with nothing but
-#         TASK [packages : install packages] *********************************************************************************************************************************************************************************
-#         fatal: [/mnt]: FAILED! => {"changed": false, "msg": "This is a bug"}
 packages:
-  - base
+  - qemu-guest-agent
 
 # only intel and amd are valid. All others are ignored
 # and no ucode will be installed
-cpu_manufacturer: default
+cpu_manufacturer: null

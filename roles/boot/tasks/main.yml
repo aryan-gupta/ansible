@@ -1,4 +1,24 @@
 ---
+- name: include vars from fsmnt
+  include_vars: roles/fsmnt/defaults/main.yml
+# needed_vars:
+# mounts[0].path
+# root.disk
+# root.device
+
+- name: include vars from part
+  include_vars: roles/part/defaults/main.yml
+# needed_vars:
+# partitions[0].device
+# partitions[0].number
+# partitions[0].label
+
+- name: include vars from part
+  include_vars: roles/luks/defaults/main.yml
+  when: nocrypt == false
+# needed_vars:
+# crypt[0].name
+
 - name: install intel microcode
   pacman:
     name: intel-ucode
@@ -45,12 +65,7 @@
     - "default"
     # - "fallback"
 
-# - name: add preset file splash
-#   lineinfile:
-#     path: /etc/mkinitcpio.d/{{ kernel }}.preset
-#     regexp: '^#default_options'
-#     line: 'default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"'
-
+# @TODO make this idempotent
 - name: delete old boot entries
   shell: >-
     variable=$(efibootmgr | grep "{{ partitions[0].label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
@@ -63,35 +78,32 @@
     - "/boot/initramfs-{{ kernel }}.img"
     - "/boot/initramfs-{{ kernel }}-fallback.img"
 
-- include_tasks: plymouth.yml
-
 - name: get root UUID
-  command: blkid -s UUID -o value {{ crypt[0].device }}
+  command: blkid -s UUID -o value {{ root_superblock }}
   register: root_uuid
-  changed_when: False
+  changed_when: false
   check_mode: no
+  when: nocrypt == false
 
+# @TODO see if we can combine these two tasks so it doesnt rely on the when
 - name: save cmdline boot
   copy:
     dest: /etc/kernel/cmdline
     content: 'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} rd.luks.options=timeout=0 root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
+  when: nocrypt == false
+
+- name: save cmdline boot no crypt
+  copy:
+    dest: /etc/kernel/cmdline
+    content: 'root={{ root.device }} rootflags=x-systemd.device-timeout=0 rw quiet splash loglevel=3 fbcon=nodefer'
+  when: nocrypt == true
 
 - name: rebuild UKI
   command: mkinitcpio -p {{ kernel }}
-# WARNING: THIS IS BAD and will be replaced when sbctl is working
-#  register: mkinit_res
-#  failed_when: ( mkinit_res.rc not in [ 0, 1 ] )
   args:
     creates:
       - "{{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
       # - "/boot/arch-{{ kernel }}-fallback.efi"
-
-- stat: path="{{ secureboot_keytarpacket.src }}"
-  register: optional_file
-
-- include_tasks: secureboot.yml
-  when: optional_file.stat.exists
-  ignore_errors: True
 
 - name: restrict access permissions to UKI efi file
   file:
@@ -101,7 +113,7 @@
     - "default"
     # - "fallback"
 
-- name: setup boot items
+- name: create NVRAM entry
   shell: >-
     efibootmgr
     --create
@@ -111,5 +123,4 @@
     --loader "/{{ hostname }}-arch-{{ kernel }}-default.efi"
     --unicode
     --verbose
-
-#    'rd.luks.name={{ root_uuid.stdout }}={{ crypt[0].name }} root={{ root.device }} rw initrd=\initramfs-{{ kernel }}.img initrd=\{{ cpu_manufacturer }}-ucode.img loglevel=0'
+# when: delete old boot entries runs

@@ -1,19 +1,25 @@
 ---
 hostname: 'boson'
+
 install_disk: "/dev/disk/by-id/nvme-WDC_PC_SN730_SDBQNTY-512G-1001_21081F804906"
+part_postfix: "-part"
+
+boot_vol_size: 512M
 root_vol_size: 64G
 var_vol_size: 8G
 data_vol_size: 398G
-part_postfix: "-part"
+
+nocrypt: false
+nolvm: false
+secureboot: false
 
 initramfs_modules:
   - i915
 
 packages:
-  # - cura
-  - acpilight # BOSON ONLY laptop backlight
-  - sof-firmware
   - intel-media-driver
   - intel-gpu-tools
+  - acpilight
+  - nvme-cli
 
 cpu_manufacturer: intel

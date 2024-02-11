@@ -14,6 +14,27 @@
     directory_mode: yes
     remote_src: true
 
+#
+# @TODO
+# the goal of this command is to test if this config:
+#
+#   [Daemon]
+#   Theme=owl
+#
+# exists in the file: /etc/plymouth/plymouthd.conf
+# according to this: https://stackoverflow.com/questions/30786263/
+# a clean method does not exist. An alternative is this:
+#
+# - name: set plymouth settings
+#   copy:
+#     dest: /etc/plymouth/plymouthd.conf
+#     content: |
+#       [Daemon]
+#       Theme=owl
+#       # below option is optional
+#       # ShowDelay=2
+#
+
 - name: change plymouth default theme
   ansible.builtin.command: plymouth-set-default-theme owl
 
@@ -38,11 +59,3 @@
     src: plymouth-quit-override.conf.j2
     dest: /etc/systemd/system/plymouth-quit.service.d/override.conf
     mode: 644
-
-# - name: set plymouth settings
-#   copy:
-#     dest: /etc/kernel/cmdline
-#     content: |
-#       [Daemon]
-#       Theme=owl
-#       ShowDelay=2

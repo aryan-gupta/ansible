@@ -1,0 +1,44 @@
+---
+
+# ======================== FS ============================
+
+- name: format root part
+  community.general.filesystem:
+    device: "{{ root.device }}"
+    fstype: "{{ root.fstype }}"
+
+- name: Mount root partition
+  ansible.posix.mount:
+    path: "{{ arch_root }}"
+    src: "{{ root.device }}"
+    fstype: "{{ root.fstype }}"
+    state: mounted
+
+- name: Format partitions
+  community.general.filesystem:
+    device: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+  with_items: "{{ mounts }}"
+
+# ======================== MNT ============================
+
+- name: Create mount points
+  file:
+    path: "{{ arch_root }}{{ item.path }}"
+    state: directory
+    mode: '0755'
+  with_items: "{{ mounts }}"
+
+- name: Mount rest of partitions
+  ansible.posix.mount:
+    path: "{{ arch_root }}{{ item.path }}"
+    src: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  with_items: "{{ mounts }}"
+
+# ======================== SWAP ============================
+
+- name: Set swapon partitions
+  command: "swapon {{ swap_part }}"
+  when: swap_part is defined

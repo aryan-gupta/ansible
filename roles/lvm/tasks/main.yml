@@ -1,0 +1,21 @@
+---
+
+# - name: Create pvs
+#   shell: "pvcreate {{ item.device }}"
+#   with_items: "{{ lvm.pv }}"
+
+- name: Create LVM vgs
+  community.general.lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.pvs }}"
+    pvresize: "{{ item.pvresize }}"
+  with_items: "{{ lvm.vg }}"
+
+- name: Create LVM lvs
+  community.general.lvol:
+    vg: "{{ item.vg }}"
+    lv: "{{ item.name }}"
+    size: "{{ item.size }}"
+  # args:
+  #   creates: "/dev/mapper/{{ item.vg }}-{{ item.name }}"
+  with_items: "{{ lvm.lv }}"

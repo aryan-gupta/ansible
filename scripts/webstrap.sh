@@ -2,11 +2,13 @@
 
 this_repo="https://github.com/aryan-gupta/ansible"
 repo_path="/tmp/ansible"
-secrets_file="/tmp/ansible/group_vars/all_secret.yml"
 
-if [ $# -eq 0 ]; then
+if [ -z "$0" ]; then
     echo -n "Host Name: "
     read host
+else
+    host="$0"
+    echo "Using provided hostname: $host"
 fi
 
 if ping -c 1 "8.8.8.8"; then
@@ -34,6 +36,7 @@ fi
 # https://github.com/zxiiro/ansible-arch-install
 mount -o remount,size=1G /run/archiso/cowspace
 timedatectl set-timezone "America/New_York"
+timedatectl set-ntp true
 sleep 10
 timedatectl # verify date is correct for keys below
 
@@ -48,30 +51,7 @@ git clone $this_repo $repo_path
 cd $repo_path
 git checkout develop
 
-while [ ! -f "$secrets_file" ]
-do
-    echo "[ERROR]: $secrets_file doesnt exist."
-    echo "Waiting on secrets file."
-    echo "This will be removed when screts manegment"
-    echo "isnt scp'ing it into the test VM"
-    echo "sleeping 5 more seconds"
-    echo "\n\n\n"
-    sleep 5
+# @TODO I need to figure out how to enable public
+# key ssh'ing as I belive archiso does support it
 
-done
-
-# if we are in a ssh shell, then delete the password (as a test)
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-  SESSION_TYPE=remote/ssh
-# many other tests omitted
-else
-  case $(ps -o comm= -p "$PPID") in
-    sshd|*/sshd) SESSION_TYPE=remote/ssh;;
-  esac
-fi
-
-if [ "$SESSION_TYPE" = "remote/ssh" ]; then
-    passwd -d `whoami`
-fi
-
-sh ./setup.sh $host
+sh ./setup.sh $host "${@:1}"
