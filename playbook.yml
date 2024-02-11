@@ -16,13 +16,13 @@
   tags: ['bootstrap']
 
   pre_tasks:
-    - include_vars: "host_vars/disks.yml"
+    - include_vars: "extra_vars/disks.yml"
       when: '(nocrypt == false) and (nolvm == false)'
-    - include_vars: "host_vars/nocrypt.yml"
+    - include_vars: "extra_vars/nocrypt.yml"
       when: '(nocrypt == true ) and (nolvm == false)'
-    - include_vars: "host_vars/nolvm.yml"
+    - include_vars: "extra_vars/nolvm.yml"
       when: '(nocrypt == false) and (nolvm == true )'
-    - include_vars: "host_vars/plain.yml"
+    - include_vars: "extra_vars/plain.yml"
       when: '(nocrypt == true ) and (nolvm == true )'
 
   roles:
