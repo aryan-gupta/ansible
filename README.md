@@ -3,9 +3,23 @@ An Ansible Playbook to setup my Linux machines. From the platform of Arch linux 
 
 
 ## Installing
-Run this command to start the install. It will ask you if you want to wipe the disk.
+Boot into the archiso, connect to the internet, and run one of these commands to start the install. It will ask you if you want to wipe the disk.
+- Replace `/master/` in the URL to `/develop/` switch to develop branch
+- The first argument specifies the hostname.
+- The disk style can be changed using these extra arguments. `-e` is short for `--extra-vars`
+  - `-e '{"nocrypt":false, "nolvm":false}'` : Redundantly specify default config
+  - `-e '{"nocrypt":true}'`                 : Do not setup luks
+  - `-e '{"nolvm":true}'`                   : Do not setup LVM
+  - `-e '{"nocrypt":true, "nolvm":true}'`   : Do not setup luks or LVM
+- The `--start-at-task` argument can be used to resume playbook after resolving an failure
+
 ```shell
-curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh | sh -s "default"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/scripts/webstrap.sh)" "default"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"  "default" -e '{"nocrypt":true}'
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"  "boson" --start-at-task="Check if in UEFI mode"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)"  "default" --extra-vars '{"nocrypt":true}' --start-at-task="Check if in UEFI mode"
+
+```
 
 ```
 

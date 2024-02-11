@@ -25,7 +25,7 @@
   with_items: "{{ crypt_partitions }}"
   when: "(nolvm == true) and (mode == 'luks')"
 
-- name: Create on crypt partitions
+- name: Create on raw partitions
   community.general.parted:
     state: present
     device: "{{ item.device }}"

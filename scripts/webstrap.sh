@@ -3,11 +3,11 @@
 this_repo="https://github.com/aryan-gupta/ansible"
 repo_path="/tmp/ansible"
 
-if [ $# -eq 0 ]; then
+if [ -z "$0" ]; then
     echo -n "Host Name: "
     read host
 else
-    host="$1"
+    host="$0"
     echo "Using provided hostname: $host"
 fi
 
@@ -54,4 +54,4 @@ git checkout develop
 # @TODO I need to figure out how to enable public
 # key ssh'ing as I belive archiso does support it
 
-sh ./setup.sh $host "${@:2}"
+sh ./setup.sh $host "${@:1}"

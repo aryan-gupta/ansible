@@ -59,7 +59,7 @@
     - role: 'secureboot'
       when: 'secureboot == true'
     - role: 'accounts'
-    - role: 'folders' # /home/aryan and /life
+    - role: 'folders'
       vars: { mode: 'root' }
 
 - hosts: chroot
