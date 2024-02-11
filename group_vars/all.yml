@@ -49,50 +49,30 @@ base_packages:
   - pacman-contrib
   - fwupd
   - arch-install-scripts
+  - archiso
 
   # hardware
   - lm_sensors
+  - sof-firmware
 
   # system
-  - base-devel
   - exfatprogs
   - ntfs-3g
+  - cifs-utils
   - dosfstools
   - lvm2
   - nfs-utils
   - cryptsetup
-  - efibootmgr
   - plymouth # boot splash screen
   - sbctl # secure boot
-
-  # audio
-  - alsa-utils
-  - pipewire
-  - wireplumber
-  - pipewire-audio
-  - pipewire-pulse
-  - pipewire-alsa
-  # - pipewire-jack # one day I will have a real time kernel and a sound room
-
-  # network
-  - wpa_supplicant
-  - networkmanager
-
-  # WM
-  - xorg
-  - xorg-xinit
-
-  # system utilities
   - sudo
   - htop
-  - tar
-  - zip
-  - unrar
-  - unzip
-  - inetutils
-  - rsync
+  - ntp
+  - gvfs
+  - smartmontools
 
   # devel
+  - base-devel
   - tk
   - git
   - git-lfs
@@ -102,10 +82,50 @@ base_packages:
   - code
   - gvim
   - gdb
+  - rsync
   - xterm
   - tmux
-  - ntp
   - bc
+  - tar
+  - zip
+  - unrar
+  - unzip
+  - strace
+  - usbutils
+
+  # security
+  - clamav
+  - rkhunter
+
+  # network
+  - inetutils
+  - wpa_supplicant
+  - networkmanager
+  - nm-connection-editor
+  - iwd
+  - net-tools
+
+  # WM
+  - xorg
+  - xorg-xinit
+  - xdotool
+  - wmname
+  - libva-utils
+  - gtk3
+  - arandr
+  - bspwm
+  - sxhkd
+
+  # audio
+  - rtkit
+  - alsa-utils
+  - pavucontrol
+  - pipewire
+  - wireplumber
+  - pipewire-audio
+  - pipewire-pulse
+  - pipewire-alsa
+  # - pipewire-jack # one day I will have a real time kernel and a sound room
 
   # python packages
   - python # who uses python 2 anymore?
@@ -121,33 +141,17 @@ base_packages:
   # user utilities
   - wget
   - jq
-  - iwd
-  - rtkit
-  - libva-utils
-  - cifs-utils
   - yt-dlp
-  - xdotool
-  - wmname
-  - usbutils
-  - strace
-  - gtk3
   - eog
-  - net-tools
   - unclutter
-  - gvfs
   - feh
   - neofetch
-
-  # applications
   - zsh
-  - arandr
-  - bspwm
-  - sxhkd
   - rofi
   - flameshot
   - picom
   - alacritty
-  - nitrogen
+  # - nitrogen
   - redshift
   - thunar
   - ranger
@@ -155,8 +159,8 @@ base_packages:
   # - gimp
   # - darktable
   # - kicad
-  - mpc
-  - ncmpcpp
+  # - mpc
+  # - ncmpcpp
   - dunst
   - firefox
   - vlc
@@ -167,14 +171,10 @@ base_packages:
   - transmission-cli
   - transmission-gtk
   - polybar
-  - pavucontrol
   - lxappearance-gtk3
   - baobab
   - calibre
-
-  # security
-  - clamav
-  - rkhunter
+  - discord
 
   # extras
   - noto-fonts-cjk
@@ -195,11 +195,9 @@ base_packages:
 aur_base_packages:
   - yay
   - xp-pen-tablet
-  # - picom-ibhagwan-git
   - piavpn-bin
   - brave-bin
   - cava
-  # - amdgpu_top
   # - sbctl-initcpio-post-hook
   # - plymouth-theme-owl-git
   # - cura
