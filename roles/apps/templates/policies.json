@@ -1,11 +1,12 @@
 {
   "policies":{
     "Extensions": {
-      "Install": [
+      "Locked": [
         "https://addons.mozilla.org/firefox/downloads/file/3551054/ublock_origin-latest.xpi",
         "https://addons.mozilla.org/firefox/downloads/file/4206186/noscript-latest.xpi",
-        "https://addons.mozilla.org/firefox/downloads/file/4128403/bitwarden_password_manager-latest.xpi",
-
+        "https://addons.mozilla.org/firefox/downloads/file/4128403/bitwarden_password_manager-latest.xpi"
+      ],
+      "Install": [
 	      "https://addons.mozilla.org/firefox/downloads/file/3756025/videospeed-latest.xpi",
         "https://addons.mozilla.org/firefox/downloads/file/4223104/darkreader-latest.xpi",
         "https://addons.mozilla.org/firefox/downloads/file/3535009/redirector-latest.xpi",
@@ -13,6 +14,22 @@
 	      "https://addons.mozilla.org/firefox/downloads/file/3914147/matte_black_violet-latest.xpi"
       ]
     },
+    "DisableBuiltinPDFViewer": true,
+    "DisplayMenuBar": "never",
+    "DontCheckDefaultBrowser": true,
+    "DisplayBookmarksToolbar": "newtab",
+    "DisableFeedbackCommands": true,
+    "DisableFirefoxScreenshots": true,
+    "DisableForgetButton": true,
+    "DisableFormHistory": true,
+    "DisablePrivateBrowsing": true,
+    "DisableProfileRefresh": true,
+    "DisableSafeMode": true,
+    "DisableSecurityBypass": {
+      "InvalidCertificate": true,
+      "SafeBrowsing": true
+    },
+    "DisableSystemAddonUpdate": true,
     "HardwareAcceleration": true,
     "ExtensionUpdate": true,
     "DisableTelemetry": true,
@@ -27,10 +44,19 @@
     },
     "FirefoxHome": {
       "Highlights": false,
+      "SponsoredTopSites": false,
       "Pocket": false,
       "Search": true,
+      "SponsoredPocket": false,
       "Snippets": false,
-      "TopSites": true
+      "TopSites": true,
+      "Locked": true
+    },
+    "FirefoxSuggest": {
+      "WebSuggestions": true,
+      "SponsoredSuggestions": false,
+      "ImproveSuggest": false,
+      "Locked": true
     },
     "OfferToSaveLogins": false,
     "PasswordManagerEnabled": false,
@@ -47,13 +73,40 @@
     "DefaultDownloadDirectory": "${home}",
     "DownloadDirectory": "${home}",
     "SearchSuggestEnabled": true,
+    "SearchBar": "unified",
     "OverrideFirstRunPage": "",
     "DisableMasterPasswordCreation": true,
     "DisablePocket": true,
     "DisableProfileImport": true,
     "DisableSetDesktopBackground": true,
     "SearchEngines": {
-      "Default": "DuckDuckGo"
+      "Default": "PrivateSearch",
+      "Add": [
+        {
+          "Name": "PrivateSearch",
+          "URLTemplate": "https://duckduckgo.com/?q={searchTerms}&t=h_&kp=1&ia=web",
+          "Method": "GET",
+          "IconURL": "https://duckduckgo.com/favicon.ico",
+          "Alias": "Ducky",
+          "Description": "Duck Duck Goose"
+        }
+      ],
+      "Remove": [
+        "Google",
+        "Amazon.com",
+        "Bing",
+        "eBay",
+        "Wikipedia (en)"
+      ]
+    },
+    "UserMessaging": {
+      "WhatsNew": false,
+      "ExtensionRecommendations": false,
+      "FeatureRecommendations": false,
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false,
+      "Locked": true
     }
   }
 }
