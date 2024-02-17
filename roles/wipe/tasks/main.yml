@@ -1,17 +1,50 @@
 ---
+
+#
+# #!/bin/sh
+# HOST="$1"
+#
+
 - name: sync disks
-  cmd: sync
+  ansible.builtin.command:
+    cmd: "sync"
+
+#
+# sync
+#
+
+- name: unmount fs
+  ansible.posix.mount:
+    path: "{{ arch_root }}/{{ item.path }}"
+    state: unmounted
+  with_items:
+    - "{{ mounts }}"
+    - "{{ root }}"
+  tags: unmount
+  ignore_errors: true
 
 - name: unmount other fs
-  mount: "{{ arch_root }}/{{ item.path }}"
-  state: unmounted
-  with_items: "{{ mounts }}"
+  ansible.posix.mount:
+    path: "{{ item }}"
+    state: unmounted
+  with_items:
+    - "/mnt/home"
+    - "/mnt/data"
+    - "/mnt/boot"
+    - "/mnt/efi"
+    - "/mnt/var"
+    - "/mnt"
   tags: unmount
+  ignore_errors: true
 
-- name: unmount root fs
-  mount: "{{ root.path }}"
-  state: unmounted
-  tags: unmount
+#
+# umount /mnt/home -rf
+# umount /mnt/data -rf
+# umount /mnt/boot -rf
+# umount /mnt/efi -rf
+# umount /mnt/var -rf
+# umount /mnt -rf
+#
 
 - name: remove lvs
   community.general.lvol:
@@ -19,8 +52,24 @@
     lv: "{{ item.name }}"
     state: absent
     force: true
-  with_items: "{{ lvm.lv }}"
+  with_items:
+    - "{{ lvm.lv }}"
   tags: dev-remove
+  ignore_errors: true
+
+- name: remove other lvs
+  community.general.lvol:
+    vg: "{{ hostname }}{{ lvm_postfix }}"
+    lv: "{{ item }}"
+    state: absent
+    force: true
+  with_items:
+    - "{{ hostname }}{{ lvm_postfix }}-home"
+    - "{{ hostname }}{{ lvm_postfix }}-data"
+    - "{{ hostname }}{{ lvm_postfix }}-root"
+    - "{{ hostname }}{{ lvm_postfix }}-var"
+  tags: dev-remove
+  ignore_errors: true
 
 - name: remove vgs
   community.general.lvg:
@@ -28,53 +77,175 @@
     pvs: "{{ item.pvs }}"
     state: absent
     force: true
-  with_items: "{{ lvm.vg }}"
+  with_items:
+    - "{{ lvm.vg }}"
   tags: dev-remove
+  ignore_errors: true
+
+- name: remove other vgs
+  community.general.lvg:
+    vg: "{{ item }}"
+    state: absent
+    force: true
+  with_items:
+    - "{{ hostname }}{{ lvm_postfix }}"
+  tags: dev-remove
+  ignore_errors: true
 
 - name: remove pvs
-  cmd: "pvremove -y -ff {{ pv_device }}"
+  ansible.builtin.command:
+    cmd: "pvremove -y -ff {{ pv_device }}"
   tags: dev-remove
+  ignore_errors: true
+
+#
+# I know this is bad
+# a future update will move this entire script into ansible so I
+# can support a partial install
+# @TODO remove this
+# LVM="$(grep "lvm_postfix"   group_vars/all.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)"
+# ENC="$(grep "crypt_postfix" group_vars/all.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)"
+# lvremove -ff "$HOST""$LVM""-home"
+# lvremove -ff "$HOST""$LVM""-data"
+# lvremove -ff "$HOST""$LVM""-root"
+# lvremove -ff "$HOST""$LVM""-var"
+# vgremove -ff "$HOST""$LVM"""
+# pvremove -y -ff "/dev/mapper/""$HOST""$ENC"
+#
 
 - name: dd the vol
-  community.general.filesize:
-    path: "{{ pv_device }}"
-    blocksize: 1M
-    blocks: 32
-    source: "/dev/zero"
+  # this does not work: failed: [default] (item=/dev/mapper/default_crypt) => {"ansible_loop_var": "item", "changed": false, "item": "/dev/mapper/default_crypt", "msg": "/dev/mapper/default_crypt exists but is not a regular file"}
+  # community.general.filesize:
+  #   path: "{{ item }}"
+  #   size: "32MiB"
+  #   source: "/dev/zero"
+  #   force: true
+  ansible.builtin.command:
+    cmd: 'dd if=/dev/zero of="{{ item }}" bs=1M count=32'
   tags: dd-crypt
+  with_items:
+    - "{{ pv_device }}"
+    - "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
+  ignore_errors: true
+
+#
+# dd if=/dev/zero of="/dev/mapper/""$HOST""$ENC" bs=1M count=32
+#
 
 - name: remove crypt
   community.crypto.luks_device:
-    device: "/dev/mapper/{{ crypt[0].name }}"
+    device: "{{ item }}"
     state: "absent"
+  with_items:
+    - "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
+    - "/dev/mapper/{{ crypt[0].name }}"
   tags: dd-crypt
+  ignore_errors: true
 
-- name: run dmsetup
-  cmd: "dmsetup remove {{ item.vg }}-{{ item.name }}"
-  with_items: "{{ lvm.lv }}"
-  tags: dms-remove
+#
+# cryptsetup close "$HOST""$ENC"
+#
 
-- name: run dmsetup
-  cmd: "dmsetup remove /dev/mapper/{{ crypt[0].name }}"
+- name: run lvm dmsetup
+  ansible.builtin.command:
+    cmd: "dmsetup remove {{ item.vg }}-{{ item.name }}"
+  with_items:
+    - "{{ lvm.lv }}"
   tags: dms-remove
+  ignore_errors: true
+
+- name: run other dmsetup
+  ansible.builtin.command:
+    cmd: "dmsetup remove {{ item }}"
+  tags: dms-remove
+  with_items:
+    - "{{ hostname }}{{ lvm_postfix }}-home"
+    - "{{ hostname }}{{ lvm_postfix }}-data"
+    - "{{ hostname }}{{ lvm_postfix }}-root"
+    - "{{ hostname }}{{ lvm_postfix }}-var"
+    - "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
+    - "/dev/mapper/{{ crypt[0].name }}"
+  ignore_errors: true
+
+#
+# dmsetup remove "$HOST""$LVM""-home"
+# dmsetup remove "$HOST""$LVM""-data"
+# dmsetup remove "$HOST""$LVM""-root"
+# dmsetup remove "$HOST""$LVM""-var"
+# dmsetup remove "$HOST""$ENC"
+#
+
+- name: delete crypt
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/dev/mapper/{{ hostname }}{{ crypt_postfix }}"
+    - "/dev/mapper/{{ crypt[0].name }}"
+  ignore_errors: true
+
+#
+# rm -f "/dev/mapper/""$HOST""$ENC"
+#
 
 - name: dd the disks
-  community.general.filesize:
-    path: "{{ item }}"
-    blocksize: 1M
-    blocks: 32
-    source: "/dev/zero"
+  # community.general.filesize:
+  #   path: "{{ item }}"
+  #   size: "32MiB"
+  #   source: "/dev/zero"
+  #   force: true
+  ansible.builtin.command:
+    cmd: 'dd if=/dev/zero of="{{ item }}" bs=1M count=32'
   with_items:
     - "{{ install_disk }}{{ part_postfix }}1"
     - "{{ install_disk }}{{ part_postfix }}2"
     - "{{ install_disk }}"
   tags: dd-disks
+  ignore_errors: true
+
+#
+# install_disk=$(grep "install_disk" host_vars/$HOST.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
+# part_postfix=$(grep "part_postfix" host_vars/$HOST.yml | awk -F ' ' '{print $2}' | head -1 | xargs echo -n)
+#
+# dd if=/dev/zero of="$install_disk$part_postfix""1"  bs=1M count=32
+# dd if=/dev/zero of="$install_disk$part_postfix""2"  bs=1M count=32
+# dd if=/dev/zero of="$install_disk$part_postfix"     bs=1M count=32
+#
+
+- name: remove leftover files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ install_disk }}{{ part_postfix }}1"
+    - "{{ install_disk }}{{ part_postfix }}2"
+    - "{{ install_disk }}{{ part_postfix }}3"
+    - "{{ install_disk }}{{ part_postfix }}4"
+  ignore_errors: true
+
+#
+# rm -f "$install_disk$part_postfix""1"
+# rm -f "$install_disk$part_postfix""2"
+#
 
 - name: sync disks
-  cmd: sync
+  ansible.builtin.command:
+    cmd: sync
+  ignore_errors: true
 
 - name: update kernel vols
-  cmd: "lvmdiskscan"
+  ansible.builtin.command:
+    cmd: "lvmdiskscan"
+  ignore_errors: true
 
 - name: update kernel parts
-  cmd: "partprobe"
+  ansible.builtin.command:
+    cmd: "partprobe"
+  ignore_errors: true
+
+#
+# lvmdiskscan
+# partprobe
+# clear
+# lsblk
+#
