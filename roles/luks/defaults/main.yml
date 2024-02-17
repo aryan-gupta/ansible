@@ -9,6 +9,6 @@ crypt:
     keysize: 512
     hash: sha512
     passphrase: "{{ luks_password }}"
-    keyfile_name: "{{ hostname + crypt_postfix }}_{{ ansible_date_time.date }}"
-    keyfile: "/tmp/{{ hostname + crypt_postfix }}_{{ ansible_date_time.date }}"
+    keyfile_name: "{{ hostname + crypt_postfix }}_backup.keyfile"
+    keyfile: "/tmp/{{ hostname + crypt_postfix }}_backup.keyfile"
     keyfile_len: 64
