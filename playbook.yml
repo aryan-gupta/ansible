@@ -9,7 +9,7 @@
 #    - role: 'backup'
 #    - role: 'bootable'
 
-- hosts: localhost
+- hosts: '{{ hostname }}'
   name: bootstrap ArchLinux system
   become: yes
   connection: local

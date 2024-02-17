@@ -1,5 +1,7 @@
 [host]
-localhost
+boson
+graviton
+default
 
 [chroot]
 /mnt ansible_chroot_exe=arch-chroot
