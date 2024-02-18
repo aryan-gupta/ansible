@@ -1,9 +1,4 @@
 ---
-- name: Upgrade system to latest state
-  pacman:
-    update_cache: yes
-    upgrade: yes
-
 - name: configure locales
   community.general.locale_gen:
     name: "{{ item }}"

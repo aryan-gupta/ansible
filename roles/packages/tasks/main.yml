@@ -17,6 +17,12 @@
 # - name: "Chroots into new enviroment to start install"
 #   shell: /bin/archchroot /mnt ansible
 
+- name: Upgrade system to latest state
+  pacman:
+    update_cache: yes
+    upgrade: yes
+  when: "'syu' in modes"
+
 - name: install base packages
   pacman:
     name: "{{ base_packages }}"
