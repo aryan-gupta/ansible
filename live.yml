@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  name: update Archlinux
+  connection: local
+  tags: ['install','backup', 'bootable']
+
+  roles:
+  #  - role: 'backup'
+  #  - role: 'bootable'
+    - role: 'locale'
+    - role: 'hosts'
+    - role: 'packages'
+      vars: { modes: [ 'syu' ] }
+    - role: 'apps'
+    - role: 'plymouth'
+    - role: 'boot'
+    - role: 'secureboot'
+      when: 'secureboot == true'
+    - role: 'accounts'
+    - role: 'folders'
+      vars: { mode: 'root' }
+
+- hosts: localhost
+  name: user setup
+  become: true
+  become_method: sudo
+  connection: local
+  become_user: "{{ user.name }}"
+  tags: ['user']
+  vars: { ansible_become_pass: "{{ user_password }}" }
+
+  roles:
+    - role: 'dotfile'
+    - role: 'folders'
+      vars: { mode: "{{ user.name }}" }
+    - role: 'user'
