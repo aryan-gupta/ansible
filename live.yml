@@ -4,6 +4,10 @@
   connection: local
   tags: ['install','backup', 'bootable']
 
+  pre_tasks:
+    - include_vars: "group_vars/all_secret.yml"
+    - include_vars: "host_vars/{{ ansible_hostname }}.yml"
+
   roles:
   #  - role: 'backup'
   #  - role: 'bootable'
@@ -28,6 +32,10 @@
   become_user: "{{ user.name }}"
   tags: ['user']
   vars: { ansible_become_pass: "{{ user_password }}" }
+
+  pre_tasks:
+    - include_vars: "group_vars/all_secret.yml"
+    - include_vars: "host_vars/{{ ansible_hostname }}.yml"
 
   roles:
     - role: 'dotfile'
