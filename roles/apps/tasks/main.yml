@@ -68,5 +68,5 @@
 - name: enable openssh if default
   ansible.builtin.systemd:
     enabled: true
-    name: piavpn.service
-  when: 'hostname in [ "default", "nocrypt" ]'
+    name: sshd.service
+  when: 'hostname in [ "default", "graviton" ]'
