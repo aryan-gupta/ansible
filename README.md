@@ -5,7 +5,7 @@ An Ansible Playbook to setup my Linux machines. From the platform of Arch linux 
 Boot into the archiso, connect to the internet, and run this command to start the install. It will ask you if you want to wipe the disk.
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/scripts/webstrap.sh)" "default"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/setup.sh)" "default"
 ```
 
 ### Options
@@ -14,15 +14,29 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master
 - The disk style can be changed using these extra arguments. `-e` is short for `--extra-vars`
   - `-e '{"nocrypt":false, "nolvm":false}'` : Redundantly specify default config
   - `-e '{"nocrypt":true}'`                 : Do not setup luks
+  - `-e '{"nocrypt":true, "wipe":true}'`    : Do not setup luks and also wipe the drive
   - `-e '{"nolvm":true}'`                   : Do not setup LVM [BROKEN](https://bbs.archlinux.org/viewtopic.php?id=281802)
   - `-e '{"nocrypt":true, "nolvm":true}'`   : Do not setup luks or LVM
+  - `-e '{"wipe":true}'`                    : Wipe the drive before install
 - The `--start-at-task` argument can be used to resume playbook after resolving an failure
 
 ```shell
-WEBSTRAP_URL='https://raw.githubusercontent.com/aryan-gupta/ansible/develop/scripts/webstrap.sh'
+WEBSTRAP_URL='https://raw.githubusercontent.com/aryan-gupta/ansible/develop/setup.sh'
+
+# setup default host with no LUKS encryption layer
 sh -c "$(curl -fsSL $WEBSTRAP_URL)" "default" -e '{"nocrypt":true}'
+
+# setup boson host but start at failed task: "Check if in UEFI mode"
 sh -c "$(curl -fsSL $WEBSTRAP_URL)" "boson" --start-at-task="Check if in UEFI mode"
+
+# setup graviton host without LUKS but start at failed task: "Check if in UEFI mode"
 sh -c "$(curl -fsSL $WEBSTRAP_URL)" "graviton" --extra-vars '{"nocrypt":true}' --start-at-task="Check if in UEFI mode"
+
+# setup graviton host after wiping the drive
+sh -c "$(curl -fsSL $WEBSTRAP_URL)" "graviton" --extra-vars '{"wipe":true}'
+
+# wipe the host graviton and exit
+sh -c "$(curl -fsSL $WEBSTRAP_URL)" "graviton" --extra-vars '{"wipe":true}' --tasks="wipe"
 ```
 
 ### Secrets
@@ -135,13 +149,13 @@ If you are attempting to run this in a vm, first download the arch iso:
 Create a VM with a `20 GB` disk and boot into the arch iso. Please ensure network connectivity and `/dev/vda` is the disk you want to install to. Run above command in the console. You can `ssh` into the archiso to copy-paste the command. See [SSH section](#ssh) for advice.
 
 ```console
-root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/scripts/webstrap.sh)" "default"
+root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/setup.sh)" "default"
 ```
 
 If the provisioning requires custom hostname or disk name. This command can be run. Since `default` was the chosen hostname, the file `host_vars/default.yml` gets loaded. You can copy this file to change the settings for another specific host if more complicated config is required. More examples are in the `host_vars` directory.
 
 ```console
-root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/scripts/webstrap.sh)" "foobar" --extra-vars '{"nocrypt":true,"install_disk":"/dev/sda","hostname":"foobar"}'
+root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/setup.sh)" "foobar" --extra-vars '{"nocrypt":true,"install_disk":"/dev/sda","hostname":"foobar"}'
 ```
 
 >
@@ -205,7 +219,7 @@ root@archiso ~ #
 You can now copy and paste the command into your host console. Please note that this is the develop webstrap script. Replace develop with master for mainline. Enter the hostname to start the install.
 
 ```console
-root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/scripts/webstrap.sh)"
+root@archiso ~ # sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/develop/setup.sh)"
 Host Name: default
 
 ```
