@@ -172,7 +172,7 @@ else
     yes_or_no "[ASK] Do you want to WIPE THIS COMPUTER"      && \
     yes_or_no "[ASK] One more time: DELETE ALL DATA on $install_disk?" && \
     echo "[WARN] Wiping... Bye..." && \
-    ansible-playbook playbook.yml \
+    ansible-playbook archiso.yml \
         --extra-vars "@$secrets_file" \
         --extra-vars "@host_vars/$host.yml" \
         --extra-vars '{"wipe":true}' --tags="wipe" ${@:1}
@@ -201,6 +201,6 @@ fi
 # @TODO test other disk provisioning schemas
 #
 
-ansible-playbook playbook.yml \
+ansible-playbook archiso.yml \
     --extra-vars "@$secrets_file" \
     --extra-vars "@host_vars/$host.yml" ${@:1}

@@ -1,13 +1,4 @@
 ---
-#- hosts: localhost
-#  name: prepare system for reinstall
-#  become: yes
-#  connection: local
-#  tags: ['backup', 'bootable']
-#
-#  roles:
-#    - role: 'backup'
-#    - role: 'bootable'
 
 - hosts: '{{ hostname }}'
   name: bootstrap ArchLinux system
