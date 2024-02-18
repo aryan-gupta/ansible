@@ -14,7 +14,7 @@
     - role: 'locale'
     - role: 'hosts'
     - role: 'packages'
-      vars: { modes: [ 'syu' ] }
+      vars: { modes: [ 'clr', 'syu' ] } # clear and -Syu update
     - role: 'apps'
     - role: 'plymouth'
     - role: 'boot'

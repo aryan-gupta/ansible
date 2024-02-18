@@ -36,6 +36,8 @@ initramfs_hooks:
   - filesystems
   - fsck
 
+paccache_keep_num: 2
+
 pacstrap_packages:
   - base
   - "{{ kernel }}"

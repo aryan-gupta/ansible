@@ -17,6 +17,11 @@
 # - name: "Chroots into new enviroment to start install"
 #   shell: /bin/archchroot /mnt ansible
 
+- name: clean pacman cache
+  command:
+    cmd: "paccache -rk{{ paccache_keep_num }}"
+  when: "'clr' in modes"
+
 - name: Upgrade system to latest state
   pacman:
     update_cache: yes
