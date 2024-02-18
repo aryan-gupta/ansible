@@ -4,9 +4,9 @@
   connection: local
   tags: ['install','backup', 'bootable']
 
-  pre_tasks:
-    - include_vars: "group_vars/all_secret.yml"
-    - include_vars: "host_vars/{{ ansible_hostname }}.yml"
+  vars_files:
+    - "group_vars/all_secret.yml"
+    - "host_vars/{{ lookup('file', '/etc/hostname') }}.yml"
 
   roles:
   #  - role: 'backup'
@@ -33,12 +33,13 @@
   tags: ['user']
   vars: { ansible_become_pass: "{{ user_password }}" }
 
-  pre_tasks:
-    - include_vars: "group_vars/all_secret.yml"
-    - include_vars: "host_vars/{{ ansible_hostname }}.yml"
+  vars_files:
+    - "group_vars/all_secret.yml"
+    - "host_vars/{{ lookup('file', '/etc/hostname') }}.yml"
 
   roles:
     - role: 'dotfile'
+      tags: 'dotfile'
     - role: 'folders'
       vars: { mode: "{{ user.name }}" }
     - role: 'user'
