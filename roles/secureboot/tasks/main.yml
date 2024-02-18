@@ -1,4 +1,9 @@
 ---
+- name: include vars from fsmnt
+  include_vars: roles/fsmnt/defaults/main.yml
+  tags: 'always'
+# needed_vars:
+# mounts[0].path
 
 - name: check secureboot key checksum
   ansible.builtin.stat:
@@ -27,5 +32,8 @@
   shell:
     cmd: "ESP_PATH=/efi sbctl verify | grep -q '✓ {{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-default.efi is signed'"
     chdir: "/efi"
+  register: sb_verify_result
+  failed_when: sb_verify_result.rc != 0
+  changed_when: false
   tags:
-    - sbctl_verify
+    - sb-verify
