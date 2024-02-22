@@ -22,7 +22,7 @@
     "DisableFirefoxScreenshots": true,
     "DisableForgetButton": true,
     "DisableFormHistory": true,
-    "DisablePrivateBrowsing": true,
+    "DisablePrivateBrowsing": false,
     "DisableProfileRefresh": true,
     "DisableSafeMode": true,
     "DisableSecurityBypass": {
