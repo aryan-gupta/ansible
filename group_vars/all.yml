@@ -73,6 +73,8 @@ base_packages:
   - ntp
   - gvfs
   - smartmontools
+  - bluez
+  - bluez-utils
 
   # devel
   - base-devel

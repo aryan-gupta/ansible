@@ -84,3 +84,9 @@
     state: present
     regexp: '^#Color'
     line: "Color"
+
+- name: enable openssh if default
+  ansible.builtin.systemd:
+    enabled: true
+    name: bluetooth.service
+  when: 'hostname in [ "boson" ]' # do not enable bluetooth on graviton yet @TODO
