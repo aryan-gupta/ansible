@@ -21,5 +21,6 @@ packages:
   - intel-gpu-tools
   - acpilight
   - nvme-cli
+  - upower
 
 cpu_manufacturer: intel
