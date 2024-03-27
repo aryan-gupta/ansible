@@ -37,6 +37,7 @@ initramfs_hooks:
   - fsck
 
 paccache_keep_num: 2
+pacman_parallel_downloads: 5
 
 pacstrap_packages:
   - base

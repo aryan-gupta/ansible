@@ -70,3 +70,17 @@
     enabled: true
     name: sshd.service
   when: 'hostname in [ "default", "graviton" ]'
+
+- name: enable parallel downloads pacman
+  lineinfile:
+    path: /etc/pacman.conf
+    state: present
+    regexp: '^#ParallelDownloads = 5'
+    line: "ParallelDownloads = {{ pacman_parallel_downloads }}"
+
+- name: enable color in pacman
+  lineinfile:
+    path: /etc/pacman.conf
+    state: present
+    regexp: '^#Color'
+    line: "Color"
