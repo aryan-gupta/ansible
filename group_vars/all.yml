@@ -172,6 +172,8 @@ base_packages:
   - bitwarden
   - bitwarden-cli
   - zathura
+  - zathura-pdf-mupdf
+  - tesseract-data-eng
   - xournalpp
   - transmission-cli
   - transmission-gtk
