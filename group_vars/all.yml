@@ -182,6 +182,7 @@ base_packages:
   - baobab
   - calibre
   - discord
+  - obsidian
 
   # extras
   - noto-fonts-cjk
