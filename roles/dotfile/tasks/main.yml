@@ -49,6 +49,7 @@
     clone: yes
     repo: "{{ dotfile_repo_github }}"
     dest: "{{ dotfile_repo_loc }}"
+  ignore_errors: true
 
 - name: fetch wallpaper
   ansible.builtin.command:
