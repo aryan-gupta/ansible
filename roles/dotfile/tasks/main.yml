@@ -66,6 +66,7 @@
     clone: yes
     repo: "{{ scripts_repo_github }}"
     dest: "{{ scripts_repo_loc }}"
+  ignore_errors: true
 
 - name: setup .gitconfig
   ansible.builtin.file:
