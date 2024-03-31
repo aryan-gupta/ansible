@@ -91,3 +91,7 @@
     enabled: true
     name: bluetooth.service
   when: 'hostname in [ "boson" ]' # do not enable bluetooth on graviton yet @TODO
+
+- name: install the certificate authority chain
+  ansible.builtin.command:
+    cmd: "trust anchor --store /data/secure/ca-chain.cert.pem"
