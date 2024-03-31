@@ -81,6 +81,13 @@
     state: link
   ignore_errors: true # this is to handle that there is no .github-default file
 
+- name: setup .cmd-shortcuts
+  ansible.builtin.file:
+    src: "{{ dotfile_repo_loc }}/.cmd-shortcuts"
+    dest: "{{ user.home_dir }}/.cmd-shortcuts"
+    state: link
+    force: true
+
 - name: Check bashrc
   stat:
     path: "{{ user.home_dir }}/.bashrc"
@@ -91,6 +98,12 @@
     path: "{{ user.home_dir }}/.bashrc"
     state: absent
   when: bashrc_file_type.stat.islnk is defined and not bashrc_file_type.stat.islnk
+
+- name: add bashrc
+  ansible.builtin.file:
+    src: "{{ dotfile_repo_loc }}/.bashrc"
+    dest: "{{ user.home_dir }}/.bashrc"
+    state: link
 
 - name: Check zshrc
   stat:
@@ -103,6 +116,12 @@
     state: absent
   when: zshrc_file_type.stat.islnk is defined and not zshrc_file_type.stat.islnk
 
+- name: add zshrc
+  ansible.builtin.file:
+    src: "{{ dotfile_repo_loc }}/.zshrc"
+    dest: "{{ user.home_dir }}/.zshrc"
+    state: link
+
 - name: Check gtkrc2
   stat:
     path: "{{ user.home_dir }}/.gtkrc-2.0"
@@ -113,25 +132,6 @@
     path: "{{ user.home_dir }}/.gtkrc-2.0"
     state: absent
   when: gtkrc2_file_type.stat.islnk is defined and not gtkrc2_file_type.stat.islnk
-
-- name: setup .cmd-shortcuts
-  ansible.builtin.file:
-    src: "{{ dotfile_repo_loc }}/.cmd-shortcuts"
-    dest: "{{ user.home_dir }}/.cmd-shortcuts"
-    state: link
-    force: true
-
-- name: add bashrc
-  ansible.builtin.file:
-    src: "{{ dotfile_repo_loc }}/.bashrc"
-    dest: "{{ user.home_dir }}/.bashrc"
-    state: link
-
-- name: add zshrc
-  ansible.builtin.file:
-    src: "{{ dotfile_repo_loc }}/.zshrc"
-    dest: "{{ user.home_dir }}/.zshrc"
-    state: link
 
 - name: add gtkrc2
   ansible.builtin.file:
