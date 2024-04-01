@@ -48,33 +48,33 @@
   ansible.builtin.git:
     clone: yes
     repo: "{{ dotfile_repo_github }}"
-    dest: "{{ godfile_dir }}/{{ dotfile_repo }}"
+    dest: "{{ dotfile_repo_loc }}"
 
 - name: fetch wallpaper
   ansible.builtin.command:
     cmd: "git lfs fetch"
-    chdir: "{{ godfile_dir }}/{{ dotfile_repo }}"
+    chdir: "{{ dotfile_repo_loc }}"
 
 - name: checkout wallpaper
   ansible.builtin.command:
     cmd: "git lfs checkout"
-    chdir: "{{ godfile_dir }}/{{ dotfile_repo }}"
+    chdir: "{{ dotfile_repo_loc }}"
 
 - name: clone scripts
   ansible.builtin.git:
     clone: yes
     repo: "{{ scripts_repo_github }}"
-    dest: "{{ godfile_dir }}/{{ scripts_repo }}"
+    dest: "{{ scripts_repo_loc }}"
 
 - name: setup .gitconfig
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gitconfig"
+    src: "{{ dotfile_repo_loc }}/.gitconfig"
     dest: "{{ user.home_dir }}/.gitconfig"
     state: link
 
 - name: setup .gitconfig-local
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gitconfig-{{ hostname }}"
+    src: "{{ dotfile_repo_loc }}/.gitconfig-{{ hostname }}"
     dest: "{{ user.home_dir }}/.gitconfig-local"
     state: link
   ignore_errors: true # this is to handle that there is no .github-default file
@@ -114,33 +114,33 @@
 
 - name: setup .cmd-shortcuts
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.cmd-shortcuts"
+    src: "{{ dotfile_repo_loc }}/.cmd-shortcuts"
     dest: "{{ user.home_dir }}/.cmd-shortcuts"
     state: link
     force: true
 
 - name: add bashrc
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.bashrc"
+    src: "{{ dotfile_repo_loc }}/.bashrc"
     dest: "{{ user.home_dir }}/.bashrc"
     state: link
 
 - name: add zshrc
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.zshrc"
+    src: "{{ dotfile_repo_loc }}/.zshrc"
     dest: "{{ user.home_dir }}/.zshrc"
     state: link
 
 - name: add gtkrc2
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.gtkrc-2.0"
+    src: "{{ dotfile_repo_loc }}/.gtkrc-2.0"
     dest: "{{ user.home_dir }}/.gtkrc-2.0"
     state: link
     force: true
 
 - name: setup .xinitrc
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.xinitrc"
+    src: "{{ dotfile_repo_loc }}/.xinitrc"
     dest: "{{ user.home_dir }}/.xinitrc"
     state: link
 
@@ -162,7 +162,7 @@
 
 - name: link .config folder
   ansible.builtin.file:
-    src: "{{ godfile_dir }}/{{ dotfile_repo }}/.config"
+    src: "{{ dotfile_repo_loc }}/.config"
     dest: "{{ user.home_dir }}/.config"
     state: link
   when: not config_folder_type.stat.exists

@@ -222,11 +222,17 @@ user:
   shell: /usr/bin/zsh
   email:  "{{ email }}"
 
-godfile_dir: "/godfile"
 dotfile_repo: "dotfiles"
 dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
+dotfile_repo_loc: "/data/{{ user.name }}/.{{ dotfile_repo }}"
+
 scripts_repo: "scripts"
 scripts_repo_github: "https://github.com/{{ github_username }}/{{ scripts_repo }}"
+scripts_repo_loc: "/data/{{ scripts_repo }}"
+
+ansible_repo: "ansible"
+ansible_repo_github: "https://github.com/{{ github_username }}/{{ ansible_repo }}"
+ansible_repo_loc: "/data/{{ ansible_repo }}"
 
 life_folders_root: /data/life
 
