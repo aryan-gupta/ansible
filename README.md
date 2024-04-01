@@ -8,6 +8,16 @@ Boot into the archiso, connect to the internet, and run this command to start th
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/aryan-gupta/ansible/master/setup.sh)" "default"
 ```
 
+### Testing
+For testing purposes, these commands are helpful.
+
+```shell
+echo "10.27.182.3 gitea.gempi.re" >> /etc/hosts
+WEBSTRAP_URL='https://gitea.gempi.re/aryan-gupta/ansible/raw/branch/testing/setup.sh'
+# to ignore SSL errors, add the -k option
+sh -c "$(curl -fsSLk $WEBSTRAP_URL)" "default"
+```
+
 ### Options
 - Replace `/master/` in the URL to `/develop/` switch to develop branch
 - The first argument specifies the hostname. See `host_vars/*` for available options.
