@@ -3,11 +3,16 @@
 # =========================================================================================
 # ===================================== VARS ==============================================
 # =========================================================================================
-this_repo="https://github.com/aryan-gupta/ansible"
+this_repo="https://gitea.gempi.re/aryan-gupta/ansible"
 repo_path="/tmp/ansible"
-secrets_file="/tmp/all_secret.yml"
-ansible_log_path="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 
+secret_repo="https://gitea.gempi.re/aryan-gupta/ansible-secrets" # pragma: allowlist secret
+secret_repo_path="/tmp/ansible/ansible-secrets"
+
+gpg_enc_key="/tmp/E009B402.sub.key.asc"
+secrets_file="$secret_repo_path/all_secret.yml"
+
+ansible_log_path="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 
 
 # =========================================================================================
@@ -100,13 +105,13 @@ pacman -Sy ansible-core ansible git efibootmgr python python-passlib bitwarden-c
 
 if [ ! -d "$repo_path" ]; then
     echo "[INFO] Git repo not found. Cloning."
-    git clone $this_repo $repo_path
+    GIT_SSL_NO_VERIFY=true git clone $this_repo $repo_path
 fi
 
 echo "[INFO] Entering git repo"
 cd $repo_path
-echo "[INFO] Checking out develop branch"
-git checkout develop
+echo "[INFO] Checking out testing branch"
+git checkout testing
 
 
 
@@ -125,29 +130,30 @@ echo "[INFO] Setup logging"
 # ===================================== SECRETS ===========================================
 # =========================================================================================
 
-# get the secrets we need
-# https://stackoverflow.com/questions/369758
-# do not set the user password until the end so this is not needed
-# or set it to a temp password then set it to the actual password if ansible cant handle it
-# move to ansible once we get the script working
-if [ ! -f "$secrets_file" ]; then
-    echo "==============================================================="
-    echo "[ERROR]: $secrets_file doesnt exist."
-    echo "Waiting on secrets file."
-    echo "This will be removed when screts manegment"
-    echo "isnt scp'ing it into the test VM"
-    echo "==============================================================="
-    #./scripts/secrets.sh $host
-
-    while [ ! -f "$secrets_file" ]; do
-        echo -n "."
-        sleep 5
-    done
-    echo ""
+if [ ! -d "$secret_repo_path" ]; then
+    echo "[INFO] Git repo **ansible-secrets** not found. Cloning."
+    GIT_SSL_NO_VERIFY=true git clone $secret_repo $secret_repo_path
 fi
-echo "[INFO] Found secrets file. Continuing..."
 
+cd $secret_repo_path
 
+echo "[ASK] Please login to bitwarden for secret extraction"
+export BW_SESSION=$(bw login --raw)
+
+echo "[INFO] Decrypting gpg key"
+ansible_secrets_key=$(bw get password 9d9cf34b-936d-434c-ba58-b144014f323e)
+gpg --batch --passphrase $ansible_secrets_key --decrypt --output $gpg_enc_key $( basename $gpg_enc_key ).sym.gpg
+
+echo "[INFO] Importing gpg key"
+gnupg_password=$(bw get password 6d69ae1b-9f81-42fb-be10-acd8016bdb33)
+gpg --batch --passphrase $gnupg_password --import $gpg_enc_key
+
+echo "[INFO] Decrypting files"
+cd $secret_repo_path
+./decrypt_all.sh $gnupg_password
+
+echo "[INFO] Changing directory to main repo"
+cd $repo_path
 
 # =========================================================================================
 # ===================================== WIPE ==============================================
@@ -206,5 +212,6 @@ fi
 #
 
 ansible-playbook archiso.yml \
+    --extra-vars "{\"gnupg_password\":\"$gnupg_password\"}" \
     --extra-vars "@$secrets_file" \
     --extra-vars "@host_vars/$host.yml" ${@:1}
