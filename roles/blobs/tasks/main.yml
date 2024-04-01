@@ -53,3 +53,17 @@
     src: "ansible-secrets/certificate-authority/ca-chain.cert.pem"
     dest: "{{ arch_root }}/data/secure/ca-chain.cert.pem"
     remote_src: true
+
+- name: copy public gnupg keys into chroot
+  copy:
+    src: "ansible-secrets/gnupg/{{ item }}.pub.asc"
+    dest: "{{ arch_root }}/data/secure/{{ item }}.pub.asc"
+    remote_src: true
+  with_items: "{{ gpg[hostname]['public'] }}"
+
+- name: copy public gnupg keys into chroot
+  copy:
+    src: "ansible-secrets/gnupg/{{ item }}.sub.key.asc"
+    dest: "{{ arch_root }}/data/secure/{{ item }}.sub.key.asc"
+    remote_src: true
+  with_items: "{{ gpg[hostname]['private'] }}"
