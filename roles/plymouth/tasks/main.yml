@@ -5,6 +5,7 @@
   ansible.builtin.git:
     repo: 'https://github.com/adi1090x/plymouth-themes'
     dest: /var/tmp/plymouth-themes
+    force: yes
     version: master
 
 - name: copy theme over
