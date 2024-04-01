@@ -75,7 +75,7 @@ fi
 # remount cowspace so we can install ansible and git
 # https://github.com/zxiiro/ansible-arch-install
 echo "[INFO] Remounting COWspace"
-mount -o remount,size=1G /run/archiso/cowspace
+mount -o remount,size=2G /run/archiso/cowspace
 
 echo "[INFO] Updating Time..."
 timedatectl set-timezone "America/New_York"
@@ -90,7 +90,7 @@ pacman-key --populate archlinux
 
 # install packages we need
 echo "[INFO] Installing packages"
-pacman -Sy ansible-core ansible git efibootmgr python python-passlib python-jinja python-yaml python-markupsafe --needed --noconfirm 1> /dev/null
+pacman -Sy ansible-core ansible git efibootmgr python python-passlib bitwarden-cli python-markupsafe --needed --noconfirm
 
 
 
