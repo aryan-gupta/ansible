@@ -11,26 +11,42 @@
   with_items: "{{ crypt }}"
   when: nocrypt == false
 
-- name: check secureboot
-  stat:
-    path: "{{ secureboot_keytarpacket.src }}"
-  register: secureboot_file
-
-- name: create secureboot directory
+- name: create secureboot directories
   file:
-    path: "{{ secureboot_keytarpacket.unzippath }}"
-    state: 'directory'
-  when: secureboot_file.stat.exists
-  ignore_errors: true
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ arch_root }}/usr/share/secureboot/"
+    - "{{ arch_root }}/usr/share/secureboot/keys"
+    - "{{ arch_root }}/usr/share/secureboot/keys/PK"
+    - "{{ arch_root }}/usr/share/secureboot/keys/KEK"
+    - "{{ arch_root }}/usr/share/secureboot/keys/db"
+    - "{{ arch_root }}/usr/share/secureboot/keys/dbx"
 
 - name: copy secureboot file into chroot
   copy:
-    src: "{{ secureboot_keytarpacket.src }}"
-    dest: "{{ arch_root }}/{{ secureboot_keytarpacket.dest }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dst }}"
     owner: root
     group: root
-  when: secureboot_file.stat.exists
-  ignore_errors: true
+    mode: '0400'
+    remote_src: true
+  with_items:
+    - src: "ansible-secrets/secureboot/GUID"
+      dst: "{{ arch_root }}/usr/share/secureboot/GUID"
+    - src: "ansible-secrets/secureboot/keys/KEK/KEK.key"
+      dst: "{{ arch_root }}/usr/share/secureboot/keys/KEK/KEK.key"
+    - src: "ansible-secrets/secureboot/keys/KEK/KEK.pem"
+      dst: "{{ arch_root }}/usr/share/secureboot/keys/KEK/KEK.pem"
+    - src: "ansible-secrets/secureboot/keys/db/db.key"
+      dst: "{{ arch_root }}/usr/share/secureboot/keys/db/db.key"
+    - src: "ansible-secrets/secureboot/keys/db/db.pem"
+      dst: "{{ arch_root }}/usr/share/secureboot/keys/db/db.pem"
+    - src: "ansible-secrets/secureboot/keys/dbx/dbx.key"
+      dst: "{{ arch_root }}/usr/share/secureboot/keys/dbx/dbx.key"
+    - src: "ansible-secrets/secureboot/keys/dbx/dbx.pem"
+      dst: "{{ arch_root }}/usr/share/secureboot/keys/dbx/dbx.pem"
 
 - name: copy certificate authority file into chroot
   copy:

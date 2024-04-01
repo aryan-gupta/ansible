@@ -5,24 +5,6 @@
 # needed_vars:
 # mounts[0].path
 
-- name: check secureboot key checksum
-  ansible.builtin.stat:
-    path: "{{ secureboot_keytarpacket.dest }}"
-    checksum_algorithm: sha256
-    get_checksum: yes
-  register: stat_checksum
-
-- name: verify secureboot key checksum
-  fail:
-    msg: "secure boot keyfile did not pass checksum"
-  when: stat_checksum.stat.checksum != secureboot_keytarpacket.sha256
-
-- name: unpack secureboot keys
-  ansible.builtin.unarchive:
-    src: "{{ secureboot_keytarpacket.dest }}"
-    dest: "{{ secureboot_keytarpacket.unzippath }}"
-    remote_src: true
-
 - name: sign efi binary
   ansible.builtin.command:
     cmd: "sbctl sign -s {{ mounts[0].path }}/{{ hostname }}-arch-{{ kernel }}-default.efi"
