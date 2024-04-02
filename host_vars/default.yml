@@ -19,6 +19,8 @@ initramfs_modules: []
 packages:
   - qemu-guest-agent
 
+host_user_groups: [] # any extra groups needed by the user on this host
+
 # only intel and amd are valid. All others are ignored
 # and no ucode will be installed
 cpu_manufacturer: null

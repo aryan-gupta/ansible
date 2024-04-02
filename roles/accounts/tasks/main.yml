@@ -35,7 +35,7 @@
     shell: "{{ user.shell }}"
     update_password: on_create
     uid: "{{ user.uid }}"
-    groups: "{{ user.groups }}"
+    groups: "{{ user.groups + host_user_groups }}"
     append: yes
   tags:
     - user

@@ -23,4 +23,6 @@ packages:
   - nvme-cli
   - upower
 
+host_user_groups: []
+
 cpu_manufacturer: intel

@@ -27,4 +27,7 @@ packages:
   - qemu-base
   - dnsmasq
 
+host_user_groups:
+  - libvirt
+
 cpu_manufacturer: amd
