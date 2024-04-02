@@ -61,6 +61,13 @@
     cmd: "git lfs checkout"
     chdir: "{{ dotfile_repo_loc }}"
 
+- name: clone wikinotes
+  ansible.builtin.git:
+    clone: yes
+    repo: "{{ wikinotes_repo_github }}"
+    dest: "{{ wikinotes_repo_loc }}"
+  ignore_errors: true
+
 - name: clone scripts
   ansible.builtin.git:
     clone: yes
