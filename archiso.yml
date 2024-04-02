@@ -44,7 +44,7 @@
     - role: 'locale'
     - role: 'hosts'
     - role: 'packages'
-      vars: { modes: [ 'syu', 'min', 'typ', 'aur' ] }
+      vars: { modes: [ 'mir', 'syu', 'min', 'typ', 'aur' ] }
     - role: 'apps'
     - role: 'plymouth'
     - role: 'boot'

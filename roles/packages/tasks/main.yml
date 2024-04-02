@@ -10,6 +10,21 @@
   #   creates: "{{ arch_root }}/etc/fstab"
   when: "'boot' in modes"
 
+- name: create backup of mirrors
+  shell: "cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig"
+  args:
+    creates: "/etc/pacman.d/mirrorlist.orig"
+  when: "'mir' in modes"
+
+- name: uncomment list of mirrors
+  shell: "sed 's/^#Server/Server/' /etc/pacman.d/mirrorlist.orig > /etc/pacman.d/mirrorlist.all"
+  args:
+    creates: "/etc/pacman.d/mirrorlist.all"
+  when: "'mir' in modes"
+
+- name: rank mirrorts based off speed
+  shell: "/usr/bin/rankmirrors -n 6 /etc/pacman.d/mirrorlist.all > /etc/pacman.d/mirrorlist"
+  when: "'mir' in modes"
 
 - name: clean pacman cache
   command:

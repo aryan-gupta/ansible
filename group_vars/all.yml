@@ -43,11 +43,12 @@ pacstrap_packages:
   - base
   - "{{ kernel }}"
   - python3 # so that ansible can run its code in the chroot
+  - pacman-contrib # so that the chroot can run rankmirrors command before base_packages are installed
 
 base_packages:
   # system automation / maintinance
   - ansible
-  - pacman-contrib
+  - pacman-contrib # duplicate
   - fwupd
   - arch-install-scripts
   - archiso
