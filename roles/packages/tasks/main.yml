@@ -109,6 +109,7 @@
 
 - name: remove packages
   pacman:
-    names: "{{ rm_packages }}"
+    name: "{{ item }}"
     state: "absent"
+  loop: "{{ rm_packages }}"
   when: "'rmp' in modes"
