@@ -3,17 +3,23 @@
 # =========================================================================================
 # ===================================== VARS ==============================================
 # =========================================================================================
-this_repo="https://gitea.gempi.re/aryan-gupta/ansible"
-repo_path="/tmp/ansible"
 
-secret_repo="https://gitea.gempi.re/aryan-gupta/ansible-secrets" # pragma: allowlist secret
-secret_repo_path="/tmp/ansible/ansible-secrets"
+ram_area='/tmp' # or /dev/shm
 
-gpg_enc_key="/tmp/E009B402.sub.key.asc"
+server='gitea.gempi.re'
+# server='github.com'
+export GIT_SSL_NO_VERIFY=true
+
+this_repo="https://$server/aryan-gupta/ansible"
+repo_path="$ram_area/ansible"
+
+secret_repo="https://$server/aryan-gupta/ansible-secrets" # pragma: allowlist secret
+secret_repo_path="$ram_area/ansible/ansible-secrets"
+
+gpg_enc_key="$secret_repo_path/E009B402.sub.key.asc"
 secrets_file="$secret_repo_path/all_secret.yml"
 
-ansible_log_path="./logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
-
+ansible_log_path="$repo_path/logs/ansible-$(date +%Y-%m-%d-%H-%M-%s).log"
 
 # =========================================================================================
 # ===================================== ARGS ==============================================
@@ -44,8 +50,6 @@ fi
 
 echo "[INFO] Using hostname: $host"
 
-
-
 # =========================================================================================
 # ===================================== NET ===============================================
 # =========================================================================================
@@ -69,8 +73,6 @@ else
         exit 1
     fi
 fi
-
-
 
 # =========================================================================================
 # ===================================== ARCHISO ===========================================
@@ -97,15 +99,13 @@ pacman-key --populate archlinux
 echo "[INFO] Installing packages"
 pacman -Sy ansible-core ansible git efibootmgr python python-passlib bitwarden-cli python-markupsafe --needed --noconfirm
 
-
-
 # =========================================================================================
 # ===================================== GIT ===============================================
 # =========================================================================================
 
 if [ ! -d "$repo_path" ]; then
     echo "[INFO] Git repo not found. Cloning."
-    GIT_SSL_NO_VERIFY=true git clone $this_repo $repo_path
+    git clone $this_repo $repo_path
 fi
 
 echo "[INFO] Entering git repo"
@@ -113,26 +113,13 @@ cd $repo_path
 echo "[INFO] Checking out testing branch"
 git checkout testing
 
-
-
-# =========================================================================================
-# ===================================== LOGS ==============================================
-# =========================================================================================
-
-# run ansible playbook
-mkdir -p logs/
-export ANSIBLE_LOG_PATH=$ansible_log_path
-echo "[INFO] Setup logging"
-
-
-
 # =========================================================================================
 # ===================================== SECRETS ===========================================
 # =========================================================================================
 
 if [ ! -d "$secret_repo_path" ]; then
     echo "[INFO] Git repo **ansible-secrets** not found. Cloning."
-    GIT_SSL_NO_VERIFY=true git clone $secret_repo $secret_repo_path
+    git clone $secret_repo $secret_repo_path
 fi
 
 cd $secret_repo_path
@@ -141,6 +128,11 @@ echo "[ASK] Please login to bitwarden for secret extraction"
 bw logout
 export BW_SESSION=$(bw login --raw)
 
+# these bitwarden id's are not secrets, are they?
+# access to the UUID does not reveal the encrypted password data
+# https://stackoverflow.com/questions/61742196/
+# https://security.stackexchange.com/questions/4729/
+# https://security.stackexchange.com/questions/36870/
 echo "[INFO] Decrypting gpg key"
 ansible_secrets_key=$(bw get password 9d9cf34b-936d-434c-ba58-b144014f323e)
 gpg --batch --passphrase $ansible_secrets_key --decrypt --output $gpg_enc_key $( basename $gpg_enc_key ).sym.gpg
@@ -155,6 +147,15 @@ cd $secret_repo_path
 
 echo "[INFO] Changing directory to main repo"
 cd $repo_path
+
+# =========================================================================================
+# ===================================== LOGS ==============================================
+# =========================================================================================
+
+# run ansible playbook
+mkdir -p logs/
+export ANSIBLE_LOG_PATH=$ansible_log_path
+echo "[INFO] Setup logging"
 
 # =========================================================================================
 # ===================================== WIPE ==============================================
@@ -191,8 +192,6 @@ else
     echo "[INFO] Wiped"
     lsblk
 fi
-
-
 
 # =========================================================================================
 # ===================================== RUN ===============================================

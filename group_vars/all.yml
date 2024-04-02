@@ -241,12 +241,12 @@ ansible_repo_github: "https://github.com/{{ github_username }}/{{ ansible_repo }
 ansible_repo_loc: "/data/{{ ansible_repo }}"
 
 secrets_repo: "ansible-secrets" # pragma: allowlist secret
-secrets_repo_git: "https://gitea.gempi.re/{{ github_username }}/{{ secrets_repo }}" # pragma: allowlist secret
+secrets_repo_git: "https://gitea.{{ domain_suffix }}/{{ github_username }}/{{ secrets_repo }}" # pragma: allowlist secret
 secrets_repo_archiso_loc: "/tmp/{{ ansible_repo }}/{{ secrets_repo }}" # pragma: allowlist secret
 
 wikinotes_repo: "wikinotes"
-wikinotes_repo_github: "https://gitea.gempi.re/{{ github_username }}/{{ ariwiki_repo }}"
-wikinotes_repo_loc: "/data/{{ user.name }}/{{ ariwiki_repo }}"
+wikinotes_repo_github: "https://gitea.{{ domain_suffix }}/{{ github_username }}/{{ wikinotes_repo }}"
+wikinotes_repo_loc: "/data/{{ user.name }}/{{ wikinotes_repo }}"
 
 life_folders_root: /data/life
 

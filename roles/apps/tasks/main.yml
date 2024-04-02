@@ -86,7 +86,7 @@
     regexp: '^#Color'
     line: "Color"
 
-- name: enable openssh if default
+- name: enable bluetooth
   ansible.builtin.systemd:
     enabled: true
     name: bluetooth.service

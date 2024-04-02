@@ -333,6 +333,12 @@ This section will never be updated and will be removed once issues have been res
 - graviton : Main Desktop
   - Gigabyte B550
   - retired ~~Asus Z97 Custom Build~~
+- tachyon : VPS / remote host / static IP
+- touon   : wifi router
+- axion   : OPNsense router
+- fermion : Asus Z97 server
+- photon : ~~ODroid N2 server~~ NOW IS ANDROID
+- neutrino: ~~Android Phone~~ NOW IS ODroid N2 server
 - default
   - reserved for VM test installs
 
@@ -344,7 +350,6 @@ This section will never be updated and will be removed once issues have been res
   - ODroid H2 - https://www.hardkernel.com/shop/odroid-h2/
 - muon : TCL TV
 - higgs : Intel Stick server
-- photon : ODroid N2 server
 <!-- - tachyon : Desk Smartclock ->
 - dyon : docker swarm cluster
   - dyon: DHCP/DNS

@@ -11,12 +11,6 @@
   when: "'boot' in modes"
 
 
-# - name: "Clone ansible repo into chroot enviroment"
-#   shell: /bin/git clone "" /mnt/root/ansible-linux
-
-# - name: "Chroots into new enviroment to start install"
-#   shell: /bin/archchroot /mnt ansible
-
 - name: clean pacman cache
   command:
     cmd: "paccache -rk{{ paccache_keep_num }}"
@@ -40,10 +34,11 @@
     extra_args: --needed
   when: "'typ' in modes"
 
+# @TODO fix this so we dont need this tmp-nobody password hack
 - name: allow nobody sudoers
   copy:
     dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
-    content: "nobody ALL=(ALL:ALL) NOPASSWD: ALL"
+    content: "nobody ALL=(ALL:ALL) NOPASSWD: ALL" # pragma: allowlist secret
   when: "'aur' in modes"
 
 - name: clone yay repo
