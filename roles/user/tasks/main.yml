@@ -29,3 +29,27 @@
   ansible.builtin.shell:
     cmd: "gpg --lock-multiple --batch --pinentry-mode loopback --passphrase {{ gnupg_password }} --import /data/secure/{{ item }}.sub.key.asc && gpgconf --kill keyboxd && gpgconf --kill gpg-agent"
   with_items: "{{ gpg[hostname]['private'] }}"
+
+- name: enable gpg ssh support
+  ansible.builtin.lineinfile:
+    path: "{{ user.home_dir }}/.gnupg/gpg-agent.conf"
+    line: 'enable-ssh-support'
+    create: yes
+
+- name: set gpg ssh key using keygrip
+  ansible.builtin.lineinfile:
+    path: "{{ user.home_dir }}/.gnupg/sshcontrol"
+    line: "{{ gpg[hostname]['ssh'] }}"
+    create: yes
+
+- name: create ssh folder
+  ansible.builtin.file:
+    state: directory
+    path: "/home/{{ user.name }}/.ssh"
+
+- name: add authorized keys to ssh
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user.name }}/.ssh/authorized_keys"
+    line: "{{ item }}"
+    create: yes
+  with_items: "{{ ssh_auth_keys }}"
