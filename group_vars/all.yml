@@ -202,7 +202,7 @@ base_packages:
   - libcurl-gnutls
 
 aur_base_packages:
-  - yay
+  # - yay
   - xp-pen-tablet
   - piavpn-bin
   - brave-bin

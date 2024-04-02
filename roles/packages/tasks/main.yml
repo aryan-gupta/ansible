@@ -59,29 +59,26 @@
 - name: clone yay repo
   ansible.builtin.git:
     clone: yes
-    repo: "https://aur.archlinux.org/{{ item }}.git"
-    dest: "/var/tmp/{{ item }}"
-  loop: "{{ aur_base_packages }}"
+    repo: "https://aur.archlinux.org/yay.git"
+    dest: "/var/tmp/yay"
   when: "'aur' in modes"
 
-- name: set folder permissions
+- name: set yay folder permissions
   file:
-    dest: "/var/tmp/{{ item }}"
+    dest: "/var/tmp/yay"
     owner: nobody
     group: nobody
     mode: '777'
     recurse: yes
-  loop: "{{ aur_base_packages }}"
   when: "'aur' in modes"
 
-- name: build aur packages
+- name: build yay package
   ansible.builtin.command:
     cmd: "sudo -u nobody HOME=/tmp makepkg -s --noconfirm --needed"
-    chdir: "/var/tmp/{{ item }}"
-  loop: "{{ aur_base_packages }}"
+    chdir: "/var/tmp/yay"
   when: "'aur' in modes"
 
-- name: get package names
+- name: get yay package names
   find:
     paths: "/var/tmp/"
     patterns: "*.pkg.*"
@@ -91,17 +88,19 @@
   register: install_package
   when: "'aur' in modes"
 
-- name: install aur packages
+- name: install yay
   pacman:
     name: "{{ item.path }}"
     state: present
   loop: "{{ install_package.files }}"
   when: "'aur' in modes"
 
-# - name: install aur packages
-#   ansible.builtin.command:
-#     cmd: "yay --noconfirm -S {{ item }}"
-#   loop: "{{ aur_base_packages }}"
+# @TODO fix this so cache is spared
+- name: install aur packages
+  ansible.builtin.command:
+    cmd: "sudo -u nobody yay --builddir=/tmp --noconfirm -S {{ item }}"
+  loop: "{{ aur_base_packages }}"
+  when: "'aur' in modes"
 
 - name: remove nobody sudoers file
   file:
