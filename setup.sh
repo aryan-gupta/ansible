@@ -138,6 +138,7 @@ fi
 cd $secret_repo_path
 
 echo "[ASK] Please login to bitwarden for secret extraction"
+bw logout
 export BW_SESSION=$(bw login --raw)
 
 echo "[INFO] Decrypting gpg key"
