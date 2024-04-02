@@ -17,12 +17,15 @@
     force: yes
   loop: "{{ link_default_home_folders }}"
 
+# There is a bug in here. When gpg runs it starts keyboxd and gpg-agent
+# which dies uncleanly when the command finish running leaving a lockfile
+# this is a workaround.
 - name: load public gnupg keys into install
-  ansible.builtin.command:
-    cmd: "gpg --import /data/secure/{{ item }}.pub.asc"
+  ansible.builtin.shell:
+    cmd: "gpg --lock-multiple --import /data/secure/{{ item }}.pub.asc && gpgconf --kill keyboxd && gpgconf --kill gpg-agent"
   with_items: "{{ gpg[hostname]['public'] }}"
 
 - name: load public gnupg keys into install
-  ansible.builtin.command:
-    cmd: "gpg --batch --passphrase {{ gnupg_password }} --import /data/secure/{{ item }}.sub.key.asc"
+  ansible.builtin.shell:
+    cmd: "gpg --lock-multiple --batch --pinentry-mode loopback --passphrase {{ gnupg_password }} --import /data/secure/{{ item }}.sub.key.asc && gpgconf --kill keyboxd && gpgconf --kill gpg-agent"
   with_items: "{{ gpg[hostname]['private'] }}"
