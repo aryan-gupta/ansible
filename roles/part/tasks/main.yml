@@ -1,4 +1,8 @@
 ---
+# alignment: https://wiki.archlinux.org/title/Advanced_Format#Partition_alignment
+# to check alignment: https://github.com/crysman/check-partitions-alignment
+# since the partition sizes are in MiB and GiB, parted will align it to 4096B
+
 - name: Create on disk partitions
   community.general.parted:
     state: present
