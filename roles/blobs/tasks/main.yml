@@ -11,6 +11,14 @@
   with_items: "{{ crypt }}"
   when: nocrypt == false
 
+# https://stackoverflow.com/questions/25981863/
+- name: verify hashes of all the secrets
+  shell: "sha256sum {{ secrets_repo_archiso_loc }}/{{ item.file }} | grep -q {{ item.hash }}"
+  register: secrets_verify_result
+  failed_when: secrets_verify_result.rc != 0
+  changed_when: false
+  with_items: "{{ secret_hashes }}"
+
 - name: create secureboot directories
   file:
     path: "{{ item }}"
