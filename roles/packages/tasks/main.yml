@@ -106,3 +106,9 @@
     dest: "/etc/sudoers.d/tmp-{{ user.name }}-nopasswd"
     state: absent
   when: "'aur' in modes"
+
+- name: remove packages
+  pacman:
+    names: "{{ rm_packages }}"
+    state: "absent"
+  when: "'rmp' in modes"
