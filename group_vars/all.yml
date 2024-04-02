@@ -207,20 +207,16 @@ rm_packages:
   - xdg-desktop-portal
 
 aur_base_packages:
-  # - yay
   - xp-pen-tablet
   - piavpn-bin
   - brave-bin
   - cava
+  - spotify
+  - python-detect-secrets
+  # - picom-ibhagwan-git
   # - sbctl-initcpio-post-hook
-  # - plymouth-theme-owl-git
   # - cura
-  # - ddccontrol-db-git
-  # - ddccontrol
-  # - spotify
-  # - zenpower3-dkms
-  # - zenmonitor
-  # - python-detect-secrets
+  # - plymouth-theme-owl-git
 
 user:
   name: "{{ username }}"

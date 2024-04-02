@@ -30,4 +30,11 @@ packages:
 host_user_groups:
   - libvirt
 
+aur_packages:
+  - amdgpu_top
+  - ddccontrol-db-git
+  - ddccontrol
+  - zenpower3-dkms
+  - zenmonitor
+
 cpu_manufacturer: amd

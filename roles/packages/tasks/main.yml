@@ -98,7 +98,7 @@
 - name: install aur packages
   ansible.builtin.command:
     cmd: "sudo -u {{ user.name }} yay --noconfirm -S {{ item }}"
-  loop: "{{ aur_base_packages }}"
+  loop: "{{ aur_base_packages + aur_packages }}"
   when: "'aur' in modes"
 
 - name: remove {{ user.name }} sudoers file

@@ -25,4 +25,6 @@ packages:
 
 host_user_groups: []
 
+aur_packages: []
+
 cpu_manufacturer: intel

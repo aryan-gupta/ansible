@@ -21,6 +21,14 @@ packages:
 
 host_user_groups: [] # any extra groups needed by the user on this host
 
+aur_packages:
+  - amdgpu_top
+  - ddccontrol-db-git
+  - ddccontrol
+  - zenpower3-dkms
+  - zenmonitor
+
+
 # only intel and amd are valid. All others are ignored
 # and no ucode will be installed
 cpu_manufacturer: null
