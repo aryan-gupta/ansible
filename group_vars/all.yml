@@ -221,6 +221,7 @@ aur_base_packages:
 user:
   name: "{{ username }}"
   uid: 42069
+  gid: 31415
   group: "{{ username }}"
   home_dir: "/home/{{ username }}"
   groups:
