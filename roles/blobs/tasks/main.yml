@@ -33,37 +33,37 @@
     mode: '0400'
     remote_src: true
   with_items:
-    - src: "ansible-secrets/secureboot/GUID"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/GUID"
       dst: "{{ arch_root }}/usr/share/secureboot/GUID"
-    - src: "ansible-secrets/secureboot/keys/KEK/KEK.key"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/KEK/KEK.key"
       dst: "{{ arch_root }}/usr/share/secureboot/keys/KEK/KEK.key"
-    - src: "ansible-secrets/secureboot/keys/KEK/KEK.pem"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/KEK/KEK.pem"
       dst: "{{ arch_root }}/usr/share/secureboot/keys/KEK/KEK.pem"
-    - src: "ansible-secrets/secureboot/keys/db/db.key"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/db/db.key"
       dst: "{{ arch_root }}/usr/share/secureboot/keys/db/db.key"
-    - src: "ansible-secrets/secureboot/keys/db/db.pem"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/db/db.pem"
       dst: "{{ arch_root }}/usr/share/secureboot/keys/db/db.pem"
-    - src: "ansible-secrets/secureboot/keys/dbx/dbx.key"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/dbx/dbx.key"
       dst: "{{ arch_root }}/usr/share/secureboot/keys/dbx/dbx.key"
-    - src: "ansible-secrets/secureboot/keys/dbx/dbx.pem"
+    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/dbx/dbx.pem"
       dst: "{{ arch_root }}/usr/share/secureboot/keys/dbx/dbx.pem"
 
 - name: copy certificate authority file into chroot
   copy:
-    src: "ansible-secrets/certificate-authority/ca-chain.cert.pem"
+    src: "{{ secrets_repo_archiso_loc }}/certificate-authority/ca-chain.cert.pem"
     dest: "{{ arch_root }}/data/secure/ca-chain.cert.pem"
     remote_src: true
 
 - name: copy public gnupg keys into chroot
   copy:
-    src: "ansible-secrets/gnupg/{{ item }}.pub.asc"
+    src: "{{ secrets_repo_archiso_loc }}/gnupg/{{ item }}.pub.asc"
     dest: "{{ arch_root }}/data/secure/{{ item }}.pub.asc"
     remote_src: true
   with_items: "{{ gpg[hostname]['public'] }}"
 
 - name: copy public gnupg keys into chroot
   copy:
-    src: "ansible-secrets/gnupg/{{ item }}.sub.key.asc"
+    src: "{{ secrets_repo_archiso_loc }}/gnupg/{{ item }}.sub.key.asc"
     dest: "{{ arch_root }}/data/secure/{{ item }}.sub.key.asc"
     remote_src: true
   with_items: "{{ gpg[hostname]['private'] }}"
