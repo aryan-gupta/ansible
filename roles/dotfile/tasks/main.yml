@@ -1,4 +1,17 @@
 ---
+- name: set git password
+  ansible.builtin.lineinfile:
+    path: "{{ user.home_dir }}/.git-credentials"
+    line: "https://{{ item.username }}:{{ item.password }}@{{ item.host }}"
+    create: yes
+  with_items:
+    - username: "{{ github_username }}"
+      password: "{{ github_password[hostname] }}"
+      host: "{{ github_host }}"
+    - username: "{{ gitea_username }}"
+      password: "{{ gitea_password[hostname] }}"
+      host: "{{ gitea_host }}"
+
 # @TODO modularize this
 # update to use https://aur.archlinux.org/packages/oh-my-zsh-git ??
 # https://ohmyz.sh/#install
