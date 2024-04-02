@@ -12,7 +12,7 @@ data_vol_size: 1G
 
 nocrypt: false
 nolvm: false
-secureboot: false
+secureboot: true
 
 initramfs_modules: []
 
