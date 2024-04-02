@@ -49,11 +49,10 @@
     extra_args: --needed
   when: "'typ' in modes"
 
-# @TODO fix this so we dont need this tmp-nobody password hack
-- name: allow nobody sudoers
+- name: allow unpriv sudoers
   copy:
-    dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
-    content: "nobody ALL=(ALL:ALL) NOPASSWD: ALL" # pragma: allowlist secret
+    dest: "/etc/sudoers.d/tmp-{{ user.name }}-nopasswd"
+    content: "{{ user.name }} ALL=(ALL:ALL) NOPASSWD: ALL" # pragma: allowlist secret
   when: "'aur' in modes"
 
 - name: clone yay repo
@@ -66,15 +65,15 @@
 - name: set yay folder permissions
   file:
     dest: "/var/tmp/yay"
-    owner: nobody
-    group: nobody
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
     mode: '777'
     recurse: yes
   when: "'aur' in modes"
 
 - name: build yay package
   ansible.builtin.command:
-    cmd: "sudo -u nobody HOME=/tmp makepkg -s --noconfirm --needed"
+    cmd: "sudo -u {{ user.name }} makepkg -s --noconfirm --needed"
     chdir: "/var/tmp/yay"
   when: "'aur' in modes"
 
@@ -98,12 +97,12 @@
 # @TODO fix this so cache is spared
 - name: install aur packages
   ansible.builtin.command:
-    cmd: "sudo -u nobody yay --builddir=/tmp --noconfirm -S {{ item }}"
+    cmd: "sudo -u {{ user.name }} yay --noconfirm -S {{ item }}"
   loop: "{{ aur_base_packages }}"
   when: "'aur' in modes"
 
-- name: remove nobody sudoers file
+- name: remove {{ user.name }} sudoers file
   file:
-    dest: "/etc/sudoers.d/tmp-nobody-nopasswd"
+    dest: "/etc/sudoers.d/tmp-{{ user.name }}-nopasswd"
     state: absent
   when: "'aur' in modes"

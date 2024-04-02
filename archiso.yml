@@ -44,13 +44,15 @@
     - role: 'locale'
     - role: 'hosts'
     - role: 'packages'
-      vars: { modes: [ 'mir', 'syu', 'min', 'typ', 'aur' ] }
+      vars: { modes: [ 'mir', 'syu', 'min', 'typ' ] }
     - role: 'apps'
     - role: 'plymouth'
     - role: 'boot'
     - role: 'secureboot'
       when: 'secureboot == true'
     - role: 'accounts'
+    - role: 'packages'
+      vars: { modes: [ 'aur' ] } # yay needs local user (post accounts role)
     - role: 'folders'
       vars: { mode: 'root' }
 
