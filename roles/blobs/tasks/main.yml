@@ -17,12 +17,7 @@
     state: directory
     recurse: yes
   with_items:
-    - "{{ arch_root }}/usr/share/secureboot/"
-    - "{{ arch_root }}/usr/share/secureboot/keys"
-    - "{{ arch_root }}/usr/share/secureboot/keys/PK"
-    - "{{ arch_root }}/usr/share/secureboot/keys/KEK"
-    - "{{ arch_root }}/usr/share/secureboot/keys/db"
-    - "{{ arch_root }}/usr/share/secureboot/keys/dbx"
+    - "{{ secureboot_folders }}"
 
 - name: copy secureboot file into chroot
   copy:
@@ -33,20 +28,7 @@
     mode: '0400'
     remote_src: true
   with_items:
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/GUID"
-      dst: "{{ arch_root }}/usr/share/secureboot/GUID"
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/KEK/KEK.key"
-      dst: "{{ arch_root }}/usr/share/secureboot/keys/KEK/KEK.key"
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/KEK/KEK.pem"
-      dst: "{{ arch_root }}/usr/share/secureboot/keys/KEK/KEK.pem"
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/db/db.key"
-      dst: "{{ arch_root }}/usr/share/secureboot/keys/db/db.key"
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/db/db.pem"
-      dst: "{{ arch_root }}/usr/share/secureboot/keys/db/db.pem"
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/dbx/dbx.key"
-      dst: "{{ arch_root }}/usr/share/secureboot/keys/dbx/dbx.key"
-    - src: "{{ secrets_repo_archiso_loc }}/secureboot/keys/dbx/dbx.pem"
-      dst: "{{ arch_root }}/usr/share/secureboot/keys/dbx/dbx.pem"
+    - "{{ secureboot_files }}"
 
 - name: copy certificate authority file into chroot
   copy:
