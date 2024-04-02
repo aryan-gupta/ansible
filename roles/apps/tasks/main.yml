@@ -95,3 +95,14 @@
 - name: install the certificate authority chain
   ansible.builtin.command:
     cmd: "trust anchor --store /data/secure/ca-chain.cert.pem"
+
+- name: copy wireguard config file
+  template:
+    src: wg-client.conf
+    dest: "/etc/wireguard/wg-{{ hostname }}.conf"
+    mode: 700
+
+- name: enable wireguard config
+  ansible.builtin.systemd:
+    enabled: true
+    name: "wg-quick@wg-{{ hostname }}.service"

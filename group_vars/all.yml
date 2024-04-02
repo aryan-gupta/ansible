@@ -76,6 +76,7 @@ base_packages:
   - smartmontools
   - bluez
   - bluez-utils
+  - wireguard-tools
 
   # devel
   - base-devel
