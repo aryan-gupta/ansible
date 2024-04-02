@@ -38,6 +38,7 @@
     src: "/home/{{ user.name }}/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme"
     dest: "/home/{{ user.name }}/.oh-my-zsh/custom/themes/spaceship.zsh-theme"
     state: link
+    force: true
 
 - name: remove default zshrc file
   ansible.builtin.file:
@@ -80,6 +81,7 @@
     src: "{{ dotfile_repo_loc }}/.gitconfig"
     dest: "{{ user.home_dir }}/.gitconfig"
     state: link
+    force: true
 
 - name: setup .gitconfig-local
   ansible.builtin.file:
@@ -111,6 +113,7 @@
     src: "{{ dotfile_repo_loc }}/.bashrc"
     dest: "{{ user.home_dir }}/.bashrc"
     state: link
+    force: true
 
 - name: Check zshrc
   stat:
@@ -128,6 +131,7 @@
     src: "{{ dotfile_repo_loc }}/.zshrc"
     dest: "{{ user.home_dir }}/.zshrc"
     state: link
+    force: true
 
 - name: Check gtkrc2
   stat:
@@ -152,6 +156,7 @@
     src: "{{ dotfile_repo_loc }}/.xinitrc"
     dest: "{{ user.home_dir }}/.xinitrc"
     state: link
+    force: true
 
 - name: Check .config folder
   stat:
@@ -174,6 +179,7 @@
     src: "{{ dotfile_repo_loc }}/.config"
     dest: "{{ user.home_dir }}/.config"
     state: link
+    force: true
   when: not config_folder_type.stat.exists
 
 - name: finish setting up alacritty
