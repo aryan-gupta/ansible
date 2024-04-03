@@ -19,7 +19,7 @@ initramfs_modules:
 packages:
   - intel-media-driver
   - intel-gpu-tools
-  - acpilight
+  # - acpilight
   - nvme-cli
   - upower
 
