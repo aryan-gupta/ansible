@@ -118,6 +118,7 @@ base_packages:
   - xdotool
   - wmname
   - libva-utils
+  - gtk2
   - gtk3
   - arandr
   - bspwm
