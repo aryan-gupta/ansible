@@ -65,6 +65,11 @@
     dest: "{{ dotfile_repo_loc }}"
   ignore_errors: true
 
+- name: install git lfs for wallpaper
+  ansible.builtin.command:
+    cmd: "git lfs install"
+    chdir: "{{ dotfile_repo_loc }}"
+
 - name: fetch wallpaper
   ansible.builtin.command:
     cmd: "git lfs fetch"
