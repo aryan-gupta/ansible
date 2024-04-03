@@ -11,7 +11,7 @@ data_vol_size: 390G
 
 nocrypt: false
 nolvm: false
-secureboot: false
+secureboot: true
 
 initramfs_modules:
   - i915
