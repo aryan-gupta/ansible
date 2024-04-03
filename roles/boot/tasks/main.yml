@@ -68,7 +68,7 @@
 # @TODO make this idempotent
 - name: delete old boot entries
   shell: >-
-    variable=$(efibootmgr | grep "{{ partitions[0].label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; printf "$variable" | while IFS= read -r line ; do efibootmgr -Bb $line; done
+    variable=$(efibootmgr | grep "{{ partitions[0].label }}" | awk '{ print $1 }' | sed 's/Boot//' | sed 's/*//') ; for line in $variable; do efibootmgr -Bb $line; done
 
 - name: delete default mkinitcpio img files
   file:
