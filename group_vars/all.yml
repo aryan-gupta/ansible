@@ -2,7 +2,7 @@
 system_name: ArchLinux
 
 username: aryan
-github_username: aryan-gupta
+git_username: aryan-gupta
 email: "me@theguptaempire.net"
 
 arch_root: /mnt
@@ -232,23 +232,23 @@ user:
   email:  "{{ email }}"
 
 dotfile_repo: "dotfiles"
-dotfile_repo_github: "https://github.com/{{ github_username }}/{{ dotfile_repo }}"
+dotfile_repo_git: "https://gitea.{{ domain_suffix }}/{{ git_username }}/{{ dotfile_repo }}"
 dotfile_repo_loc: "/data/{{ user.name }}/.{{ dotfile_repo }}"
 
 scripts_repo: "scripts"
-scripts_repo_github: "https://github.com/{{ github_username }}/{{ scripts_repo }}"
+scripts_repo_git: "https://github.com/{{ git_username }}/{{ scripts_repo }}"
 scripts_repo_loc: "/data/{{ scripts_repo }}"
 
 ansible_repo: "ansible"
-ansible_repo_github: "https://github.com/{{ github_username }}/{{ ansible_repo }}"
+ansible_repo_git: "https://gitea.{{ domain_suffix }}/{{ git_username }}/{{ ansible_repo }}"
 ansible_repo_loc: "/data/{{ ansible_repo }}"
 
 secrets_repo: "ansible-secrets" # pragma: allowlist secret
-secrets_repo_git: "https://gitea.{{ domain_suffix }}/{{ github_username }}/{{ secrets_repo }}" # pragma: allowlist secret
+secrets_repo_git: "https://gitea.{{ domain_suffix }}/{{ git_username }}/{{ secrets_repo }}" # pragma: allowlist secret
 secrets_repo_archiso_loc: "/tmp/{{ ansible_repo }}/{{ secrets_repo }}" # pragma: allowlist secret
 
 wikinotes_repo: "wikinotes"
-wikinotes_repo_github: "https://gitea.{{ domain_suffix }}/{{ github_username }}/{{ wikinotes_repo }}"
+wikinotes_repo_git: "https://gitea.{{ domain_suffix }}/{{ git_username }}/{{ wikinotes_repo }}"
 wikinotes_repo_loc: "/data/{{ user.name }}/{{ wikinotes_repo }}"
 
 life_folders_root: /data/life

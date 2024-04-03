@@ -61,7 +61,7 @@
 - name: clone dotfiles
   ansible.builtin.git:
     clone: yes
-    repo: "{{ dotfile_repo_github }}"
+    repo: "{{ dotfile_repo_git }}"
     dest: "{{ dotfile_repo_loc }}"
   ignore_errors: true
 
@@ -78,14 +78,14 @@
 - name: clone wikinotes
   ansible.builtin.git:
     clone: yes
-    repo: "{{ wikinotes_repo_github }}"
+    repo: "{{ wikinotes_repo_git }}"
     dest: "{{ wikinotes_repo_loc }}"
   ignore_errors: true
 
 - name: clone scripts
   ansible.builtin.git:
     clone: yes
-    repo: "{{ scripts_repo_github }}"
+    repo: "{{ scripts_repo_git }}"
     dest: "{{ scripts_repo_loc }}"
   ignore_errors: true
 
