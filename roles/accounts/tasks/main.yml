@@ -53,11 +53,6 @@
     dest: "/etc/sudoers.d/restart-windows-nopasswd"
     content: "{{ user.name }} ALL = (root) NOPASSWD: /usr/bin/restart_into_windows.sh"
 
-- name: allow xp pentablet nopasswd
-  copy:
-    dest: "/etc/sudoers.d/xppentablet-nopasswd"
-    content: "{{ user.name }} ALL = (root) NOPASSWD: /usr/lib/pentablet/pentablet.sh"
-
 - name: create getty folder
   file:
     path: /etc/systemd/system/getty@tty1.service.d/
