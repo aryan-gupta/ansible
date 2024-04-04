@@ -126,7 +126,7 @@ cd $secret_repo_path
 
 echo "[ASK] Please login to bitwarden for secret extraction"
 bw logout
-export BW_SESSION=$(bw login --raw)
+[ ! -n "$BW_SESSION" ] && export BW_SESSION=$(bw login --raw)
 
 # these bitwarden id's are not secrets, are they?
 # access to the UUID does not reveal the encrypted password data
@@ -134,11 +134,11 @@ export BW_SESSION=$(bw login --raw)
 # https://security.stackexchange.com/questions/4729/
 # https://security.stackexchange.com/questions/36870/
 echo "[INFO] Decrypting gpg key"
-ansible_secrets_key=$(bw get password 9d9cf34b-936d-434c-ba58-b144014f323e)
+[ ! -n "$ansible_secrets_key" ] && ansible_secrets_key=$(bw get password 9d9cf34b-936d-434c-ba58-b144014f323e)
 gpg --batch --passphrase $ansible_secrets_key --decrypt --output $gpg_enc_key $( basename $gpg_enc_key ).sym.gpg
 
 echo "[INFO] Importing gpg key"
-gnupg_password=$(bw get password 6d69ae1b-9f81-42fb-be10-acd8016bdb33)
+[ ! -n "$gnupg_password" ] && gnupg_password=$(bw get password 6d69ae1b-9f81-42fb-be10-acd8016bdb33)
 gpg --batch --passphrase $gnupg_password --import $gpg_enc_key
 
 echo "[INFO] Decrypting files"
